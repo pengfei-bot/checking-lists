@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "Checking Lists",
+    "slug": "checking-lists",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "checkinglists",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Pour joindre une photo preuve quand une tache est terminee.",
+        "NSPhotoLibraryUsageDescription": "Pour choisir une photo preuve depuis la galerie.",
+        "NSCalendarsUsageDescription": "Pour ajouter les taches du jour au calendrier (sync unidirectionnelle).",
+        "NSRemindersUsageDescription": "Pour planifier des rappels locaux de taches."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "POST_NOTIFICATIONS",
+        "READ_CALENDAR",
+        "WRITE_CALENDAR"
+      ],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Autoriser l acces aux photos pour les preuves.",
+          "cameraPermission": "Autoriser la camera pour les preuves."
+        }
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Autoriser l acces au calendrier pour y ajouter les taches du jour."
+        }
+      ],
+      "expo-notifications"
+    ]
+  }
+}
