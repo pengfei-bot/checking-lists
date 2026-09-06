@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
@@ -31,6 +32,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
     setCurrentProfileId,
     refreshReminders,
   } = useApp();
+  const { isAuthenticated, family } = useAuth();
   const [filterChildId, setFilterChildId] = useState<string | "all">("all");
 
   if (!currentProfile || currentProfile.role !== "parent") {
@@ -137,6 +139,18 @@ export function ParentDashboardScreen({ navigation }: Props) {
           onPress={() => navigation.navigate("ParentCalendar")}
           style={{ marginBottom: 8 }}
         />
+        {isAuthenticated ? (
+          <PrimaryButton
+            label={
+              family?.inviteCode
+                ? `Partage famille · ${family.inviteCode}`
+                : "Partage famille"
+            }
+            variant="ghost"
+            onPress={() => navigation.navigate("FamilyShare")}
+            style={{ marginBottom: 8 }}
+          />
+        ) : null}
         <PrimaryButton
           label="+ Nouvelle tache"
           onPress={() => navigation.navigate("TaskForm", {})}
