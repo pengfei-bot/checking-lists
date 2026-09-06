@@ -27,18 +27,18 @@ const RECURRENCES: Recurrence[] = ["daily", "weekdays", "once"];
 type PeriodId = "matin" | "midi" | "apresmidi" | "soir";
 
 const PERIODS: { id: PeriodId; label: string; hint: string; defaultTime: string }[] = [
-  { id: "matin", label: "Matin", hint: "06:00–11:30", defaultTime: "08:00" },
-  { id: "midi", label: "Midi", hint: "12:00–13:30", defaultTime: "12:00" },
-  { id: "apresmidi", label: "Après-midi", hint: "14:00–17:30", defaultTime: "16:00" },
+  { id: "matin", label: "Matin", hint: "06:00–11:45", defaultTime: "08:00" },
+  { id: "midi", label: "Midi", hint: "12:00–13:45", defaultTime: "12:00" },
+  { id: "apresmidi", label: "Après-midi", hint: "14:00–17:45", defaultTime: "16:00" },
   { id: "soir", label: "Soir", hint: "18:00–22:00", defaultTime: "19:00" },
 ];
 
-function buildHalfHourSlots(startHour: number, endHour: number, endMinute = 0): string[] {
+/** Quarter-hour slots so e.g. 10:15 is selectable. */
+function buildQuarterHourSlots(startHour: number, endHour: number, endMinute = 0): string[] {
   const slots: string[] = [];
   for (let h = startHour; h <= endHour; h++) {
-    for (const m of [0, 30]) {
+    for (const m of [0, 15, 30, 45]) {
       if (h === endHour && m > endMinute) break;
-      if (h === startHour && m < 0) continue;
       slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
     }
   }
@@ -46,13 +46,13 @@ function buildHalfHourSlots(startHour: number, endHour: number, endMinute = 0): 
 }
 
 const TIMES_BY_PERIOD: Record<PeriodId, string[]> = {
-  matin: buildHalfHourSlots(6, 11, 30),
-  midi: buildHalfHourSlots(12, 13, 30),
-  apresmidi: buildHalfHourSlots(14, 17, 30),
-  soir: buildHalfHourSlots(18, 22, 0),
+  matin: buildQuarterHourSlots(6, 11, 45),
+  midi: buildQuarterHourSlots(12, 13, 45),
+  apresmidi: buildQuarterHourSlots(14, 17, 45),
+  soir: buildQuarterHourSlots(18, 22, 0),
 };
 
-const ALL_TIMES = buildHalfHourSlots(6, 22, 0);
+const ALL_TIMES = buildQuarterHourSlots(6, 22, 0);
 
 function periodForTime(t: string): PeriodId {
   const [hh] = t.split(":").map(Number);
@@ -80,7 +80,7 @@ function validateForm(input: {
   if (!input.title.trim()) errors.title = "Le titre est requis.";
   if (!input.childId) errors.childId = "Choisissez un enfant.";
   if (!/^\d{2}:\d{2}$/.test(input.time)) {
-    errors.time = "Choisissez une heure (ex. 17:00).";
+    errors.time = "Choisissez une heure (ex. 10:15).";
   }
   if (input.recurrence === "once" && !/^\d{4}-\d{2}-\d{2}$/.test(input.onceDate)) {
     errors.onceDate = "Indiquez une date au format AAAA-MM-JJ.";
@@ -236,7 +236,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         ]}
       >
         <Text style={styles.timeButtonLabel}>{time || "Choisir…"}</Text>
-        <Text style={styles.timeButtonHint}>Toucher pour choisir · créneaux 30 min</Text>
+        <Text style={styles.timeButtonHint}>Toucher pour choisir · créneaux 15 min</Text>
       </Pressable>
       {attempted && fieldErrors.time ? (
         <Text style={styles.fieldError}>{fieldErrors.time}</Text>
@@ -337,7 +337,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>Choisir l'heure</Text>
-            <Text style={styles.help}>Créneaux toutes les 30 minutes (06:00–22:00)</Text>
+            <Text style={styles.help}>Créneaux toutes les 15 minutes (06:00–22:00)</Text>
             <ScrollView style={styles.modalList}>
               {ALL_TIMES.map((t) => (
                 <Pressable

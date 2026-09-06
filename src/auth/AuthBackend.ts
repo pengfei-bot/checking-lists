@@ -35,7 +35,7 @@ export interface AuthBackend {
 
   /**
    * Child device enters invite code to join parent family (Supabase RPC).
-   * @param displayName optional nickname for the child device / member row
+   * @param displayName optional; defaults to « Appareil enfant » (UI no longer collects a name)
    */
   redeemInvite(code: string, displayName?: string): Promise<AuthResult>;
 

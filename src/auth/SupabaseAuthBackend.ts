@@ -135,7 +135,7 @@ export class SupabaseAuthBackend implements AuthBackend {
     await clearDemo();
     const normalized = normalizeInviteCode(code);
     if (normalized.length < 4) throw new Error("Code d'invitation invalide.");
-    const nickname = (displayName?.trim() || "Enfant").slice(0, 40);
+    const nickname = (displayName?.trim() || "Appareil enfant").slice(0, 40);
     await this.ensureChildAuthSession(nickname);
     const supabase = getSupabase();
     const { data: familyId, error: rpcErr } = await supabase.rpc("redeem_family_invite", { p_code: normalized, p_display_name: nickname });
