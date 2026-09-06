@@ -1,19 +1,11 @@
-# Parcours de test — 5 minutes
+# TEST 5 min
 
-## Web d abord
-
-```bash
-npx expo start --web
-```
-
-Ouvrir http://localhost:8081 (ou l URL Expo).
-
-## Script
-
-1. Accueil: Parent (Demo), Leo, Mia — pas de setup.
-2. Leo: cocher une tache.
-3. Photo: autre tache → photo (fichier ou mock).
-4. Changer de profil → Parent: voir progression + photo.
-5. Creer une tache pour Mia → se connecter en Mia → valider.
-6. Bouton rappels: message web OU permission mobile.
-7. Reset demo depuis l accueil.
+1. npx expo start --web
+2. Accueil Parent / Leo / Mia
+3. Leo: cocher + photo
+4. Parent: voir photo + stats du jour
+5. Parent -> Calendrier: grille du mois FR
+6. Toucher un jour: detail par enfant + taches
+7. Fleches pour changer de mois
+8. Creer tache Mia + valider
+9. Reset demo pour recharger historique seed

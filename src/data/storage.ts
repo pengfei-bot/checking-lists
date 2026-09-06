@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppState } from "../types";
 import { createSeedState } from "./seed";
 
-const STORAGE_KEY = "@checking_lists/v1";
+const STORAGE_KEY = "@checking_lists/v2";
 
 export async function loadAppState(): Promise<AppState> {
   try {
