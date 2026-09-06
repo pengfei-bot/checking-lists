@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { AppState, Profile, Task, TaskCompletion } from "../types";
 import { loadAppState, resetDemoData, saveAppState } from "../data/storage";
+import { childColors } from "../theme/colors";
 import { todayISO, uid } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
 import { rescheduleTodayReminders } from "../services/notifications";
@@ -25,6 +26,12 @@ interface AppContextValue {
   unmarkTaskDone: (taskId: string, date?: string) => Promise<void>;
   upsertTask: (input: Omit<Task, "id" | "createdAt" | "updatedAt"> & { id?: string }) => Promise<Task>;
   deleteTask: (taskId: string) => Promise<void>;
+  addChild: (input: { name: string; emoji?: string; color?: string }) => Promise<Profile>;
+  updateChild: (
+    id: string,
+    input: { name: string; emoji?: string; color?: string }
+  ) => Promise<Profile | undefined>;
+  deleteChild: (id: string) => Promise<void>;
   getTask: (taskId: string) => Task | undefined;
   getProfile: (id: string) => Profile | undefined;
   resetDemo: () => Promise<void>;
@@ -192,6 +199,69 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [persist, state]
   );
 
+
+  const addChild = useCallback(
+    async (input: { name: string; emoji?: string; color?: string }): Promise<Profile> => {
+      const kids = state.profiles.filter((p) => p.role === "child");
+      const color =
+        input.color?.trim() ||
+        childColors[kids.length % childColors.length] ||
+        childColors[0];
+      const profile: Profile = {
+        id: uid("profile_child"),
+        name: input.name.trim(),
+        role: "child",
+        emoji: (input.emoji?.trim() || "🌟"),
+        color,
+      };
+      await persist({ ...state, profiles: [...state.profiles, profile] });
+      return profile;
+    },
+    [persist, state]
+  );
+
+  const updateChild = useCallback(
+    async (
+      id: string,
+      input: { name: string; emoji?: string; color?: string }
+    ): Promise<Profile | undefined> => {
+      let saved: Profile | undefined;
+      const profiles = state.profiles.map((p) => {
+        if (p.id !== id || p.role !== "child") return p;
+        saved = {
+          ...p,
+          name: input.name.trim(),
+          emoji: input.emoji?.trim() || p.emoji,
+          color: input.color?.trim() || p.color,
+        };
+        return saved;
+      });
+      if (!saved) return undefined;
+      await persist({ ...state, profiles });
+      return saved;
+    },
+    [persist, state]
+  );
+
+  const deleteChild = useCallback(
+    async (id: string) => {
+      const next: AppState = {
+        ...state,
+        profiles: state.profiles.filter((p) => p.id !== id),
+        tasks: state.tasks.filter((t) => t.childId !== id),
+        completions: state.completions.filter((c) => c.childId !== id),
+        currentProfileId: state.currentProfileId === id ? null : state.currentProfileId,
+      };
+      await persist(next);
+      try {
+        await rescheduleTodayReminders(next.tasks, next.profiles);
+      } catch {
+        /* ignore */
+      }
+    },
+    [persist, state]
+  );
+
   const getTask = useCallback(
     (taskId: string) => state.tasks.find((t) => t.id === taskId),
     [state.tasks]
@@ -229,6 +299,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     unmarkTaskDone,
     upsertTask,
     deleteTask,
+    addChild,
+    updateChild,
+    deleteChild,
     getTask,
     getProfile,
     resetDemo,
