@@ -1,6 +1,5 @@
 /**
- * Auth domain types — local prototype foundation.
- * Swap LocalAuthBackend for Supabase/Firebase without changing UI contracts.
+ * Auth domain types — pluggable LocalAuthBackend / SupabaseAuthBackend.
  */
 
 export type AuthMode = "anonymous" | "demo" | "authenticated" | "child_device";
@@ -8,9 +7,9 @@ export type AuthMode = "anonymous" | "demo" | "authenticated" | "child_device";
 export interface ParentAccount {
   id: string;
   email: string;
-  /** SHA-256(salt + password) — prototype only; server-side hashing later */
-  passwordHash: string;
-  salt: string;
+  /** Local prototype only — omitted for Supabase Auth accounts */
+  passwordHash?: string;
+  salt?: string;
   displayName: string;
   familyId: string;
   createdAt: string;
@@ -20,7 +19,7 @@ export interface Family {
   id: string;
   name: string;
   ownerParentId: string;
-  /** Active 6-char invite code (prototype sharing model) */
+  /** Active 6-char invite code shared across devices via Supabase */
   inviteCode: string;
   childProfileIds: string[];
   createdAt: string;
@@ -31,7 +30,7 @@ export interface FamilyInvite {
   code: string;
   familyId: string;
   createdAt: string;
-  /** Soft expiry for future cloud; local backend ignores */
+  /** Soft expiry for future; cloud may ignore */
   expiresAt?: string;
 }
 

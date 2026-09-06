@@ -6,6 +6,12 @@ module.exports = ({ config }) => {
   const baseUrl = process.env.EXPO_BASE_URL;
   return {
     ...config,
+    extra: {
+      ...(config.extra || {}),
+      supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
+      supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+      supabaseProject: "Checking lists",
+    },
     ...(baseUrl
       ? { experiments: { ...(config.experiments || {}), baseUrl } }
       : { experiments: { ...(config.experiments || {}) } }),
