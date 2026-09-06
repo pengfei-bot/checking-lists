@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Alert,
   Image,
   Platform,
   ScrollView,
@@ -9,17 +8,16 @@ import {
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import * as ImagePicker from "expo-image-picker";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { recurrenceLabel } from "../utils/recurrence";
 import { todayISO } from "../utils/dates";
+import { notifyUser } from "../utils/feedback";
+import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskDetail">;
-
-const MOCK_PHOTO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
 
 export function TaskDetailScreen({ navigation, route }: Props) {
   const {
@@ -46,51 +44,25 @@ export function TaskDetailScreen({ navigation, route }: Props) {
   const done = completionFor(task.id);
   const isChild = currentProfile?.role === "child";
 
-  const pickPhotoWebOrDevice = async (): Promise<string | undefined> => {
-    if (Platform.OS === "web") {
-      try {
-        const pick = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ["images"],
-          quality: 0.7,
-        });
-        if (!pick.canceled && pick.assets[0]?.uri) return pick.assets[0].uri;
-      } catch {
-        // fall through to mock
-      }
-      return MOCK_PHOTO;
-    }
-
-    const cam = await ImagePicker.requestCameraPermissionsAsync();
-    if (cam.granted) {
-      const shot = await ImagePicker.launchCameraAsync({ quality: 0.7 });
-      if (!shot.canceled && shot.assets[0]?.uri) return shot.assets[0].uri;
-    }
-    const lib = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (lib.granted) {
-      const pick = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ["images"],
-        quality: 0.7,
-      });
-      if (!pick.canceled && pick.assets[0]?.uri) return pick.assets[0].uri;
-    }
-    return undefined;
-  };
-
   const markDone = async (withPhoto: boolean) => {
     setBusy(true);
     try {
       let photoUri: string | undefined;
       if (withPhoto) {
-        photoUri = await pickPhotoWebOrDevice();
-        if (!photoUri && Platform.OS !== "web") {
-          Alert.alert("Photo", "Aucune photo selectionnee.");
+        const result = await pickProofImage({ quality: 0.7, preferCamera: true });
+        if (result.status === "canceled") {
+          notifyUser("Photo", "Selection annulee — aucune photo ajoutee.");
           return;
         }
-        if (Platform.OS === "web" && photoUri === MOCK_PHOTO) {
-          Alert.alert(
-            "Demo web",
-            "Fichier non choisi: une photo de demonstration a ete utilisee."
+        if (result.status === "error") {
+          photoUri = MOCK_PHOTO_URI;
+          notifyUser(
+            "Photo",
+            `${result.message} Une photo de demonstration a ete utilisee.`
           );
+        } else {
+          photoUri = result.uri;
+          notifyUser("Photo", "Photo preuve enregistree.");
         }
       }
       await markTaskDone(task.id, task.childId, photoUri);
@@ -126,8 +98,8 @@ export function TaskDetailScreen({ navigation, route }: Props) {
       {Platform.OS === "web" && (
         <View style={styles.webNote}>
           <Text style={styles.webNoteText}>
-            Demo navigateur: choisissez une image (file picker) ou une photo mock sera utilisee.
-            Notifications locales desactivees sur le web.
+            Demo navigateur : le bouton photo ouvre un selecteur de fichier image.
+            En cas d'erreur du selecteur, une photo mock peut etre utilisee. Notifications locales desactivees sur le web.
           </Text>
         </View>
       )}
@@ -136,7 +108,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         <>
           <PrimaryButton label="Marquer fait" onPress={() => void markDone(false)} loading={busy} style={{ marginTop: 8 }} />
           <PrimaryButton
-            label={Platform.OS === "web" ? "Fait + photo (fichier / mock)" : "Fait + photo"}
+            label={Platform.OS === "web" ? "Fait + photo (fichier)" : "Fait + photo"}
             variant="secondary"
             onPress={() => void markDone(true)}
             loading={busy}
