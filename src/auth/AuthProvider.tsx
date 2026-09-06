@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import { AuthBackend } from "./AuthBackend";
-import { LocalAuthBackend } from "./LocalAuthBackend";
+import { SupabaseAuthBackend } from "./SupabaseAuthBackend";
 import { isUsingSecureStore } from "./secureStorage";
 import {
   Family,
@@ -25,20 +25,22 @@ interface AuthContextValue {
   parent: ParentAccount | null;
   isDemo: boolean;
   isAuthenticated: boolean;
+  /** True when session is cloud-backed (parent or child device), not demo */
+  isCloud: boolean;
   usingSecureStore: boolean;
   signUp: (input: SignUpInput) => Promise<void>;
   signIn: (input: SignInInput) => Promise<void>;
   signOut: () => Promise<void>;
   continueAsDemo: () => Promise<void>;
   createInvite: () => Promise<FamilyInvite>;
-  redeemInvite: (code: string) => Promise<void>;
+  redeemInvite: (code: string, displayName?: string) => Promise<void>;
   refreshFamily: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-/** Singleton local backend — swap here for Supabase/Firebase later. */
-const backend: AuthBackend = new LocalAuthBackend();
+/** Cloud backend — swap for LocalAuthBackend in unit tests if needed. */
+const backend: AuthBackend = new SupabaseAuthBackend();
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
@@ -106,8 +108,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [session?.familyId]);
 
   const redeemInvite = useCallback(
-    async (code: string) => {
-      apply(await backend.redeemInvite(code));
+    async (code: string, displayName?: string) => {
+      apply(await backend.redeemInvite(code, displayName));
     },
     [apply]
   );
@@ -117,6 +119,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setFamily(await backend.getFamily(session.familyId));
   }, [session?.familyId]);
 
+  const isCloud = !!session && !session.isDemo && !!session.familyId;
+
   const value: AuthContextValue = useMemo(
     () => ({
       ready,
@@ -125,6 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       parent,
       isDemo: !!session?.isDemo,
       isAuthenticated: session?.mode === "authenticated",
+      isCloud,
       usingSecureStore: isUsingSecureStore(),
       signUp,
       signIn,
@@ -139,6 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       session,
       family,
       parent,
+      isCloud,
       signUp,
       signIn,
       signOut,
