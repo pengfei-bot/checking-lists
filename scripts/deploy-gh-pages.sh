@@ -5,7 +5,7 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 bun install
-bunx expo export --platform web
+EXPO_BASE_URL=/checking-lists bunx expo export --platform web
 cp dist/index.html dist/404.html
 touch dist/.nojekyll
 TMP=$(mktemp -d)
