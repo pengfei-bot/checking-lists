@@ -154,8 +154,29 @@ export function ParentDashboardScreen({ navigation }: Props) {
         <PrimaryButton
           label="+ Nouvelle tache"
           onPress={() => navigation.navigate("TaskForm", {})}
+          style={{ marginBottom: 8 }}
+        />
+        <PrimaryButton
+          label="+ Ajouter un enfant"
+          variant="secondary"
+          onPress={() => navigation.navigate("ChildForm", {})}
           style={{ marginBottom: 12 }}
         />
+
+        <Text style={styles.section}>Enfants</Text>
+        <View style={styles.kidsManage}>
+          {childrenProfiles.map((child) => (
+            <Pressable
+              key={`manage-${child.id}`}
+              onPress={() => navigation.navigate("ChildForm", { childId: child.id })}
+              style={[styles.kidManageCard, { borderColor: child.color }]}
+            >
+              <Text style={styles.statEmoji}>{child.emoji}</Text>
+              <Text style={styles.kidManageName}>{child.name}</Text>
+              <Text style={styles.kidManageEdit}>Modifier</Text>
+            </Pressable>
+          ))}
+        </View>
 
         <Text style={styles.section}>Aujourd hui</Text>
         {todayTasks.length === 0 ? (
@@ -224,9 +245,11 @@ const styles = StyleSheet.create({
   chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   chipText: { fontWeight: "700", color: colors.text },
   chipTextActive: { color: "#fff" },
-  statsRow: { flexDirection: "row", gap: 10, marginBottom: 12 },
+  statsRow: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginBottom: 12 },
   statCard: {
-    flex: 1,
+    minWidth: "45%",
+    flexGrow: 1,
+    flexBasis: "40%",
     backgroundColor: colors.card,
     borderRadius: 16,
     padding: 12,
@@ -237,6 +260,19 @@ const styles = StyleSheet.create({
   statName: { fontWeight: "700", marginTop: 4 },
   statValue: { fontSize: 22, fontWeight: "800", color: colors.primary, marginTop: 4 },
   statLabel: { color: colors.textMuted, fontSize: 12 },
+  kidsManage: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 16 },
+  kidManageCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    borderWidth: 2,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+  },
+  kidManageName: { fontWeight: "700", color: colors.text },
+  kidManageEdit: { color: colors.primary, fontWeight: "600", fontSize: 12 },
   section: { fontWeight: "800", fontSize: 16, marginBottom: 8, color: colors.text },
   empty: { color: colors.textMuted, marginBottom: 12 },
   editBtn: {
