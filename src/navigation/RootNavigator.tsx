@@ -5,6 +5,8 @@ import { RootStackParamList } from "./types";
 import { ProfilePickerScreen } from "../screens/ProfilePickerScreen";
 import { ChildHomeScreen } from "../screens/ChildHomeScreen";
 import { ParentDashboardScreen } from "../screens/ParentDashboardScreen";
+import { ParentCalendarScreen } from "../screens/ParentCalendarScreen";
+import { ParentDayDetailScreen } from "../screens/ParentDayDetailScreen";
 import { TaskFormScreen } from "../screens/TaskFormScreen";
 import { TaskDetailScreen } from "../screens/TaskDetailScreen";
 import { colors } from "../theme/colors";
@@ -41,6 +43,16 @@ export function RootNavigator() {
             name="ParentDashboard"
             component={ParentDashboardScreen}
             options={{ title: "Parents" }}
+          />
+          <Stack.Screen
+            name="ParentCalendar"
+            component={ParentCalendarScreen}
+            options={{ title: "Calendrier" }}
+          />
+          <Stack.Screen
+            name="ParentDayDetail"
+            component={ParentDayDetailScreen}
+            options={{ title: "Jour" }}
           />
           <Stack.Screen
             name="TaskForm"
