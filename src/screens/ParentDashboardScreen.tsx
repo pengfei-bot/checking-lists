@@ -132,6 +132,12 @@ export function ParentDashboardScreen({ navigation }: Props) {
         </View>
 
         <PrimaryButton
+          label="Calendrier"
+          variant="secondary"
+          onPress={() => navigation.navigate("ParentCalendar")}
+          style={{ marginBottom: 8 }}
+        />
+        <PrimaryButton
           label="+ Nouvelle tache"
           onPress={() => navigation.navigate("TaskForm", {})}
           style={{ marginBottom: 12 }}
