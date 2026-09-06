@@ -18,7 +18,7 @@ export function ForgotPasswordScreen({ navigation }: Props) {
         appareil, recréez un compte parent ou utilisez « Continuer en démo ».
       </Text>
       <Text style={styles.note}>
-        Plus tard : reset via Supabase Auth / Firebase + e-mail (et Sign in with Apple sur iOS).
+        Reset via Supabase Auth (e-mail) a brancher — et Sign in with Apple sur iOS avant App Store.
       </Text>
       <PrimaryButton
         label="Retour à la connexion"

@@ -45,8 +45,8 @@ export function SignUpScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>Créer un compte parent</Text>
         <Text style={styles.hint}>
-          Compte local pour préparer l'App Store. Un code famille à 6 caractères sera généré
-          pour lier un appareil enfant.
+          Compte parent cloud (Supabase). Un code famille à 6 caractères sera généré pour que
+          l'enfant rejoigne la famille depuis son propre iPhone.
         </Text>
 
         <Text style={styles.label}>Prénom / nom</Text>
