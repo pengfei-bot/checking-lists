@@ -180,7 +180,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
           ))}
         </View>
 
-        <Text style={styles.section}>Aujourd hui</Text>
+        <Text style={styles.section}>Aujourd'hui</Text>
         {todayTasks.length === 0 ? (
           <Text style={styles.empty}>Aucune tache pour ce filtre.</Text>
         ) : (
