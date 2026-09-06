@@ -12,4 +12,5 @@ export type RootStackParamList = {
   ParentDayDetail: { date: string };
   TaskForm: { taskId?: string; childId?: string };
   TaskDetail: { taskId: string };
+  ChildForm: { childId?: string };
 };
