@@ -1,4 +1,10 @@
 export type RootStackParamList = {
+  Welcome: undefined;
+  SignUp: undefined;
+  SignIn: undefined;
+  ForgotPassword: undefined;
+  RedeemInvite: undefined;
+  FamilyShare: undefined;
   ProfilePicker: undefined;
   ChildHome: undefined;
   ParentDashboard: undefined;
