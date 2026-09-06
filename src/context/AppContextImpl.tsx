@@ -144,10 +144,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const deleteTask = useCallback(async (taskId: string) => {
     if (familyId) await cloudDeleteTask(taskId);
-    const next = { ...state, tasks: state.tasks.filter((t) => t.id !== taskId), completions: state.completions.filter((c) => c.taskId !== taskId) };
+    const prev = stateRef.current;
+    const next = {
+      ...prev,
+      tasks: prev.tasks.filter((t) => t.id !== taskId),
+      completions: prev.completions.filter((c) => c.taskId !== taskId),
+    };
+    stateRef.current = next;
     if (familyId) setState(next); else await persistLocal(next);
     await safeReminders(next.tasks, next.profiles);
-  }, [familyId, persistLocal, state]);
+  }, [familyId, persistLocal]);
 
   const addChild = useCallback(async (input: { name: string; emoji?: string; color?: string }): Promise<Profile> => {
     const kids = state.profiles.filter((p) => p.role === "child");

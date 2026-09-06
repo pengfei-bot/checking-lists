@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import {
-  Alert,
   Modal,
   Pressable,
   ScrollView,
@@ -16,8 +15,10 @@ import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { PrimaryButton } from "../components/PrimaryButton";
-import { Recurrence } from "../types";
+import { Recurrence, Task } from "../types";
+import { frenchCloudError } from "../utils/cloudTimeout";
 import { todayISO } from "../utils/dates";
+import { confirmUser, notifyUser } from "../utils/feedback";
 import { recurrenceLabel } from "../utils/recurrence";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskForm">;
@@ -71,7 +72,7 @@ interface FieldErrors {
 
 function validateForm(input: {
   title: string;
-  /** Create: selected child ids; edit: single id or empty. */
+  /** Selected child ids (create and edit: at least one). */
   childIds: string[];
   time: string;
   recurrence: Recurrence;
@@ -91,11 +92,11 @@ function validateForm(input: {
 
 export function TaskFormScreen({ navigation, route }: Props) {
   const blocked = useParentOnlyGuard(navigation);
-  const { getTask, childrenProfiles, upsertTask, deleteTask } = useApp();
+  const { getTask, childrenProfiles, upsertTask, deleteTask, state } = useApp();
   const existing = route.params.taskId ? getTask(route.params.taskId) : undefined;
 
   const [title, setTitle] = useState(existing?.title ?? "");
-  /** Edit: one assignee. Create: multi-select (at least one). */
+  /** Multi-select assignees (create and edit; at least one). */
   const [childIds, setChildIds] = useState<string[]>(() => {
     if (existing?.childId) return [existing.childId];
     const fromRoute = route.params.childId;
@@ -113,6 +114,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
   const [onceDate, setOnceDate] = useState(existing?.onceDate ?? todayISO());
   const [saving, setSaving] = useState(false);
   const [attempted, setAttempted] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const isEdit = !!existing;
 
@@ -124,17 +126,29 @@ export function TaskFormScreen({ navigation, route }: Props) {
   const isValid = errorList.length === 0;
 
   const toggleChild = (id: string) => {
-    if (isEdit) {
-      setChildIds([id]);
-      return;
-    }
     setChildIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
+  const findSiblingForChild = (
+    tasks: Task[],
+    childId: string,
+    attrs: { title: string; time: string; recurrence: Recurrence },
+    excludeId?: string
+  ): Task | undefined =>
+    tasks.find(
+      (t) =>
+        t.id !== excludeId &&
+        t.childId === childId &&
+        t.title === attrs.title &&
+        t.time === attrs.time &&
+        t.recurrence === attrs.recurrence
+    );
+
   const onSave = async () => {
     setAttempted(true);
+    setFormError(null);
     if (!isValid) return;
     setSaving(true);
     try {
@@ -145,19 +159,53 @@ export function TaskFormScreen({ navigation, route }: Props) {
         reminderEnabled,
         onceDate: recurrence === "once" ? onceDate : undefined,
       };
+      const selectedIds = childIds;
+
       if (isEdit && existing) {
+        // Prefer keeping current child if still selected; else first selected.
+        const finalChildId = selectedIds.includes(existing.childId)
+          ? existing.childId
+          : selectedIds[0];
+
         await upsertTask({
           id: existing.id,
           ...payload,
-          childId: childIds[0],
+          childId: finalChildId,
         });
+
+        // Upsert same attributes for every other selected child.
+        const oldAttrs = {
+          title: existing.title,
+          time: existing.time,
+          recurrence: existing.recurrence,
+        };
+        for (const cid of selectedIds) {
+          if (cid === finalChildId) continue;
+          const sibling =
+            findSiblingForChild(state.tasks, cid, payload, existing.id) ??
+            findSiblingForChild(state.tasks, cid, oldAttrs, existing.id);
+          if (sibling) {
+            await upsertTask({
+              id: sibling.id,
+              ...payload,
+              childId: cid,
+            });
+          } else {
+            await upsertTask({ ...payload, childId: cid });
+          }
+        }
       } else {
         // One tasks row per selected child (same title/time/recurrence/reminder)
-        for (const cid of childIds) {
+        for (const cid of selectedIds) {
           await upsertTask({ ...payload, childId: cid });
         }
       }
       navigation.goBack();
+    } catch (e) {
+      const msg = frenchCloudError(e, "Impossible d'enregistrer la tâche.");
+      setFormError(msg);
+      setSaving(false);
+      notifyUser("Erreur", msg);
     } finally {
       setSaving(false);
     }
@@ -165,17 +213,28 @@ export function TaskFormScreen({ navigation, route }: Props) {
 
   const onDelete = () => {
     if (!existing) return;
-    Alert.alert("Supprimer ?", "Cette tâche sera supprimée.", [
-      { text: "Annuler", style: "cancel" },
-      {
-        text: "Supprimer",
-        style: "destructive",
-        onPress: async () => {
-          await deleteTask(existing.id);
-          navigation.popToTop();
-        },
-      },
-    ]);
+    void (async () => {
+      const ok = await confirmUser(
+        "Supprimer la tâche",
+        "Supprimer définitivement ?",
+        "Supprimer"
+      );
+      if (!ok) return;
+      setSaving(true);
+      setFormError(null);
+      try {
+        await deleteTask(existing.id);
+        setSaving(false);
+        navigation.goBack();
+      } catch (e) {
+        const msg = frenchCloudError(e, "Impossible de supprimer la tâche.");
+        setFormError(msg);
+        setSaving(false);
+        notifyUser("Erreur", msg);
+      } finally {
+        setSaving(false);
+      }
+    })();
   };
 
   const selectPeriod = (id: PeriodId) => {
@@ -214,10 +273,10 @@ export function TaskFormScreen({ navigation, route }: Props) {
         <Text style={styles.fieldError}>{fieldErrors.title}</Text>
       ) : null}
 
-      <Text style={styles.label}>{isEdit ? "Enfant" : "Enfants"}</Text>
-      {!isEdit ? (
-        <Text style={styles.help}>Sélectionnez un ou plusieurs enfants (une tâche par enfant).</Text>
-      ) : null}
+      <Text style={styles.label}>Enfants</Text>
+      <Text style={styles.help}>
+        Sélectionnez un ou plusieurs enfants (une tâche par enfant).
+      </Text>
       <View style={styles.rowWrap}>
         {childrenProfiles.length === 0 ? (
           <Text style={styles.help}>Aucun profil enfant — créez-en un d'abord.</Text>
@@ -232,11 +291,11 @@ export function TaskFormScreen({ navigation, route }: Props) {
                   styles.chip,
                   selected && { backgroundColor: c.color, borderColor: c.color },
                 ]}
-                accessibilityRole={isEdit ? "radio" : "checkbox"}
+                accessibilityRole="checkbox"
                 accessibilityState={{ checked: selected }}
               >
                 <Text style={[styles.chipText, selected && { color: "#fff" }]}>
-                  {isEdit ? "" : selected ? "✓ " : "○ "}
+                  {selected ? "✓ " : "○ "}
                   {c.emoji} {c.name}
                 </Text>
               </Pressable>
@@ -342,17 +401,22 @@ export function TaskFormScreen({ navigation, route }: Props) {
         </View>
       ) : null}
 
+      {formError ? <Text style={styles.fieldError}>{formError}</Text> : null}
+
       <PrimaryButton
         label={isEdit ? "Enregistrer" : "Créer"}
         onPress={() => void onSave()}
         loading={saving}
+        disabled={saving}
         style={{ marginTop: 16 }}
       />
       {isEdit && (
         <PrimaryButton
-          label="Supprimer"
+          label="Supprimer la tâche"
           variant="danger"
           onPress={onDelete}
+          loading={saving}
+          disabled={saving}
           style={{ marginTop: 10 }}
         />
       )}
@@ -360,6 +424,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         label="Annuler"
         variant="ghost"
         onPress={() => navigation.goBack()}
+        disabled={saving}
         style={{ marginTop: 10 }}
       />
 
