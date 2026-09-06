@@ -78,7 +78,7 @@ export function WelcomeScreen({ navigation }: Props) {
         style={{ marginTop: 18 }}
       />
       <Text style={styles.footer}>
-        La démo charge Parent + Léo + Mia sans compte — idéal pour tester sur le web.
+        La démo charge Parent et les enfants seed (sans compte) — idéal pour tester sur le web.
       </Text>
     </View>
   );

@@ -32,7 +32,7 @@ export function FamilyShareScreen({ navigation }: Props) {
         <Text style={styles.title}>Partage famille</Text>
         <Text style={styles.body}>
           Disponible après création d'un compte parent. En mode démo, utilisez les profils seed
-          (Léo / Mia) sur le même appareil.
+          (profils enfants seed) sur le même appareil.
         </Text>
         <PrimaryButton
           label="Créer un compte parent"
