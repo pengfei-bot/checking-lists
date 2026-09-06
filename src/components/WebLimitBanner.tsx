@@ -7,7 +7,7 @@ export function WebLimitBanner() {
   return (
     <View style={styles.wrap}>
       <Text style={styles.text}>
-        Mode demo web: UI + donnees locales OK. Notifications = desactivees. Photo = file picker ou mock.
+        Mode demo web : UI + donnees locales OK. Notifications desactivees. Photo = selecteur de fichier (feedback affiche).
       </Text>
     </View>
   );
