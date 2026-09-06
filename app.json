@@ -51,7 +51,8 @@
           "calendarPermission": "Autoriser l acces au calendrier pour y ajouter les taches du jour."
         }
       ],
-      "expo-notifications"
+      "expo-notifications",
+      "expo-secure-store"
     ]
   }
 }
