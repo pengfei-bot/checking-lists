@@ -41,8 +41,9 @@ export function RedeemInviteScreen({ navigation }: Props) {
     >
       <Text style={styles.title}>Rejoindre une famille</Text>
       <Text style={styles.hint}>
-        Le parent affiche le code sur son téléphone. Entrez-le ici sur l'iPhone de l'enfant
-        (réseau Internet requis). Vous verrez ensuite les profils et tâches de la famille.
+        Le parent affiche le code sur son téléphone. Entrez-le ici sur l'appareil de l'enfant
+        (réseau Internet requis). Vous accéderez uniquement à la checklist enfant — pas au
+        tableau de bord parent ni à la création de tâches.
       </Text>
 
       <Text style={styles.label}>Code d'invitation</Text>

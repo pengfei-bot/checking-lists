@@ -4,11 +4,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAuth } from "../../auth";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { RootStackParamList } from "../../navigation/types";
+import { useParentOnlyGuard } from "../../navigation/useParentOnlyGuard";
 import { colors } from "../../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "FamilyShare">;
 
 export function FamilyShareScreen({ navigation }: Props) {
+  const blocked = useParentOnlyGuard(navigation);
   const { family, session, isAuthenticated, createInvite, isDemo } = useAuth();
   const [busy, setBusy] = useState(false);
   const [code, setCode] = useState(family?.inviteCode ?? "");
@@ -25,6 +27,23 @@ export function FamilyShareScreen({ navigation }: Props) {
       setBusy(false);
     }
   };
+
+  if (blocked) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Espace parent</Text>
+        <Text style={styles.body}>
+          Le partage famille (codes d'invitation) est réservé au compte parent.
+        </Text>
+        <PrimaryButton
+          label="Retour"
+          variant="ghost"
+          onPress={() => navigation.replace("ProfilePicker")}
+          style={{ marginTop: 16 }}
+        />
+      </View>
+    );
+  }
 
   if (isDemo || !isAuthenticated) {
     return (

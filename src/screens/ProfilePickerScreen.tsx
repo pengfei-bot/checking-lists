@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -20,7 +20,19 @@ type Props = NativeStackScreenProps<RootStackParamList, "ProfilePicker">;
 
 export function ProfilePickerScreen({ navigation }: Props) {
   const { ready, state, setCurrentProfileId, resetDemo } = useApp();
-  const { session, isDemo, isAuthenticated, family, signOut } = useAuth();
+  const { session, isDemo, isAuthenticated, isChildDevice, family, signOut } = useAuth();
+
+  const parents = state.profiles.filter((p) => p.role === "parent");
+  const kids = state.profiles.filter((p) => p.role === "child");
+
+  const singleChildId = kids.length === 1 ? kids[0].id : null;
+
+  // Child device: never show parent profiles; auto-enter if a single child.
+  useEffect(() => {
+    if (!ready || !isChildDevice || !singleChildId) return;
+    setCurrentProfileId(singleChildId);
+    navigation.replace("ChildHome");
+  }, [ready, isChildDevice, singleChildId, navigation, setCurrentProfileId]);
 
   if (!ready) {
     return (
@@ -31,8 +43,6 @@ export function ProfilePickerScreen({ navigation }: Props) {
     );
   }
 
-  const parents = state.profiles.filter((p) => p.role === "parent");
-  const kids = state.profiles.filter((p) => p.role === "child");
   const demoRoster = [
     ...parents.map((p) => p.name.replace(/\s*\(Demo\)\s*/i, "").trim() || p.name),
     ...kids.map((k) => k.name),
@@ -43,6 +53,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
       : "Mode démo — données seed. Choisissez un profil.";
 
   const enter = (id: string, role: "parent" | "child") => {
+    if (isChildDevice && role === "parent") return;
     setCurrentProfileId(id);
     navigation.replace(role === "parent" ? "ParentDashboard" : "ChildHome");
   };
@@ -63,56 +74,76 @@ export function ProfilePickerScreen({ navigation }: Props) {
     })();
   };
 
+  const hint = isChildDevice
+    ? `Appareil enfant · famille « ${session?.displayName ?? family?.name ?? "famille"} » — choisissez votre profil (checklist uniquement).`
+    : isDemo
+      ? demoBanner
+      : isAuthenticated
+        ? `Connecté : ${session?.displayName ?? session?.email ?? "parent"}${
+            family?.inviteCode ? ` · code famille ${family.inviteCode}` : ""
+          }`
+        : "Choisissez un profil pour commencer.";
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.emoji}>✅</Text>
       <Text style={styles.title}>Checking Lists</Text>
       <Text style={styles.subtitle}>
-        Listes de tâches famille · {formatFrenchDate(todayISO())}
+        {isChildDevice
+          ? `Mes tâches · ${formatFrenchDate(todayISO())}`
+          : `Listes de tâches famille · ${formatFrenchDate(todayISO())}`}
       </Text>
-      <Text style={styles.hint}>
-        {isDemo
-          ? demoBanner
-          : isAuthenticated
-            ? `Connecté : ${session?.displayName ?? session?.email ?? "parent"}${
-                family?.inviteCode ? ` · code famille ${family.inviteCode}` : ""
-              }`
-            : session?.linkedViaInvite
-              ? `Appareil lié à « ${session.displayName ?? "famille"} » — choisissez un profil enfant.`
-              : "Choisissez un profil pour commencer."}
-      </Text>
+      <Text style={styles.hint}>{hint}</Text>
 
-      <Text style={styles.section}>Parent</Text>
-      {parents.map((p) => (
-        <Pressable
-          key={p.id}
-          style={({ pressed }) => [styles.card, { borderColor: p.color, opacity: pressed ? 0.85 : 1 }]}
-          onPress={() => enter(p.id, "parent")}
-        >
-          <Text style={styles.cardEmoji}>{p.emoji}</Text>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.cardTitle}>{p.name}</Text>
-            <Text style={styles.cardMeta}>Tableau de bord · gérer les enfants</Text>
-          </View>
-        </Pressable>
-      ))}
+      {!isChildDevice ? (
+        <>
+          <Text style={styles.section}>Parent</Text>
+          {parents.map((p) => (
+            <Pressable
+              key={p.id}
+              style={({ pressed }) => [
+                styles.card,
+                { borderColor: p.color, opacity: pressed ? 0.85 : 1 },
+              ]}
+              onPress={() => enter(p.id, "parent")}
+            >
+              <Text style={styles.cardEmoji}>{p.emoji}</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.cardTitle}>{p.name}</Text>
+                <Text style={styles.cardMeta}>Tableau de bord · gérer les enfants</Text>
+              </View>
+            </Pressable>
+          ))}
+        </>
+      ) : null}
 
-      <Text style={styles.section}>Enfants</Text>
-      {kids.map((p) => (
-        <Pressable
-          key={p.id}
-          style={({ pressed }) => [styles.card, { borderColor: p.color, opacity: pressed ? 0.85 : 1 }]}
-          onPress={() => enter(p.id, "child")}
-        >
-          <Text style={styles.cardEmoji}>{p.emoji}</Text>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.cardTitle}>{p.name}</Text>
-            <Text style={styles.cardMeta}>Mes tâches du jour · photo preuve</Text>
-          </View>
-        </Pressable>
-      ))}
+      <Text style={styles.section}>{isChildDevice ? "Qui es-tu ?" : "Enfants"}</Text>
+      {kids.length === 0 ? (
+        <Text style={styles.emptyKids}>
+          {isChildDevice
+            ? "Aucun profil enfant pour l'instant. Demandez au parent d'en créer un."
+            : "Aucun enfant — ajoutez-en depuis le tableau de bord parent."}
+        </Text>
+      ) : (
+        kids.map((p) => (
+          <Pressable
+            key={p.id}
+            style={({ pressed }) => [
+              styles.card,
+              { borderColor: p.color, opacity: pressed ? 0.85 : 1 },
+            ]}
+            onPress={() => enter(p.id, "child")}
+          >
+            <Text style={styles.cardEmoji}>{p.emoji}</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>{p.name}</Text>
+              <Text style={styles.cardMeta}>Mes tâches du jour · photo preuve</Text>
+            </View>
+          </Pressable>
+        ))
+      )}
 
-      {isAuthenticated ? (
+      {isAuthenticated && !isChildDevice ? (
         <PrimaryButton
           label="Partage famille (code invitation)"
           variant="secondary"
@@ -126,7 +157,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
           label="Réinitialiser les données de démo"
           variant="ghost"
           onPress={onReset}
-          style={{ marginTop: isAuthenticated ? 10 : 24 }}
+          style={{ marginTop: isAuthenticated && !isChildDevice ? 10 : 24 }}
         />
       ) : null}
 
@@ -139,7 +170,9 @@ export function ProfilePickerScreen({ navigation }: Props) {
             navigation.replace("Welcome");
           })();
         }}
-        style={{ marginTop: isDemo || isAuthenticated ? 10 : 24 }}
+        style={{
+          marginTop: isDemo || (isAuthenticated && !isChildDevice) ? 10 : 24,
+        }}
       />
     </ScrollView>
   );
@@ -151,7 +184,12 @@ const styles = StyleSheet.create({
   container: { padding: 20, paddingBottom: 40, backgroundColor: colors.bg, flexGrow: 1 },
   emoji: { fontSize: 42, textAlign: "center", marginTop: 12 },
   title: { fontSize: 28, fontWeight: "800", textAlign: "center", color: colors.text, marginTop: 8 },
-  subtitle: { textAlign: "center", color: colors.textMuted, marginTop: 4, textTransform: "capitalize" },
+  subtitle: {
+    textAlign: "center",
+    color: colors.textMuted,
+    marginTop: 4,
+    textTransform: "capitalize",
+  },
   hint: {
     marginTop: 16,
     backgroundColor: colors.primarySoft,
@@ -171,6 +209,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 0.6,
   },
+  emptyKids: { color: colors.textMuted, marginBottom: 8, lineHeight: 20 },
   card: {
     backgroundColor: colors.card,
     borderRadius: 16,

@@ -25,6 +25,8 @@ interface AuthContextValue {
   parent: ParentAccount | null;
   isDemo: boolean;
   isAuthenticated: boolean;
+  /** Invite-redeemed child device — child UI only, no parent admin */
+  isChildDevice: boolean;
   /** True when session is cloud-backed (parent or child device), not demo */
   isCloud: boolean;
   usingSecureStore: boolean;
@@ -120,6 +122,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [session?.familyId]);
 
   const isCloud = !!session && !session.isDemo && !!session.familyId;
+  const isChildDevice =
+    session?.mode === "child_device" || (!!session?.linkedViaInvite && !session.isDemo);
 
   const value: AuthContextValue = useMemo(
     () => ({
@@ -129,6 +133,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       parent,
       isDemo: !!session?.isDemo,
       isAuthenticated: session?.mode === "authenticated",
+      isChildDevice,
       isCloud,
       usingSecureStore: isUsingSecureStore(),
       signUp,
@@ -144,6 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       session,
       family,
       parent,
+      isChildDevice,
       isCloud,
       signUp,
       signIn,

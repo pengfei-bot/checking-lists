@@ -14,6 +14,7 @@ import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
+import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { TaskCard } from "../components/TaskCard";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { formatFrenchDate, todayISO } from "../utils/dates";
@@ -24,6 +25,7 @@ import { ensureNotificationPermissions, notificationsSupported } from "../servic
 type Props = NativeStackScreenProps<RootStackParamList, "ParentDashboard">;
 
 export function ParentDashboardScreen({ navigation }: Props) {
+  const blocked = useParentOnlyGuard(navigation);
   const {
     currentProfile,
     childrenProfiles,
@@ -35,10 +37,17 @@ export function ParentDashboardScreen({ navigation }: Props) {
   const { isAuthenticated, family } = useAuth();
   const [filterChildId, setFilterChildId] = useState<string | "all">("all");
 
-  if (!currentProfile || currentProfile.role !== "parent") {
+  const todayTasks = useMemo(() => {
+    return state.tasks
+      .filter((t) => isTaskForDate(t))
+      .filter((t) => filterChildId === "all" || t.childId === filterChildId)
+      .sort((a, b) => a.time.localeCompare(b.time));
+  }, [state.tasks, filterChildId]);
+
+  if (blocked || !currentProfile || currentProfile.role !== "parent") {
     return (
       <View style={styles.center}>
-        <Text>Profil parent requis.</Text>
+        <Text>{blocked ? "Espace parent réservé aux comptes parents." : "Profil parent requis."}</Text>
         <PrimaryButton
           label="Changer de profil"
           onPress={() => {
@@ -50,13 +59,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
       </View>
     );
   }
-
-  const todayTasks = useMemo(() => {
-    return state.tasks
-      .filter((t) => isTaskForDate(t))
-      .filter((t) => filterChildId === "all" || t.childId === filterChildId)
-      .sort((a, b) => a.time.localeCompare(b.time));
-  }, [state.tasks, filterChildId]);
 
   const stats = childrenProfiles.map((child) => {
     const tasks = state.tasks.filter((t) => t.childId === child.id && isTaskForDate(t));

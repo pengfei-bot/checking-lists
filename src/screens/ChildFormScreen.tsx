@@ -11,6 +11,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useApp } from "../context/AppContext";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { RootStackParamList } from "../navigation/types";
+import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { childColors, colors } from "../theme/colors";
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { frenchCloudError } from "../utils/cloudTimeout";
@@ -20,6 +21,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "ChildForm">;
 const EMOJI_CHOICES = ["🦁", "🦄", "🦊", "🐻", "🐼", "🐸", "🐰", "🐯", "🐨", "🐶", "🐱", "🌟"];
 
 export function ChildFormScreen({ navigation, route }: Props) {
+  const blocked = useParentOnlyGuard(navigation);
   const { getProfile, childrenProfiles, addChild, updateChild, deleteChild } = useApp();
   const existing = route.params.childId ? getProfile(route.params.childId) : undefined;
   const isEdit = !!existing && existing.role === "child";
@@ -34,6 +36,14 @@ export function ChildFormScreen({ navigation, route }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   const canSave = useMemo(() => name.trim().length > 0, [name]);
+
+  if (blocked) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg, padding: 24 }}>
+        <Text style={{ color: colors.textMuted, fontWeight: "600" }}>Espace parent réservé.</Text>
+      </View>
+    );
+  }
 
   const onSave = async () => {
     if (!canSave) {

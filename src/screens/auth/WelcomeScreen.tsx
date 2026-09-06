@@ -42,32 +42,34 @@ export function WelcomeScreen({ navigation }: Props) {
       <Text style={styles.emoji}>✅</Text>
       <Text style={styles.title}>Checking Lists</Text>
       <Text style={styles.subtitle}>
-        Tâches quotidiennes pour toute la famille — comptes parents et partage multi-appareils.
+        Tâches quotidiennes pour la famille. Parents : compte + code. Enfants : rejoindre avec le
+        code sur leur appareil (checklist uniquement).
       </Text>
 
       <View style={styles.card}>
-        <Text style={styles.badge}>Supabase · famille</Text>
+        <Text style={styles.badge}>Deux entrées</Text>
         <Text style={styles.cardText}>
-          Le parent crée un compte et affiche un code. L'enfant saisit ce code sur son iPhone
-          (réseau requis) pour rejoindre la même famille.
+          • Parent — créez un compte, gérez les tâches et le code famille.{"\n"}
+          • Enfant — saisissez le code sur l'iPhone de l'enfant (réseau requis). Pas d'espace
+          parent sur cet appareil.
         </Text>
       </View>
 
       <PrimaryButton
-        label="Créer un compte parent"
-        onPress={() => navigation.navigate("SignUp")}
+        label="Rejoindre une famille (code enfant)"
+        onPress={() => navigation.navigate("RedeemInvite")}
         style={{ marginTop: 8 }}
       />
       <PrimaryButton
-        label="Se connecter"
+        label="Créer un compte parent"
         variant="secondary"
-        onPress={() => navigation.navigate("SignIn")}
+        onPress={() => navigation.navigate("SignUp")}
         style={{ marginTop: 10 }}
       />
       <PrimaryButton
-        label="Rejoindre une famille (code)"
+        label="Se connecter (parent)"
         variant="ghost"
-        onPress={() => navigation.navigate("RedeemInvite")}
+        onPress={() => navigation.navigate("SignIn")}
         style={{ marginTop: 10 }}
       />
       <PrimaryButton
