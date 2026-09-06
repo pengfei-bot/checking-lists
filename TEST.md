@@ -14,3 +14,6 @@
 12. Partage famille: noter le code 6 caracteres
 13. Se deconnecter → Rejoindre une famille (meme navigateur) avec le code
 14. Reset demo pour recharger historique seed (4 enfants)
+
+15. Child device: après « Rejoindre une famille », **pas** de profil Parent ni Partage famille — seulement les enfants (ou checklist auto si 1 enfant)
+16. Parent TaskForm: heure via presets Matin/Midi/Après-midi/Soir + liste 30 min ; bouton Valider affiche erreurs FR inline si champs manquants
