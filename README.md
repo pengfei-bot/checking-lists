@@ -1,72 +1,83 @@
 # Checking Lists
 
-MVP famille Expo (React Native + TypeScript) — local-first AsyncStorage + fondation auth / partage famille.
+MVP famille Expo (React Native + TypeScript) — **Supabase** pour le partage multi-appareils (parent to child), demo locale AsyncStorage.
+
+**Projet Supabase :** Checking lists (lgiqyybjnjfjxixzennr)
+URL : https://lgiqyybjnjfjxixzennr.supabase.co
 
 ## English
 
-Prefer: `npx expo start --web`
+Prefer: npx expo start --web
 
-Auth is a **local prototype** (no paid backend). Demo mode skips accounts. Real cloud sync (Supabase/Firebase) comes later. App Store will require **Sign in with Apple** and parental-consent notes when accounts ship.
+- Demo mode — local seed only (no account, no cloud).
+- Parent account — email/password via Supabase Auth; creates a families row + share code.
+- Child device — join with code via redeem_family_invite RPC; syncs profiles/tasks/completions.
+
+App Store will still need Sign in with Apple and parental-consent notes before submission.
 
 ## Comment tester
 
-1. Installer deps puis `npx expo start --web`
+1. Installer les deps puis demarrer Expo web
 2. URL typique: http://localhost:8081
-3. Accueil auth → **Continuer en démo** (ou créer un compte parent)
-4. Choisir Parent (Demo) puis bouton Calendrier / Partage famille
-5. Web OK: profils, checklist, CRUD, photo, seed, calendrier parent, auth locale, code invitation
-6. Web limite: notifications, sync calendrier OS, camera, SecureStore (fallback AsyncStorage)
-7. Expo Go: `npx expo start` + QR
-8. Reset: écran profils. Voir `TEST.md`.
+3. Accueil: compte parent (cloud) ou Continuer en demo (local)
+4. Parent: ecran Partage famille, afficher le code
+5. Autre appareil: Rejoindre une famille, saisir le code (reseau requis)
+6. Reset demo: ecran profils. Voir TEST.md.
 
-## Auth & partage famille (prototype)
+## Auth and family sharing (Supabase)
 
-### Démo vs compte
+### Demo vs account
 
-| Mode | Entrée | Données |
-|------|--------|---------|
-| **Démo** | « Continuer en démo » | Seed Parent + Léo / Mia / Noa / Sam, pas de compte |
-| **Compte parent** | Créer un compte / Se connecter | E-mail + mot de passe hashé (SHA-256 + salt), famille locale |
-| **Appareil enfant** | « Rejoindre une famille (code) » | Lie la session au `familyId` via code 6 caractères |
+| Mode | Entry | Data |
+|------|-------|------|
+| Demo | Continuer en demo | Local seed, AsyncStorage only |
+| Parent account | Create / Sign in | Supabase Auth + cloud family + share code |
+| Child device | Join family (code) | Anonymous auth (or synthetic email) + redeem_family_invite RPC |
 
-Stockage: `expo-secure-store` sur iOS/Android ; **AsyncStorage sur web = DEV ONLY**. Voir `src/auth/secureStorage.ts`.
+Architecture: src/auth/ — AuthBackend, SupabaseAuthBackend (default), LocalAuthBackend, AuthProvider. Sync: src/data/cloudSync.ts.
 
-Architecture: `src/auth/` — types `ParentAccount` / `Family` / `Session`, interface `AuthBackend`, impl `LocalAuthBackend`, `AuthProvider`. Commentaires pour remplacer par Supabase/Firebase.
+### Cross-device join flow (parent phone to child iPhone)
 
-### Flux invitation (local)
+1. Parent signs up → families row + invite_code (6 chars) + family_members (parent role)
+2. Parent opens Partage famille to show / refresh the code (stored in Supabase)
+3. On the child iPhone: Welcome → Rejoindre → enter code (+ optional nickname)
+4. Child device auth: signInAnonymously, or fallback child+{random}@checkinglists.app if Anonymous is off
+5. RPC redeem_family_invite(p_code, p_display_name) → family_id
+6. Load cloud: child_profiles, tasks, task_completions (RLS)
 
-1. Parent crée un compte → code famille 6 caractères généré
-2. Parent ouvre **Partage famille** (accueil profils ou dashboard) pour afficher / régénérer le code
-3. Sur un « appareil enfant », entrer le code → session `child_device`
-4. **Limite prototype:** le code n’existe que dans le stockage local de *cet* appareil (même navigateur en web). Sans cloud, pas de sync multi-appareils réel.
+### Supabase Auth settings the user must enable
 
-### App Store / conformité (notes courtes)
+Dashboard project Checking lists → Authentication:
 
-- **Sign in with Apple** obligatoire si d’autres logins sociaux / tiers sont proposés sur iOS — à brancher avant soumission
-- Comptes enfants: consentement parental (COPPA / RGPD) — texte légal complet hors scope ; prévoir écran parent + âge
-- Ne pas collecter d’e-mail enfant ; le modèle cible est « compte parent + profils enfants »
+1. Anonymous sign-ins — Enable (recommended for child devices)
+2. Email → Confirm email — Disable for MVP (otherwise no session right after signUp)
+3. Keep Email/password enabled for parents
 
-### Mot de passe oublié
+Without (1): app uses synthetic child+…@checkinglists.app (random password in SecureStore).
+Without (2): parent must confirm email before the family row can be created.
 
-Placeholder UI seulement — reset e-mail nécessite un backend auth.
+### App Store notes
 
-## Demo Features Limits
+- Sign in with Apple before submission if other third-party logins ship
+- Parental consent (COPPA / GDPR) for child accounts
+- Do not collect child email
 
-- Seed: Parent, Léo, Mia, Noa, Sam + historique completions (~21 jours)
-- Parent: **Ajouter un enfant** (AsyncStorage) → picker / filtres / calendrier
-- Features: profils, enfant, parent, form, photo, notifs, calendrier parent mensuel, auth locale, invite code
-- Out: cloud sync multi-appareils, Sign in with Apple, Firebase/Supabase réels, push distant
-- Next: AuthBackend cloud, sync checklists, SQLite optionnel
+### Forgot password
 
-## Structure auth
+Placeholder UI. Wire Supabase Auth email reset later.
 
-```
-src/auth/
-  types.ts           ParentAccount, Family, Session…
-  AuthBackend.ts     interface (signUp, signIn, signOut, createInvite, redeemInvite)
-  LocalAuthBackend.ts
-  AuthProvider.tsx
-  secureStorage.ts   SecureStore / AsyncStorage
-  password.ts        hash SHA-256 (prototype)
-  inviteCode.ts
-```
+## Limits
+
+- Local seed only in demo mode
+- Cloud syncs child profiles / tasks / completions across family devices
+- Missing DB column once_date (once recurrence syncs without date)
+- Next: Apple Sign In, realtime, Storage photos
+
+## Structure
+
+src/auth/ types, AuthBackend, SupabaseAuthBackend, LocalAuthBackend, AuthProvider
+src/lib/supabase.ts
+src/data/cloudSync.ts
+src/data/storage.ts
+
+Env: see .env.example. Defaults in src/lib/supabase.ts.

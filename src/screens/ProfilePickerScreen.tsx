@@ -26,7 +26,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loading}>Chargement de la démo…</Text>
+        <Text style={styles.loading}>Chargement…</Text>
       </View>
     );
   }
@@ -121,12 +121,14 @@ export function ProfilePickerScreen({ navigation }: Props) {
         />
       ) : null}
 
-      <PrimaryButton
-        label="Réinitialiser les données de démo"
-        variant="ghost"
-        onPress={onReset}
-        style={{ marginTop: isAuthenticated ? 10 : 24 }}
-      />
+      {isDemo ? (
+        <PrimaryButton
+          label="Réinitialiser les données de démo"
+          variant="ghost"
+          onPress={onReset}
+          style={{ marginTop: isAuthenticated ? 10 : 24 }}
+        />
+      ) : null}
 
       <PrimaryButton
         label={session ? "Se déconnecter / quitter" : "Retour à l'accueil"}
@@ -137,7 +139,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
             navigation.replace("Welcome");
           })();
         }}
-        style={{ marginTop: 10 }}
+        style={{ marginTop: isDemo || isAuthenticated ? 10 : 24 }}
       />
     </ScrollView>
   );
