@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuth } from "../auth";
 import { WebLimitBanner } from "../components/WebLimitBanner";
+import { ChildFormScreen } from "../screens/ChildFormScreen";
 import { ChildHomeScreen } from "../screens/ChildHomeScreen";
 import { ParentCalendarScreen } from "../screens/ParentCalendarScreen";
 import { ParentDashboardScreen } from "../screens/ParentDashboardScreen";
@@ -113,6 +114,11 @@ export function RootNavigator() {
             name="TaskDetail"
             component={TaskDetailScreen}
             options={{ title: "Detail" }}
+          />
+          <Stack.Screen
+            name="ChildForm"
+            component={ChildFormScreen}
+            options={{ title: "Enfant", presentation: "modal" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
