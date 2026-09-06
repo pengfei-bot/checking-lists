@@ -3,13 +3,24 @@ import { Alert, Platform } from "react-native";
 /**
  * Show a simple OK dialog. React Native Web's Alert.alert is a no-op,
  * so on web we use window.alert for visible feedback.
+ *
+ * Alerts are deferred with setTimeout so callers can clear spinners / re-render
+ * before the synchronous alert freezes the JS thread (which looked like an
+ * "infinite spinner / hung renderer" on GitHub Pages).
  */
 export function notifyUser(title: string, message: string): void {
-  if (Platform.OS === "web" && typeof window !== "undefined") {
-    window.alert(`${title}\n\n${message}`);
+  const show = () => {
+    if (Platform.OS === "web" && typeof window !== "undefined") {
+      window.alert(`${title}\n\n${message}`);
+      return;
+    }
+    Alert.alert(title, message);
+  };
+  if (Platform.OS === "web") {
+    setTimeout(show, 0);
     return;
   }
-  Alert.alert(title, message);
+  show();
 }
 
 /**

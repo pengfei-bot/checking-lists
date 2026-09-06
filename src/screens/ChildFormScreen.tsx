@@ -13,6 +13,7 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { RootStackParamList } from "../navigation/types";
 import { childColors, colors } from "../theme/colors";
 import { confirmUser, notifyUser } from "../utils/feedback";
+import { frenchCloudError } from "../utils/cloudTimeout";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChildForm">;
 
@@ -30,6 +31,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
   const [emoji, setEmoji] = useState(isEdit ? existing.emoji : "🌟");
   const [color, setColor] = useState(isEdit ? existing.color : defaultColor);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const canSave = useMemo(() => name.trim().length > 0, [name]);
 
@@ -38,6 +40,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
       notifyUser("Formulaire", "Le prénom de l'enfant est requis.");
       return;
     }
+    setError(null);
     setSaving(true);
     try {
       if (isEdit && existing) {
@@ -46,6 +49,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
           emoji: emoji.trim() || "🌟",
           color,
         });
+        setSaving(false);
         notifyUser("Enfant mis à jour", `${name.trim()} a été enregistré.`);
       } else {
         await addChild({
@@ -53,9 +57,15 @@ export function ChildFormScreen({ navigation, route }: Props) {
           emoji: emoji.trim() || "🌟",
           color,
         });
+        setSaving(false);
         notifyUser("Enfant ajouté", `${name.trim()} apparaît dans le sélecteur et les filtres.`);
       }
       navigation.goBack();
+    } catch (e) {
+      const msg = frenchCloudError(e, "Impossible d'enregistrer l'enfant.");
+      setError(msg);
+      setSaving(false);
+      notifyUser("Erreur", msg);
     } finally {
       setSaving(false);
     }
@@ -70,9 +80,21 @@ export function ChildFormScreen({ navigation, route }: Props) {
         "Supprimer"
       );
       if (!ok) return;
-      await deleteChild(existing.id);
-      notifyUser("Enfant supprimé", `${existing.name} a été retiré de la famille.`);
-      navigation.goBack();
+      setSaving(true);
+      setError(null);
+      try {
+        await deleteChild(existing.id);
+        setSaving(false);
+        notifyUser("Enfant supprimé", `${existing.name} a été retiré de la famille.`);
+        navigation.goBack();
+      } catch (e) {
+        const msg = frenchCloudError(e, "Impossible de supprimer l'enfant.");
+        setError(msg);
+        setSaving(false);
+        notifyUser("Erreur", msg);
+      } finally {
+        setSaving(false);
+      }
     })();
   };
 
@@ -126,11 +148,13 @@ export function ChildFormScreen({ navigation, route }: Props) {
         <Text style={styles.previewName}>{name.trim() || "Prénom"}</Text>
       </View>
 
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+
       <PrimaryButton
         label={isEdit ? "Enregistrer" : "Ajouter l'enfant"}
         onPress={() => void onSave()}
         loading={saving}
-        disabled={!canSave}
+        disabled={!canSave || saving}
         style={{ marginTop: 8 }}
       />
 
@@ -139,6 +163,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
           label="Supprimer l'enfant"
           variant="danger"
           onPress={onDelete}
+          disabled={saving}
           style={{ marginTop: 12 }}
         />
       ) : null}
@@ -147,6 +172,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
         label="Annuler"
         variant="ghost"
         onPress={() => navigation.goBack()}
+        disabled={saving}
         style={{ marginTop: 10 }}
       />
     </ScrollView>
@@ -210,4 +236,12 @@ const styles = StyleSheet.create({
   },
   previewEmoji: { fontSize: 32 },
   previewName: { fontSize: 17, fontWeight: "800", color: colors.text },
+  error: {
+    marginTop: 12,
+    color: colors.danger,
+    fontWeight: "600",
+    backgroundColor: "#FEECEC",
+    padding: 10,
+    borderRadius: 10,
+  },
 });

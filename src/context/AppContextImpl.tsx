@@ -62,6 +62,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setState(loaded);
         await safeReminders(loaded.tasks, loaded.profiles);
       }
+    } catch {
+      /* keep previous state; UI must leave the loading gate */
     } finally {
       setReady(true);
     }
@@ -143,26 +145,40 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const addChild = useCallback(async (input: { name: string; emoji?: string; color?: string }): Promise<Profile> => {
     const kids = state.profiles.filter((p) => p.role === "child");
     const color = input.color?.trim() || childColors[kids.length % childColors.length] || childColors[0];
+    if (isCloud && !familyId) {
+      throw new Error("Famille cloud introuvable (family_id manquant). Reconnectez-vous après l'inscription.");
+    }
     if (familyId) {
       const profile = await cloudInsertChild(familyId, { name: input.name, emoji: input.emoji, color });
-      setState({ ...state, profiles: [...state.profiles, profile] });
+      setState((prev) => ({ ...prev, profiles: [...prev.profiles, profile] }));
       return profile;
     }
     const profile: Profile = { id: uid("profile_child"), name: input.name.trim(), role: "child", emoji: input.emoji?.trim() || "🌟", color };
     await persistLocal({ ...state, profiles: [...state.profiles, profile] });
     return profile;
-  }, [familyId, persistLocal, state]);
+  }, [familyId, isCloud, persistLocal, state]);
 
   const updateChild = useCallback(async (id: string, input: { name: string; emoji?: string; color?: string }): Promise<Profile | undefined> => {
     if (familyId) await cloudUpdateChild(id, input);
-    let saved: Profile | undefined;
-    const profiles = state.profiles.map((p) => {
-      if (p.id !== id || p.role !== "child") return p;
-      saved = { ...p, name: input.name.trim(), emoji: input.emoji?.trim() || p.emoji, color: input.color?.trim() || p.color };
+    const existing = state.profiles.find((p) => p.id === id && p.role === "child");
+    if (!existing) return undefined;
+    const saved: Profile = {
+      ...existing,
+      name: input.name.trim(),
+      emoji: input.emoji?.trim() || existing.emoji,
+      color: input.color?.trim() || existing.color,
+    };
+    if (familyId) {
+      setState((prev) => ({
+        ...prev,
+        profiles: prev.profiles.map((p) => (p.id === id && p.role === "child" ? saved : p)),
+      }));
       return saved;
+    }
+    await persistLocal({
+      ...state,
+      profiles: state.profiles.map((p) => (p.id === id && p.role === "child" ? saved : p)),
     });
-    if (!saved) return undefined;
-    if (familyId) setState({ ...state, profiles }); else await persistLocal({ ...state, profiles });
     return saved;
   }, [familyId, persistLocal, state]);
 
