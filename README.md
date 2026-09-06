@@ -25,7 +25,7 @@ Auth is a **local prototype** (no paid backend). Demo mode skips accounts. Real 
 
 | Mode | Entrée | Données |
 |------|--------|---------|
-| **Démo** | « Continuer en démo » | Seed Parent + Léo + Mia, pas de compte |
+| **Démo** | « Continuer en démo » | Seed Parent + Léo / Mia / Noa / Sam, pas de compte |
 | **Compte parent** | Créer un compte / Se connecter | E-mail + mot de passe hashé (SHA-256 + salt), famille locale |
 | **Appareil enfant** | « Rejoindre une famille (code) » | Lie la session au `familyId` via code 6 caractères |
 
@@ -52,7 +52,8 @@ Placeholder UI seulement — reset e-mail nécessite un backend auth.
 
 ## Demo Features Limits
 
-- Seed: Parent, Leo, Mia + historique completions (~21 jours)
+- Seed: Parent, Léo, Mia, Noa, Sam + historique completions (~21 jours)
+- Parent: **Ajouter un enfant** (AsyncStorage) → picker / filtres / calendrier
 - Features: profils, enfant, parent, form, photo, notifs, calendrier parent mensuel, auth locale, invite code
 - Out: cloud sync multi-appareils, Sign in with Apple, Firebase/Supabase réels, push distant
 - Next: AuthBackend cloud, sync checklists, SQLite optionnel
