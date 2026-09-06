@@ -1,7 +1,6 @@
 import React from "react";
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -15,6 +14,7 @@ import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { formatFrenchDate, todayISO } from "../utils/dates";
+import { confirmUser, notifyUser } from "../utils/feedback";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProfilePicker">;
 
@@ -26,7 +26,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loading}>Chargement de la démo…</Text>
+        <Text style={styles.loading}>Chargement de la demo…</Text>
       </View>
     );
   }
@@ -40,20 +40,19 @@ export function ProfilePickerScreen({ navigation }: Props) {
   };
 
   const onReset = () => {
-    Alert.alert(
-      "Réinitialiser la démo ?",
-      "Les données locales seront remplacées par le jeu de démo (parent + Léo + Mia).",
-      [
-        { text: "Annuler", style: "cancel" },
-        {
-          text: "Réinitialiser",
-          style: "destructive",
-          onPress: () => {
-            void resetDemo();
-          },
-        },
-      ]
-    );
+    void (async () => {
+      const ok = await confirmUser(
+        "Reinitialiser la demo ?",
+        "Les donnees locales seront remplacees par le jeu de demo (parent + enfants seed).",
+        "Reinitialiser"
+      );
+      if (!ok) return;
+      await resetDemo();
+      notifyUser(
+        "Demo reinitialisee",
+        "Les donnees de demonstration ont ete restaurees avec succes."
+      );
+    })();
   };
 
   return (
@@ -61,17 +60,17 @@ export function ProfilePickerScreen({ navigation }: Props) {
       <Text style={styles.emoji}>✅</Text>
       <Text style={styles.title}>Checking Lists</Text>
       <Text style={styles.subtitle}>
-        Listes de tâches famille · {formatFrenchDate(todayISO())}
+        Listes de taches famille · {formatFrenchDate(todayISO())}
       </Text>
       <Text style={styles.hint}>
         {isDemo
-          ? "Mode démo — données seed (Parent, Léo, Mia). Choisissez un profil."
+          ? "Mode demo — donnees seed (Parent, Leo, Mia). Choisissez un profil."
           : isAuthenticated
-            ? `Connecté : ${session?.displayName ?? session?.email ?? "parent"}${
+            ? `Connecte : ${session?.displayName ?? session?.email ?? "parent"}${
                 family?.inviteCode ? ` · code famille ${family.inviteCode}` : ""
               }`
             : session?.linkedViaInvite
-              ? `Appareil lié à « ${session.displayName ?? "famille"} » — choisissez un profil enfant.`
+              ? `Appareil lie a « ${session.displayName ?? "famille"} » — choisissez un profil enfant.`
               : "Choisissez un profil pour commencer."}
       </Text>
 
@@ -85,7 +84,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
           <Text style={styles.cardEmoji}>{p.emoji}</Text>
           <View style={{ flex: 1 }}>
             <Text style={styles.cardTitle}>{p.name}</Text>
-            <Text style={styles.cardMeta}>Tableau de bord · gérer les enfants</Text>
+            <Text style={styles.cardMeta}>Tableau de bord · gerer les enfants</Text>
           </View>
         </Pressable>
       ))}
@@ -100,7 +99,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
           <Text style={styles.cardEmoji}>{p.emoji}</Text>
           <View style={{ flex: 1 }}>
             <Text style={styles.cardTitle}>{p.name}</Text>
-            <Text style={styles.cardMeta}>Mes tâches du jour · photo preuve</Text>
+            <Text style={styles.cardMeta}>Mes taches du jour · photo preuve</Text>
           </View>
         </Pressable>
       ))}
@@ -115,14 +114,14 @@ export function ProfilePickerScreen({ navigation }: Props) {
       ) : null}
 
       <PrimaryButton
-        label="Réinitialiser les données de démo"
+        label="Reinitialiser les donnees de demo"
         variant="ghost"
         onPress={onReset}
         style={{ marginTop: isAuthenticated ? 10 : 24 }}
       />
 
       <PrimaryButton
-        label={session ? "Se déconnecter / quitter" : "Retour à l'accueil"}
+        label={session ? "Se deconnecter / quitter" : "Retour a l'accueil"}
         variant="ghost"
         onPress={() => {
           void (async () => {
