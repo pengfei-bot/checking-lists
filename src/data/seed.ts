@@ -5,6 +5,8 @@ import { isTaskForDate } from "../utils/recurrence";
 export const PARENT_ID = "profile_parent_demo";
 export const CHILD_LEO_ID = "profile_child_leo";
 export const CHILD_MIA_ID = "profile_child_mia";
+export const CHILD_NOA_ID = "profile_child_noa";
+export const CHILD_SAM_ID = "profile_child_sam";
 
 /** Stable demo task IDs so history seed stays consistent. */
 export const DEMO_TASK_IDS = {
@@ -16,6 +18,11 @@ export const DEMO_TASK_IDS = {
   miaRead: "task_mia_read",
   miaTable: "task_mia_table",
   miaClothes: "task_mia_clothes",
+  noaWater: "task_noa_water",
+  noaToys: "task_noa_toys",
+  samShoes: "task_sam_shoes",
+  samBed: "task_sam_bed",
+  samHomework: "task_sam_homework",
 } as const;
 
 export function buildDemoProfiles(): Profile[] {
@@ -40,6 +47,20 @@ export function buildDemoProfiles(): Profile[] {
       role: "child",
       emoji: "🦄",
       color: "#4FC3F7",
+    },
+    {
+      id: CHILD_NOA_ID,
+      name: "Noa",
+      role: "child",
+      emoji: "🦊",
+      color: "#81C784",
+    },
+    {
+      id: CHILD_SAM_ID,
+      name: "Sam",
+      role: "child",
+      emoji: "🐻",
+      color: "#BA68C8",
     },
   ];
 }
@@ -126,6 +147,56 @@ export function buildDemoTasks(now = new Date()): Task[] {
       time: "20:00",
       recurrence: "weekdays",
       reminderEnabled: true,
+      createdAt,
+      updatedAt: createdAt,
+    },
+    {
+      id: DEMO_TASK_IDS.noaWater,
+      title: "Boire un grand verre d'eau",
+      childId: CHILD_NOA_ID,
+      time: "08:15",
+      recurrence: "daily",
+      reminderEnabled: true,
+      createdAt,
+      updatedAt: createdAt,
+    },
+    {
+      id: DEMO_TASK_IDS.noaToys,
+      title: "Ranger les jouets",
+      childId: CHILD_NOA_ID,
+      time: "18:00",
+      recurrence: "daily",
+      reminderEnabled: true,
+      createdAt,
+      updatedAt: createdAt,
+    },
+    {
+      id: DEMO_TASK_IDS.samShoes,
+      title: "Préparer ses chaussures",
+      childId: CHILD_SAM_ID,
+      time: "07:50",
+      recurrence: "weekdays",
+      reminderEnabled: true,
+      createdAt,
+      updatedAt: createdAt,
+    },
+    {
+      id: DEMO_TASK_IDS.samBed,
+      title: "Faire son lit",
+      childId: CHILD_SAM_ID,
+      time: "08:10",
+      recurrence: "daily",
+      reminderEnabled: true,
+      createdAt,
+      updatedAt: createdAt,
+    },
+    {
+      id: DEMO_TASK_IDS.samHomework,
+      title: "Lire une page",
+      childId: CHILD_SAM_ID,
+      time: "19:30",
+      recurrence: "daily",
+      reminderEnabled: false,
       createdAt,
       updatedAt: createdAt,
     },
