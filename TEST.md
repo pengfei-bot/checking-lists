@@ -17,3 +17,4 @@
 
 15. Child device: après « Rejoindre une famille », **pas** de profil Parent ni Partage famille — seulement les enfants (ou checklist auto si 1 enfant)
 16. Parent TaskForm: heure via presets Matin/Midi/Après-midi/Soir + liste 15 min (ex. 10:15) ; bouton Valider affiche erreurs FR inline si champs manquants
+17. Parent Nouvelle tâche: multi-select Enfants (✓ chips) → une tâche par enfant ; validation « Choisis au moins un enfant. » ; Modifier = un seul enfant

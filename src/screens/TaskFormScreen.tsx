@@ -71,14 +71,15 @@ interface FieldErrors {
 
 function validateForm(input: {
   title: string;
-  childId: string;
+  /** Create: selected child ids; edit: single id or empty. */
+  childIds: string[];
   time: string;
   recurrence: Recurrence;
   onceDate: string;
 }): FieldErrors {
   const errors: FieldErrors = {};
   if (!input.title.trim()) errors.title = "Le titre est requis.";
-  if (!input.childId) errors.childId = "Choisissez un enfant.";
+  if (input.childIds.length === 0) errors.childId = "Choisis au moins un enfant.";
   if (!/^\d{2}:\d{2}$/.test(input.time)) {
     errors.time = "Choisissez une heure (ex. 10:15).";
   }
@@ -94,9 +95,14 @@ export function TaskFormScreen({ navigation, route }: Props) {
   const existing = route.params.taskId ? getTask(route.params.taskId) : undefined;
 
   const [title, setTitle] = useState(existing?.title ?? "");
-  const [childId, setChildId] = useState(
-    existing?.childId ?? route.params.childId ?? childrenProfiles[0]?.id ?? ""
-  );
+  /** Edit: one assignee. Create: multi-select (at least one). */
+  const [childIds, setChildIds] = useState<string[]>(() => {
+    if (existing?.childId) return [existing.childId];
+    const fromRoute = route.params.childId;
+    if (fromRoute) return [fromRoute];
+    const first = childrenProfiles[0]?.id;
+    return first ? [first] : [];
+  });
   const [time, setTime] = useState(existing?.time ?? "17:00");
   const [period, setPeriod] = useState<PeriodId>(() =>
     periodForTime(existing?.time ?? "17:00")
@@ -111,26 +117,46 @@ export function TaskFormScreen({ navigation, route }: Props) {
   const isEdit = !!existing;
 
   const fieldErrors = useMemo(
-    () => validateForm({ title, childId, time, recurrence, onceDate }),
-    [title, childId, time, recurrence, onceDate]
+    () => validateForm({ title, childIds, time, recurrence, onceDate }),
+    [title, childIds, time, recurrence, onceDate]
   );
   const errorList = Object.values(fieldErrors).filter(Boolean) as string[];
   const isValid = errorList.length === 0;
+
+  const toggleChild = (id: string) => {
+    if (isEdit) {
+      setChildIds([id]);
+      return;
+    }
+    setChildIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
 
   const onSave = async () => {
     setAttempted(true);
     if (!isValid) return;
     setSaving(true);
     try {
-      await upsertTask({
-        id: existing?.id,
+      const payload = {
         title: title.trim(),
-        childId,
         time,
         recurrence,
         reminderEnabled,
         onceDate: recurrence === "once" ? onceDate : undefined,
-      });
+      };
+      if (isEdit && existing) {
+        await upsertTask({
+          id: existing.id,
+          ...payload,
+          childId: childIds[0],
+        });
+      } else {
+        // One tasks row per selected child (same title/time/recurrence/reminder)
+        for (const cid of childIds) {
+          await upsertTask({ ...payload, childId: cid });
+        }
+      }
       navigation.goBack();
     } finally {
       setSaving(false);
@@ -188,25 +214,34 @@ export function TaskFormScreen({ navigation, route }: Props) {
         <Text style={styles.fieldError}>{fieldErrors.title}</Text>
       ) : null}
 
-      <Text style={styles.label}>Enfant</Text>
+      <Text style={styles.label}>{isEdit ? "Enfant" : "Enfants"}</Text>
+      {!isEdit ? (
+        <Text style={styles.help}>Sélectionnez un ou plusieurs enfants (une tâche par enfant).</Text>
+      ) : null}
       <View style={styles.rowWrap}>
         {childrenProfiles.length === 0 ? (
           <Text style={styles.help}>Aucun profil enfant — créez-en un d'abord.</Text>
         ) : (
-          childrenProfiles.map((c) => (
-            <Pressable
-              key={c.id}
-              onPress={() => setChildId(c.id)}
-              style={[
-                styles.chip,
-                childId === c.id && { backgroundColor: c.color, borderColor: c.color },
-              ]}
-            >
-              <Text style={[styles.chipText, childId === c.id && { color: "#fff" }]}>
-                {c.emoji} {c.name}
-              </Text>
-            </Pressable>
-          ))
+          childrenProfiles.map((c) => {
+            const selected = childIds.includes(c.id);
+            return (
+              <Pressable
+                key={c.id}
+                onPress={() => toggleChild(c.id)}
+                style={[
+                  styles.chip,
+                  selected && { backgroundColor: c.color, borderColor: c.color },
+                ]}
+                accessibilityRole={isEdit ? "radio" : "checkbox"}
+                accessibilityState={{ checked: selected }}
+              >
+                <Text style={[styles.chipText, selected && { color: "#fff" }]}>
+                  {isEdit ? "" : selected ? "✓ " : "○ "}
+                  {c.emoji} {c.name}
+                </Text>
+              </Pressable>
+            );
+          })
         )}
       </View>
       {attempted && fieldErrors.childId ? (

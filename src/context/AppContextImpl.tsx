@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../auth";
 import {
   cloudDeleteChild, cloudDeleteTask, cloudInsertChild, cloudMarkDone, cloudUnmarkDone,
@@ -46,6 +46,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const { ready: authReady, session, isDemo, isCloud } = useAuth();
   const [ready, setReady] = useState(false);
   const [state, setState] = useState<AppState>(emptyState);
+  const stateRef = useRef(state);
+  stateRef.current = state;
   const familyId = isCloud ? session?.familyId ?? null : null;
   const cloudSync = !!familyId;
 
@@ -107,33 +109,38 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [familyId, persistLocal, state]);
 
   const upsertTask = useCallback(async (input: Omit<Task, "id" | "createdAt" | "updatedAt"> & { id?: string }): Promise<Task> => {
+    // stateRef so sequential creates (multi-child) do not drop prior inserts
     if (familyId) {
       const saved = await cloudUpsertTask(familyId, input);
       if (input.onceDate) saved.onceDate = input.onceDate;
-      const tasks = input.id ? state.tasks.map((t) => (t.id === saved.id ? saved : t)) : [...state.tasks, saved];
-      const next = { ...state, tasks };
+      const prev = stateRef.current;
+      const tasks = input.id ? prev.tasks.map((t) => (t.id === saved.id ? saved : t)) : [...prev.tasks, saved];
+      const next = { ...prev, tasks };
+      stateRef.current = next;
       setState(next);
       await safeReminders(next.tasks, next.profiles);
       return saved;
     }
     const now = new Date().toISOString();
+    const prev = stateRef.current;
     let saved!: Task;
     let tasks: Task[];
     if (input.id) {
-      tasks = state.tasks.map((t) => {
+      tasks = prev.tasks.map((t) => {
         if (t.id !== input.id) return t;
         saved = { ...t, ...input, id: t.id, createdAt: t.createdAt, updatedAt: now };
         return saved;
       });
     } else {
       saved = { id: uid("task"), title: input.title, childId: input.childId, time: input.time, recurrence: input.recurrence, reminderEnabled: input.reminderEnabled, onceDate: input.onceDate, createdAt: now, updatedAt: now };
-      tasks = [...state.tasks, saved];
+      tasks = [...prev.tasks, saved];
     }
-    const next = { ...state, tasks };
+    const next = { ...prev, tasks };
+    stateRef.current = next;
     await persistLocal(next);
     await safeReminders(next.tasks, next.profiles);
     return saved;
-  }, [familyId, persistLocal, state]);
+  }, [familyId, persistLocal]);
 
   const deleteTask = useCallback(async (taskId: string) => {
     if (familyId) await cloudDeleteTask(taskId);
