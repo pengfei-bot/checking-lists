@@ -42,14 +42,14 @@ export function WelcomeScreen({ navigation }: Props) {
       <Text style={styles.emoji}>✅</Text>
       <Text style={styles.title}>Checking Lists</Text>
       <Text style={styles.subtitle}>
-        Tâches quotidiennes pour toute la famille — comptes parents et partage avec les enfants.
+        Tâches quotidiennes pour toute la famille — comptes parents et partage multi-appareils.
       </Text>
 
       <View style={styles.card}>
-        <Text style={styles.badge}>Prototype local</Text>
+        <Text style={styles.badge}>Supabase · famille</Text>
         <Text style={styles.cardText}>
-          L'auth et le code d'invitation sont stockés sur l'appareil. Le sync cloud arrivera
-          plus tard (Supabase / Firebase).
+          Le parent crée un compte et affiche un code. L'enfant saisit ce code sur son iPhone
+          (réseau requis) pour rejoindre la même famille.
         </Text>
       </View>
 
@@ -78,7 +78,7 @@ export function WelcomeScreen({ navigation }: Props) {
         style={{ marginTop: 18 }}
       />
       <Text style={styles.footer}>
-        La démo charge Parent et les enfants seed (sans compte) — idéal pour tester sur le web.
+        La démo reste 100 % locale (sans compte) — idéal pour tester l'UI sur le web.
       </Text>
     </View>
   );

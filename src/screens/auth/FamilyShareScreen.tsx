@@ -32,7 +32,7 @@ export function FamilyShareScreen({ navigation }: Props) {
         <Text style={styles.title}>Partage famille</Text>
         <Text style={styles.body}>
           Disponible après création d'un compte parent. En mode démo, utilisez les profils seed
-          (profils enfants seed) sur le même appareil.
+          sur le même appareil (sans sync cloud).
         </Text>
         <PrimaryButton
           label="Créer un compte parent"
@@ -50,8 +50,9 @@ export function FamilyShareScreen({ navigation }: Props) {
       <Text style={styles.title}>Partage famille</Text>
       <Text style={styles.subtitle}>{family?.name ?? "Votre famille"}</Text>
       <Text style={styles.body}>
-        Donnez ce code à un appareil « enfant » pour le lier localement à votre famille. Modèle
-        prototype — le cloud remplacera le partage multi-appareils.
+        Montrez ce code à votre enfant. Sur son iPhone, il ouvre Checking Lists → « Rejoindre une
+        famille » et saisit le code (connexion Internet requise). Les listes se synchronisent via
+        Supabase.
       </Text>
 
       <View style={styles.codeBox}>
