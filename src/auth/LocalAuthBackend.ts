@@ -143,6 +143,9 @@ export class LocalAuthBackend implements AuthBackend {
     if (!parent) {
       throw new Error("E-mail ou mot de passe incorrect.");
     }
+    if (!parent.salt || !parent.passwordHash) {
+      throw new Error("E-mail ou mot de passe incorrect.");
+    }
     const ok = await verifyPassword(input.password, parent.salt, parent.passwordHash);
     if (!ok) {
       throw new Error("E-mail ou mot de passe incorrect.");
@@ -198,7 +201,7 @@ export class LocalAuthBackend implements AuthBackend {
     return invite;
   }
 
-  async redeemInvite(code: string): Promise<AuthResult> {
+  async redeemInvite(code: string, _displayName?: string): Promise<AuthResult> {
     const normalized = normalizeInviteCode(code);
     if (normalized.length < 4) {
       throw new Error("Code d'invitation invalide.");
@@ -210,7 +213,7 @@ export class LocalAuthBackend implements AuthBackend {
 
     if (!familyId) {
       throw new Error(
-        "Code inconnu sur cet appareil. Prototype local : le code doit exister sur le même stockage (même navigateur / restauration). Le cloud remplacera ce modèle."
+        "Code inconnu. Utilisez le backend Supabase pour rejoindre une famille depuis un autre appareil."
       );
     }
 
