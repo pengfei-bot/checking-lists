@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
 import {
-  Alert,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -9,20 +7,18 @@ import {
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import * as ImagePicker from "expo-image-picker";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { TaskCard } from "../components/TaskCard";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { formatFrenchDate, todayISO } from "../utils/dates";
+import { notifyUser } from "../utils/feedback";
+import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
 import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
 import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChildHome">;
-
-const MOCK_PHOTO =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
 
 export function ChildHomeScreen({ navigation }: Props) {
   const {
@@ -80,48 +76,26 @@ export function ChildHomeScreen({ navigation }: Props) {
   };
 
   const doneWithPhoto = async (taskId: string) => {
-    if (Platform.OS === "web") {
-      try {
-        const pick = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ["images"],
-          quality: 0.6,
-        });
-        if (!pick.canceled && pick.assets[0]?.uri) {
-          await markTaskDone(taskId, currentProfile.id, pick.assets[0].uri);
-          return;
-        }
-      } catch {
-        // ignore
-      }
-      await markTaskDone(taskId, currentProfile.id, MOCK_PHOTO);
-      Alert.alert("Demo web", "Photo mock utilisee (ou choisissez un fichier image).");
+    const result = await pickProofImage({ quality: 0.6, preferCamera: true });
+    if (result.status === "canceled") {
+      notifyUser("Photo", "Selection annulee — aucune photo ajoutee.");
       return;
     }
-    const perm = await ImagePicker.requestCameraPermissionsAsync();
-    if (!perm.granted) {
-      const lib = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!lib.granted) {
-        Alert.alert("Permission refusee", "Autorisez la camera ou la galerie.");
-        return;
-      }
-      const pick = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ["images"],
-        quality: 0.6,
-      });
-      if (!pick.canceled && pick.assets[0]) {
-        await markTaskDone(taskId, currentProfile.id, pick.assets[0].uri);
-      }
+    if (result.status === "error") {
+      await markTaskDone(taskId, currentProfile.id, MOCK_PHOTO_URI);
+      notifyUser(
+        "Photo",
+        `${result.message} Une photo de demonstration a ete utilisee.`
+      );
       return;
     }
-    const shot = await ImagePicker.launchCameraAsync({ quality: 0.6 });
-    if (!shot.canceled && shot.assets[0]) {
-      await markTaskDone(taskId, currentProfile.id, shot.assets[0].uri);
-    }
+    await markTaskDone(taskId, currentProfile.id, result.uri);
+    notifyUser("Photo", "Photo preuve enregistree.");
   };
 
   const onReminders = async () => {
     if (!notificationsSupported()) {
-      Alert.alert(
+      notifyUser(
         "Notifications",
         "Les rappels locaux ne fonctionnent pas sur le web. Testez avec Expo Go sur un appareil reel."
       );
@@ -129,16 +103,16 @@ export function ChildHomeScreen({ navigation }: Props) {
     }
     const ok = await ensureNotificationPermissions();
     if (!ok) {
-      Alert.alert("Permission refusee", "Activez les notifications dans les reglages.");
+      notifyUser("Permission refusee", "Activez les notifications dans les reglages.");
       return;
     }
     const n = await refreshReminders();
-    Alert.alert("Rappels", `${n} rappel(s) planifie(s) pour aujourd'hui.`);
+    notifyUser("Rappels", `${n} rappel(s) planifie(s) pour aujourd'hui.`);
   };
 
   const onCalendar = async () => {
     const result = await addTodayTasksToCalendar(state.tasks, state.profiles, currentProfile.id);
-    Alert.alert("Calendrier", result.message);
+    notifyUser("Calendrier", result.message);
   };
 
   return (
