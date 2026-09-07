@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAuth } from "../../auth";
 import { PrimaryButton } from "../../components/PrimaryButton";
@@ -41,7 +41,7 @@ export function WelcomeScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.emoji}>✅</Text>
+      <Image source={require("../../../assets/icon.png")} style={styles.logo} accessibilityLabel="Famlist" />
       <Text style={styles.title}>Famlist</Text>
       <Text style={styles.subtitle}>{t("welcome.subtitle")}</Text>
 
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     padding: 24,
     justifyContent: "center",
   },
-  emoji: { fontSize: 48, textAlign: "center" },
+  logo: { width: 88, height: 88, borderRadius: 20, alignSelf: "center", marginBottom: 8 },
   title: {
     fontSize: 30,
     fontWeight: "800",

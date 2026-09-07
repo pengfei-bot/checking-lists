@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import {
   ActivityIndicator,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -88,7 +89,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.emoji}>✅</Text>
+      <Image source={require("../../assets/icon.png")} style={styles.logo} accessibilityLabel={t("common.appName")} />
       <Text style={styles.title}>{t("common.appName")}</Text>
       <Text style={styles.subtitle}>
         {isChildDevice
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg },
   loading: { marginTop: 12, color: colors.textMuted },
   container: { padding: 20, paddingBottom: 40, backgroundColor: colors.bg, flexGrow: 1 },
-  emoji: { fontSize: 42, textAlign: "center", marginTop: 12 },
+  logo: { width: 72, height: 72, borderRadius: 16, alignSelf: "center", marginTop: 12, marginBottom: 4 },
   title: { fontSize: 28, fontWeight: "800", textAlign: "center", color: colors.text, marginTop: 8 },
   subtitle: {
     textAlign: "center",
