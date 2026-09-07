@@ -30,7 +30,7 @@ async function getWritableCalendarId(): Promise<string | null> {
     const local = sources.find((s) => s.type === Calendar.SourceType.LOCAL) ?? sources[0];
     if (!local) return null;
     return Calendar.createCalendarAsync({
-      title: "Checking Lists",
+      title: "Famlist",
       color: "#4F6EF7",
       entityType: Calendar.EntityTypes.EVENT,
       sourceId: local.id,

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Redeploy Checking Lists to GitHub Pages
+# Redeploy Famlist (checking-lists) to GitHub Pages
 # Requires: gh auth login (or GITHUB_TOKEN)
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"

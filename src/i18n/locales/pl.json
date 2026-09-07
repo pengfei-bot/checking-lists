@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "Ładowanie...",
     "back": "Tył",
     "cancel": "Anuluj",
@@ -102,7 +102,7 @@
     "demoBody": "Dostępne po utworzeniu konta macierzystego. W trybie demo używać profili nasion na tym samym urządzeniu (bez synchronizacji w chmurze).",
     "createParent": "Utwórz konto macierzyste",
     "yourFamily": "Twoja rodzina",
-    "body": "Pokaż ten kod swojemu dziecku. Na ich iPhone otwierają Checking Lists → \"Dołącz do rodziny\" i wprowadzić kod (Internet wymagane). Lista synchronizacji poprzez Supabase.",
+    "body": "Pokaż ten kod swojemu dziecku. Na ich iPhone otwierają Famlist → \"Dołącz do rodziny\" i wprowadzić kod (Internet wymagane). Lista synchronizacji poprzez Supabase.",
     "inviteCode": "Kod zaproszenia",
     "account": "Konto: 0",
     "generate": "Generuj nowy kod",

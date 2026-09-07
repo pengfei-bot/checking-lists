@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "Yükleniyor...",
     "back": "Geri dön",
     "cancel": "Cancel Cancel Cancel Cancel",
@@ -317,7 +317,7 @@
     "noCalendar": "Hiçbir takvim mevcut değildir.",
     "added": ".0 the görevi (s) bugün takvime eklendi.",
     "noneToday": "Bugün eklemek için hiçbir görev yok.",
-    "notes": "Checking Lists ({{date}}) tarafından eklendi."
+    "notes": "Famlist ({{date}}) tarafından eklendi."
   },
   "webBanner": {
     "text": "Web demo modu: UI + yerel veriler Tamam. Bildirimler kapalı. Fotoğraf = dosya seçici (sağlama gösterdi)."

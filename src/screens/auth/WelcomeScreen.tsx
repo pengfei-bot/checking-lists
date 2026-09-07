@@ -42,7 +42,7 @@ export function WelcomeScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>✅</Text>
-      <Text style={styles.title}>Checking Lists</Text>
+      <Text style={styles.title}>Famlist</Text>
       <Text style={styles.subtitle}>{t("welcome.subtitle")}</Text>
 
       <View style={styles.card}>

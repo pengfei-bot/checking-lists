@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "იტვირთება…",
     "back": "უკან",
     "cancel": "გაუქმება",
@@ -102,7 +102,7 @@
     "demoBody": "ხელმისაწვდომია მშობლის ანგარიშის შექმნის შემდეგ. დემოში გამოიყენეთ seed პროფილები იმავე მოწყობილობაზე (ღრუბლის სინქის გარეშე).",
     "createParent": "მშობლის ანგარიშის შექმნა",
     "yourFamily": "თქვენი ოჯახი",
-    "body": "აჩვენეთ ეს კოდი ბავშვს. მის iPhone-ზე ხსნის Checking Lists → „ოჯახში გაწევრიანება“ და შეიყვანს კოდს (საჭიროა ინტერნეტი). სიები სინქდება Supabase-ით.",
+    "body": "აჩვენეთ ეს კოდი ბავშვს. მის iPhone-ზე ხსნის Famlist → „ოჯახში გაწევრიანება“ და შეიყვანს კოდს (საჭიროა ინტერნეტი). სიები სინქდება Supabase-ით.",
     "inviteCode": "მოწვევის კოდი",
     "account": "ანგარიში: {{email}}",
     "generate": "ახალი კოდის გენერირება",
@@ -317,7 +317,7 @@
     "noCalendar": "No calendar available.",
     "added": "{{count}} task(s) added to the calendar for today.",
     "noneToday": "No tasks to add today.",
-    "notes": "Added from Checking Lists ({{date}})"
+    "notes": "Added from Famlist ({{date}})"
   },
   "webBanner": {
     "text": "Web demo mode: UI + local data OK. Notifications off. Photo = file picker (feedback shown)."

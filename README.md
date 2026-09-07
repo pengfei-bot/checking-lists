@@ -1,4 +1,4 @@
-# Checking Lists
+# Famlist (Checking Lists)
 
 MVP famille Expo (React Native + TypeScript) — **Supabase** pour le partage multi-appareils (parent to child), demo locale AsyncStorage.
 
