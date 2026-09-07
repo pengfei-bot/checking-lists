@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "Laden...",
     "back": "Terug",
     "cancel": "Annuleren",
@@ -102,7 +102,7 @@
     "demoBody": "Beschikbaar na het aanmaken van een ouderaccount. Gebruik in de demomodus Seed profielen op hetzelfde apparaat (geen cloud sync).",
     "createParent": "Ouderaccount aanmaken",
     "yourFamily": "Je familie.",
-    "body": "Toon deze code aan uw kind. Op hun iPhone openen ze Checking Lists → Een familie inloggen en de code invoeren (Internet vereist). Lijsten synchroniseren via Supabase.",
+    "body": "Toon deze code aan uw kind. Op hun iPhone openen ze Famlist → Een familie inloggen en de code invoeren (Internet vereist). Lijsten synchroniseren via Supabase.",
     "inviteCode": "Code uitnodigen",
     "account": "Account:",
     "generate": "Een nieuwe code aanmaken",

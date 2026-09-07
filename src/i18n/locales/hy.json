@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "Բեռնվում է…",
     "back": "Հետ",
     "cancel": "Չեղարկել",
@@ -102,7 +102,7 @@
     "demoBody": "Available after creating a parent account. In demo mode, use seed profiles on the same device (no cloud sync).",
     "createParent": "Ստեղծել ծնողի հաշիվ",
     "yourFamily": "Your family",
-    "body": "Show this code to your child. On their iPhone they open Checking Lists → “Join a family” and enter the code (Internet required). Lists sync via Supabase.",
+    "body": "Show this code to your child. On their iPhone they open Famlist → “Join a family” and enter the code (Internet required). Lists sync via Supabase.",
     "inviteCode": "Invite code",
     "account": "Account: {{email}}",
     "generate": "Generate a new code",
@@ -317,7 +317,7 @@
     "noCalendar": "No calendar available.",
     "added": "{{count}} task(s) added to the calendar for today.",
     "noneToday": "No tasks to add today.",
-    "notes": "Added from Checking Lists ({{date}})"
+    "notes": "Added from Famlist ({{date}})"
   },
   "webBanner": {
     "text": "Web demo mode: UI + local data OK. Notifications off. Photo = file picker (feedback shown)."

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "加载中…",
     "back": "返回",
     "cancel": "取消",
@@ -102,7 +102,7 @@
     "demoBody": "创建家长账户后可用。演示模式下可在同一设备使用示例资料（无云同步）。",
     "createParent": "创建家长账户",
     "yourFamily": "你的家庭",
-    "body": "把这个邀请码给孩子看。在他们的 iPhone 上打开 Checking Lists →「加入家庭」并输入邀请码（需联网）。清单通过 Supabase 同步。",
+    "body": "把这个邀请码给孩子看。在他们的 iPhone 上打开 Famlist →「加入家庭」并输入邀请码（需联网）。清单通过 Supabase 同步。",
     "inviteCode": "邀请码",
     "account": "账户：{{email}}",
     "generate": "生成新邀请码",

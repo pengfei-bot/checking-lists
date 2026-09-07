@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "Caricamento...",
     "back": "Indietro",
     "cancel": "Annulla",
@@ -102,7 +102,7 @@
     "demoBody": "Disponibile dopo aver creato un account genitore. In modalità demo, utilizzare profili di seme sullo stesso dispositivo (nessuna sincronizzazione cloud).",
     "createParent": "Crea un account genitore",
     "yourFamily": "La tua famiglia",
-    "body": "Mostra questo codice a tuo figlio. Sul loro iPhone si apre Checking Lists → “Unisciti a una famiglia” e inserire il codice (Internet richiesto). Le liste si sincronizzano tramite Supabase.",
+    "body": "Mostra questo codice a tuo figlio. Sul loro iPhone si apre Famlist → “Unisciti a una famiglia” e inserire il codice (Internet richiesto). Le liste si sincronizzano tramite Supabase.",
     "inviteCode": "Codice invito",
     "account": "Conto: {{email}}",
     "generate": "Generare un nuovo codice",
@@ -317,7 +317,7 @@
     "noCalendar": "Nessun calendario disponibile.",
     "added": "task(s) aggiunto al calendario per oggi.",
     "noneToday": "Nessun compito da aggiungere oggi.",
-    "notes": "Aggiunto da Checking Lists ({{date}})"
+    "notes": "Aggiunto da Famlist ({{date}})"
   },
   "webBanner": {
     "text": "Modalità demo web: UI + dati locali OK. Notifiche. Foto = raccoglitore di file (feedback mostrato)."

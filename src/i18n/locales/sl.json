@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "Nalaganje...",
     "back": "Nazaj",
     "cancel": "Prekliči",
@@ -102,7 +102,7 @@
     "demoBody": "Na voljo po ustanovitvi matičnega računa. Pri demo načinu uporabite semenske profile na isti napravi (brez sinhronizacije oblaka).",
     "createParent": "Ustvari matični račun",
     "yourFamily": "Tvoja družina.",
-    "body": "Pokažite to kodo svojemu otroku. Na svojem iPhoneu odprejo Checking Lists → »Pridruži se družini« in vnesejo kodo (potreben internet). Seznami sinhronizacijo preko Supabase.",
+    "body": "Pokažite to kodo svojemu otroku. Na svojem iPhoneu odprejo Famlist → »Pridruži se družini« in vnesejo kodo (potreben internet). Seznami sinhronizacijo preko Supabase.",
     "inviteCode": "Povabi kodo",
     "account": "Račun: ",
     "generate": "Ustvari novo kodo",

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "Chargement…",
     "back": "Retour",
     "cancel": "Annuler",
@@ -102,7 +102,7 @@
     "demoBody": "Disponible après création d'un compte parent. En mode démo, utilisez les profils seed sur le même appareil (sans sync cloud).",
     "createParent": "Créer un compte parent",
     "yourFamily": "Votre famille",
-    "body": "Montrez ce code à votre enfant. Sur son iPhone, il ouvre Checking Lists → « Rejoindre une famille » et saisit le code (connexion Internet requise). Les listes se synchronisent via Supabase.",
+    "body": "Montrez ce code à votre enfant. Sur son iPhone, il ouvre Famlist → « Rejoindre une famille » et saisit le code (connexion Internet requise). Les listes se synchronisent via Supabase.",
     "inviteCode": "Code d'invitation",
     "account": "Compte : {{email}}",
     "generate": "Générer un nouveau code",
@@ -317,7 +317,7 @@
     "noCalendar": "Aucun calendrier disponible.",
     "added": "{{count}} tâche(s) ajoutée(s) au calendrier pour aujourd'hui.",
     "noneToday": "Aucune tâche à ajouter aujourd'hui.",
-    "notes": "Ajouté depuis Checking Lists ({{date}})"
+    "notes": "Ajouté depuis Famlist ({{date}})"
   },
   "webBanner": {
     "text": "Mode démo web : UI + données locales OK. Notifications désactivées. Photo = sélecteur de fichier (feedback affiché)."

@@ -30,13 +30,23 @@
   "devDependencies": {
     "@expo/ngrok": "^4.1.0",
     "@types/react": "~19.2.2",
+    "eas-cli": "^16.28.0",
     "typescript": "~6.0.3"
   },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build:android:preview": "eas build -p android --profile preview",
+    "build:ios:preview": "eas build -p ios --profile preview",
+    "build:android:production": "eas build -p android --profile production",
+    "build:ios:production": "eas build -p ios --profile production",
+    "build:android:development": "eas build -p android --profile development",
+    "build:ios:development": "eas build -p ios --profile development",
+    "submit:android": "eas submit -p android --profile production",
+    "submit:ios": "eas submit -p ios --profile production",
+    "export:web": "EXPO_BASE_URL=/checking-lists expo export -p web"
   },
   "private": true
 }

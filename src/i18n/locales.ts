@@ -1,4 +1,4 @@
-/** BCP-47 tags: major Europe + Asia languages for Checking Lists. */
+/** BCP-47 tags: major Europe + Asia languages for Famlist. */
 export const EUROPE_LOCALES = [
   "en", "fr", "de", "es", "it", "pt", "nl", "pl", "ru", "uk", "ro", "el",
   "sv", "da", "fi", "no", "cs", "sk", "hu", "bg", "hr", "sr", "sl", "lt",

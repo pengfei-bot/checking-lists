@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "Indlæser...",
     "back": "Optagelse",
     "cancel": "Annullér",
@@ -102,7 +102,7 @@
     "demoBody": "Tilgængelig efter oprettelse af en forælder konto. I demo-tilstand, brug seed profiler på samme enhed (ingen cloud sync).",
     "createParent": "Opret forældrekonto",
     "yourFamily": "Din familie",
-    "body": "Vis denne kode til dit barn. På deres iPhone de åbner Checking Lists → \"Deltag i en familie\" og indtaste koden (Internet påkrævet). Lister synkronisering via Subasase.",
+    "body": "Vis denne kode til dit barn. På deres iPhone de åbner Famlist → \"Deltag i en familie\" og indtaste koden (Internet påkrævet). Lister synkronisering via Subasase.",
     "inviteCode": "Invitér kode",
     "account": "Konto: < 0",
     "generate": "Opret en ny kode",

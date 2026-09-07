@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Checking Lists",
+    "appName": "Famlist",
     "loading": "Beladung...",
     "back": "Rücken",
     "cancel": "Stornierung",
@@ -102,7 +102,7 @@
     "demoBody": "Verfügbar nach dem Erstellen eines Elternkontos. Verwenden Sie im Demo-Modus Seed-Profile auf demselben Gerät (keine Cloud-Synchronisierung).",
     "createParent": "Elternkonto erstellen",
     "yourFamily": "Deine Familie",
-    "body": "Zeigen Sie diesen Code Ihrem Kind. Auf ihrem iPhone öffnen sie Checking Lists → „Join a family und geben den Code ein (Internet erforderlich). Listen synchronisieren über Supabase.",
+    "body": "Zeigen Sie diesen Code Ihrem Kind. Auf ihrem iPhone öffnen sie Famlist → „Join a family und geben den Code ein (Internet erforderlich). Listen synchronisieren über Supabase.",
     "inviteCode": "Einladungscode",
     "account": "Konto: {{email}}",
     "generate": "Generieren Sie einen neuen Code",
