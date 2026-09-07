@@ -18,8 +18,10 @@
         "NSCalendarsFullAccessUsageDescription": "Pour ajouter les taches du jour au calendrier (sync unidirectionnelle).",
         "NSRemindersFullAccessUsageDescription": "Pour planifier des rappels locaux de taches.",
         "UIBackgroundModes": [
+          "remote-notification",
           "remote-notification"
-        ]
+        ],
+        "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.pengfeibot.famlist"
     },
@@ -65,6 +67,12 @@
       ],
       "expo-notifications",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "supabaseProject": "Checking lists",
+      "eas": {
+        "projectId": "20cc9485-84d3-4253-9790-3b61c7a7ce3b"
+      }
+    }
   }
 }
