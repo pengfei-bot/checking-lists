@@ -317,7 +317,8 @@
     "noCalendar": "Kalendoriaus nėra.",
     "added": "Į kalendorių įtrauktas (-i) uždavinys (-ai).",
     "noneToday": "Šiandien nėra papildomų užduočių.",
-    "notes": "Pridėta iš tikrinamųjų sąrašų"
+    "notes": "Pridėta iš tikrinamųjų sąrašų",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Interneto demo režimas: UI + vietiniai duomenys OK. Pranešimai išjungti. Nuotrauka = failų rinkiklis (parodytas atsiliepimas)."

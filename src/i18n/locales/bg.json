@@ -317,7 +317,8 @@
     "noCalendar": "Няма календар.",
     "added": "Добавени към календара за днес.",
     "noneToday": "Никакви задачи за добавяне днес.",
-    "notes": "Добавено от Famlist ("
+    "notes": "Добавено от Famlist (",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Режим уеб демо: UI + локални данни OK. Отменете уведомленията. Снимка = файл picker (показване на обратна връзка)."

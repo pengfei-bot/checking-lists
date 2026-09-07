@@ -317,7 +317,8 @@
     "noCalendar": "Níl aon féilire ar fáil.",
     "added": "Chuir an t-eolas mearbhall orm",
     "noneToday": "Níl aon tascanna a chur inniu.",
-    "notes": "Curtha ó Liostaí Seiceáil (ROS)"
+    "notes": "Curtha ó Liostaí Seiceáil (ROS)",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Modh taispeána Gréasáin: UI + sonraí áitiúla OK. Fógraí as. Grianghraf = picker comhad (athsheoladh)"

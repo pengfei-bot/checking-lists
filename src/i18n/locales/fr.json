@@ -312,12 +312,13 @@
   },
   "deviceCalendar": {
     "title": "Calendrier",
-    "webUnavailable": "Le calendrier n'est pas disponible sur le web. Utilisez Expo Go sur un téléphone.",
+    "webUnavailable": "Impossible d'exporter le calendrier dans ce navigateur.",
     "permissionDenied": "Permission calendrier refusée.",
     "noCalendar": "Aucun calendrier disponible.",
     "added": "{{count}} tâche(s) ajoutée(s) au calendrier pour aujourd'hui.",
     "noneToday": "Aucune tâche à ajouter aujourd'hui.",
-    "notes": "Ajouté depuis Famlist ({{date}})"
+    "notes": "Ajouté depuis Famlist ({{date}})",
+    "webDownloaded": "{{count}} tâche(s) prêtes. Ouvre le fichier .ics pour les ajouter à ton calendrier."
   },
   "webBanner": {
     "text": "Mode démo web : UI + données locales OK. Notifications désactivées. Photo = sélecteur de fichier (feedback affiché)."

@@ -317,7 +317,8 @@
     "noCalendar": "Tidak ada kalender yang tersedia.",
     "added": "Tambahkan ke kalender untuk hari ini.",
     "noneToday": "Tidak ada tugas untuk ditambahkan hari ini.",
-    "notes": "Ditambahkan dari List Pemeriksa (KUNO)"
+    "notes": "Ditambahkan dari List Pemeriksa (KUNO)",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Mode demo web: UI + data lokal OK. Pemberitahuan off. Foto = picker berkas (umpan balik ditampilkan)."

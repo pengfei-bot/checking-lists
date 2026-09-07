@@ -317,7 +317,8 @@
     "noCalendar": "لا يوجد تقويم",
     "added": ".0. task(s) added to the timetable for today.",
     "noneToday": "لا مهام لإضافةها اليوم.",
-    "notes": "مضافة من قوائم التحقق ()0)"
+    "notes": "مضافة من قوائم التحقق ()0)",
+    "webDownloaded": "{{count}} مهمة جاهزة. افتح ملف .ics لإضافتها إلى التقويم."
   },
   "webBanner": {
     "text": "طريقة عرض الموقع: UI + البيانات المحلية حسنا. إشعارات. Photo= file picker (feedback shown)."

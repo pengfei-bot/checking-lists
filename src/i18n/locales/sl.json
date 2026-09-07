@@ -317,7 +317,8 @@
     "noCalendar": "Koledar ni na voljo.",
     "added": "",
     "noneToday": "Danes ni nobenih nalog.",
-    "notes": "Dodano s seznamov za preverjanje"
+    "notes": "Dodano s seznamov za preverjanje",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Način spletnega demo: UI + lokalni podatki OK. Obvestila so izključena. Foto = izbirnik datotek (prikazane povratne informacije)."

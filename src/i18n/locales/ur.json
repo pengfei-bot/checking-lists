@@ -317,7 +317,8 @@
     "noCalendar": "کوئی کیلنڈر دستیاب نہیں ہے.",
     "added": "{{count}} کام (s) نے آج کل کے لیے کیلنڈر میں اضافہ کیا۔",
     "noneToday": "آج کوئی کام نہیں ہے",
-    "notes": "چیک لسٹوں ({{date}}) سے شامل کیا گیا ہے۔"
+    "notes": "چیک لسٹوں ({{date}}) سے شامل کیا گیا ہے۔",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "ویب ڈیم موڈ: UI + مقامی ڈیٹا ٹھیک۔ بند. تصویر = فائل منتخب کرنے والا (انگریزی:"

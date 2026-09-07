@@ -317,7 +317,8 @@
     "noCalendar": "تقویم در دسترس نیست.",
     "added": "⟦0 ⟧کار (s) برای امروز به تقویم اضافه شده است.",
     "noneToday": "هیچ وظیفه ای برای اضافه کردن امروز نیست.",
-    "notes": "اضافه شده از چک لیست ({{date}})"
+    "notes": "اضافه شده از چک لیست ({{date}})",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "حالت دموی وب: UI + داده های محلی خوب است. اعلان ها عکس = انتخاب کننده فایل (تصویر نشان داده شده)"

@@ -317,7 +317,8 @@
     "noCalendar": "Nessun calendario disponibile.",
     "added": "task(s) aggiunto al calendario per oggi.",
     "noneToday": "Nessun compito da aggiungere oggi.",
-    "notes": "Aggiunto da Famlist ({{date}})"
+    "notes": "Aggiunto da Famlist ({{date}})",
+    "webDownloaded": "{{count}} attività pronte. Apri il file .ics per aggiungerle al calendario."
   },
   "webBanner": {
     "text": "Modalità demo web: UI + dati locali OK. Notifiche. Foto = raccoglitore di file (feedback mostrato)."

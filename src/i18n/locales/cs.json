@@ -317,7 +317,8 @@
     "noCalendar": "Žádný kalendář není k dispozici.",
     "added": "Přidáno do kalendáře pro dnešek.",
     "noneToday": "Dnes žádné úkoly.",
-    "notes": "Přidáno z kontrolních seznamů (CLAS0)"
+    "notes": "Přidáno z kontrolních seznamů (CLAS0)",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demo mode: UI + lokální data OK. Vypnout hlášení. Fotografie = picker souborů (zobrazena zpětná vazba)."

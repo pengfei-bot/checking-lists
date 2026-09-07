@@ -317,7 +317,8 @@
     "noCalendar": "이용안내",
     "added": "s0 오늘 달력에 추가.",
     "noneToday": "오늘 추가 할 작업이 없습니다.",
-    "notes": "체크리스트에서 추가 (00))"
+    "notes": "체크리스트에서 추가 (00))",
+    "webDownloaded": "{{count}}개 할 일이 준비되었습니다. .ics 파일을 열어 캘린더에 추가하세요."
   },
   "webBanner": {
     "text": "웹 데모 모드 : UI + 로컬 데이터 OK. 공지사항 사진 = 파일 피커 (feedback 보인)."

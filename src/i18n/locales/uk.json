@@ -317,7 +317,8 @@
     "noCalendar": "Немає календаря.",
     "added": "浜у 涓 蹇",
     "noneToday": "Немає завдань, щоб додати сьогодні.",
-    "notes": "Додано з Перевірити Списки (0 ⟦)"
+    "notes": "Додано з Перевірити Списки (0 ⟦)",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Веб-модельний режим: UI + локальні дані OK. Повідомлення від. Фото = файловий пікіратор (видалення показу)."

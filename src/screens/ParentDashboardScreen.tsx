@@ -214,7 +214,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
         )}
 
         <PrimaryButton label={t("parentDash.reminders")} variant="secondary" onPress={() => void onReminders()} style={{ marginTop: 8 }} />
-        {(calendarSupported() || Platform.OS === "web") && (
+        {calendarSupported() && (
           <PrimaryButton label={t("parentDash.addCalendar")} variant="ghost" onPress={() => void onCalendar()} style={{ marginTop: 8 }} />
         )}
         <PrimaryButton

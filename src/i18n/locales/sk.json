@@ -317,7 +317,8 @@
     "noCalendar": "Nie je dostupný žiadny kalendár.",
     "added": "",
     "noneToday": "Dnes nie je čo pridávať.",
-    "notes": "Pridané z kontrolných zoznamov ("
+    "notes": "Pridané z kontrolných zoznamov (",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demo mód: UI + miestne dáta OK. Upozornenia vypnuté. Fotka = picker súborov (uvedená spätná väzba)."

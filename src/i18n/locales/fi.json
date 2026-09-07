@@ -317,7 +317,8 @@
     "noCalendar": "Kalenteria ei ole saatavilla.",
     "added": "Tehtävät lisätty kalenteriin tänään.",
     "noneToday": "Tänään ei ole mitään lisättävää.",
-    "notes": "Lisätty tarkistusluetteloista (...)"
+    "notes": "Lisätty tarkistusluetteloista (...)",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web-demotila: UI + paikalliset tiedot OK. Ilmoitukset pois. Kuva = tiedoston poimija (palaute näytetään)."

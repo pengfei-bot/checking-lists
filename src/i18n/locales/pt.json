@@ -317,7 +317,8 @@
     "noCalendar": "Nenhum calendário disponível.",
     "added": "tarefa (s) adicionada ao calendário de hoje.",
     "noneToday": "Nenhuma tarefa a adicionar hoje.",
-    "notes": "Adicionado das Listas de Verificação"
+    "notes": "Adicionado das Listas de Verificação",
+    "webDownloaded": "{{count}} tarefa(s) pronta(s). Abre o ficheiro .ics para as adicionar ao calendário."
   },
   "webBanner": {
     "text": "Modo de demonstração Web: UI + dados locais OK. Notificações desligadas. Foto = coletor de arquivos (feedback mostrado)."

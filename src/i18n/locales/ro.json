@@ -317,7 +317,8 @@
     "noCalendar": "Nu există calendar disponibil.",
     "added": "Sarcină (sarcină) adăugată în calendar pentru ziua de azi.",
     "noneToday": "Nu sunt sarcini de adăugat astăzi.",
-    "notes": "Adăugat din Liste de verificare"
+    "notes": "Adăugat din Liste de verificare",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Mod demo web: UI + date locale OK. Notificarile oprite. Foto = culegător de fișiere (înregistrare afișată)."

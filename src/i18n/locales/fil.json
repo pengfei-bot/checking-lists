@@ -317,7 +317,8 @@
     "noCalendar": "Walang makukuhang kalendaryo.",
     "added": "Ang {{count}}(s) ay nagdagdag sa kalendaryo para sa ngayon.",
     "noneToday": "Walang mga gawaing idaragdag sa ngayon.",
-    "notes": "Idagdag sa Pagsusuri sa mga Listahan (imperyo)"
+    "notes": "Idagdag sa Pagsusuri sa mga Listahan (imperyo)",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demo mode: UI + local data OK. Ang mga patalastas ay humihinto. Larawan = file picker (ipinalabas ang feedback)."

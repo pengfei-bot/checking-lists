@@ -317,7 +317,8 @@
     "noCalendar": "Qeyd olunub.",
     "added": "{{count}} təhlükəsizlik (s) bu gün sənaye əlavə.",
     "noneToday": "Bu gün əlavə etmək üçün qeydlər.",
-    "notes": "Check-in siyahısı daxildir ({{date}})"
+    "notes": "Check-in siyahısı daxildir ({{date}})",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demo rejimi: UI + yerli data OK.  Notification: Foto = fayl qazanmaq (səvəl göstərir)."

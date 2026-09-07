@@ -317,7 +317,8 @@
     "noCalendar": "Không có lịch.",
     "added": "Công việc của họ được thêm vào lịch ngày hôm nay.",
     "noneToday": "Hôm nay không có việc gì thêm.",
-    "notes": "Đã thêm từ việc kiểm tra danh sách"
+    "notes": "Đã thêm từ việc kiểm tra danh sách",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Chế độ thử ra Web: UI + dữ liệu địa phương OK. Thông báo tắt. Ảnh chụp = bộ chọn tập tin (đã cung cấp)."

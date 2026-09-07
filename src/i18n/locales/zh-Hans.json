@@ -317,7 +317,8 @@
     "noCalendar": "没有可用的日历 。",
     "added": "XQ0⟧任务添加到今天的日历中 。",
     "noneToday": "今天没有要添加的任务 。",
-    "notes": "从检查列表中添加(%%%%%)"
+    "notes": "从检查列表中添加(%%%%%)",
+    "webDownloaded": "{{count}} 个任务已就绪。打开 .ics 文件以添加到日历。"
   },
   "webBanner": {
     "text": "Web 演示模式: UI + 本地数据 OK. 通知关闭。 照片 = 文件拾取器(feedback 显示)."

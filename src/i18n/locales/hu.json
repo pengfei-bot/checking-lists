@@ -317,7 +317,8 @@
     "noCalendar": "Nincs naptár.",
     "added": "A mai naptárhoz hozzáadott feladat (ek).",
     "noneToday": "Ma nincs mit hozzátenni.",
-    "notes": "Hozzáadott ellenőrző listák ()"
+    "notes": "Hozzáadott ellenőrző listák ()",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demo mód: UI + helyi adatok OK. Értesítés lefújva. Fotó = fájlszedő (visszajelzés látható)."

@@ -317,7 +317,8 @@
     "noCalendar": "Ingen kalender tillgänglig.",
     "added": "{0 | uppgift (er) läggas till i kalendern för idag.",
     "noneToday": "Inga uppgifter att lägga till idag.",
-    "notes": "Tillagd från Famlist (@0)"
+    "notes": "Tillagd från Famlist (@0)",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demoläge: UI + lokala data OK. Meddelanden av. Photo = file picker (feedback visas)."

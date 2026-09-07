@@ -317,7 +317,8 @@
     "noCalendar": "Nie ma kalendarza.",
     "added": "Zadanie (-a) 0 dodano do kalendarza na dziś.",
     "noneToday": "Żadnych zadań do dodania.",
-    "notes": "Dodano z listy kontrolnej (0)"
+    "notes": "Dodano z listy kontrolnej (0)",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Tryb demo sieci Web: UI taken local data OK. Odwołuję powiadomienia. Zdjęcie = picker pliku (wyświetlane opinie)."

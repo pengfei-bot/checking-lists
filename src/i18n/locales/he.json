@@ -317,7 +317,8 @@
     "noCalendar": "אין לוח שנה זמין.",
     "added": "{{count}} משימה (s) הוסיף לוח השנה להיום.",
     "noneToday": "אין משימות להוסיף היום.",
-    "notes": "הוספת רשימות ({{date}})"
+    "notes": "הוספת רשימות ({{date}})",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "מצב ההדגמה באינטרנט: UI + נתונים מקומיים בסדר. סליחות תמונה = איסוף קבצים (הנקה המוצגת)."

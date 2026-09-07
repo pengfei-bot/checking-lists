@@ -317,7 +317,8 @@
     "noCalendar": "Kein Kalender verfügbar.",
     "added": "{{count}} Aufgabe(n) hinzugefügt zum Kalender für heute.",
     "noneToday": "Keine Aufgaben heute hinzuzufügen.",
-    "notes": "Aus Checklisten hinzugefügt ({{date}})"
+    "notes": "Aus Checklisten hinzugefügt ({{date}})",
+    "webDownloaded": "{{count}} Aufgabe(n) bereit. Öffne die .ics-Datei, um sie dem Kalender hinzuzufügen."
   },
   "webBanner": {
     "text": "Web-Demo-Modus: UI + lokale Daten OK. Benachrichtigungen aus. Foto = File Picker (Feedback gezeigt)."

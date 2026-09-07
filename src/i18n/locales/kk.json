@@ -317,7 +317,8 @@
     "noCalendar": "Hiçbir takvim mevcut değildir.",
     "added": ".0 the görevi (s) bugün takvime eklendi.",
     "noneToday": "Bugün eklemek için hiçbir görev yok.",
-    "notes": "Famlist ({{date}}) tarafından eklendi."
+    "notes": "Famlist ({{date}}) tarafından eklendi.",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demo modu: UI + yerel veriler Tamam. Bildirimler kapalı. Fotoğraf = dosya seçici (sağlama gösterdi)."

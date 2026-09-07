@@ -317,7 +317,8 @@
     "noCalendar": "Ingen kalender tilgængelig.",
     "added": "Opgave (r) tilføjet til kalenderen for i dag.",
     "noneToday": "Ingen opgaver at tilføje i dag.",
-    "notes": "Tilføjet fra checkinglister (+ 0)"
+    "notes": "Tilføjet fra checkinglister (+ 0)",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demo-tilstand: UI + lokale data OK. Meddelelser slukkes. Foto = filvælger (feedback vist)."

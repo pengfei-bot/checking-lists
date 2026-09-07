@@ -317,7 +317,8 @@
     "noCalendar": "Kalender puudub.",
     "added": "Ülesanne(ed) lisatakse kalendrisse tänaseks.",
     "noneToday": "Ei mingeid ülesandeid, mida täna lisada.",
-    "notes": "Lisatud kontrollnimekirjadest ({{date}})"
+    "notes": "Lisatud kontrollnimekirjadest ({{date}})",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Veebi demorežiim: UI + kohalikud andmed OK. Teated kustutatud. Foto = failivalija (näidatud tagasiside)."

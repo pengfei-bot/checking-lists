@@ -317,7 +317,8 @@
     "noCalendar": "Kalendar baru",
     "added": "Í0⟧ tugas ditambahkan ke kalender untuk hari ini.",
     "noneToday": "Tak ada tugas untuk ditambahkan hari ini.",
-    "notes": "Ditambah dari Daftar Memeriksa ({{date}})"
+    "notes": "Ditambah dari Daftar Memeriksa ({{date}})",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Mode demo web ifford: UI + data lokal OK. Tidak ada pemberitahuan. Foto = pemilih berkas (feedback show)."

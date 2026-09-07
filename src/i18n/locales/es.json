@@ -317,7 +317,8 @@
     "noCalendar": "No hay calendario disponible.",
     "added": "{{count}} task(s) añadido al calendario para hoy.",
     "noneToday": "No hay tareas que añadir hoy.",
-    "notes": "Añadido desde listas de verificación ({{date}})"
+    "notes": "Añadido desde listas de verificación ({{date}})",
+    "webDownloaded": "{{count}} tarea(s) lista(s). Abre el archivo .ics para añadirlas al calendario."
   },
   "webBanner": {
     "text": "Modo de demostración web: UI + datos locales OK. Notificación. Foto = colector de archivos (sentido)."

@@ -317,7 +317,8 @@
     "noCalendar": "कोई कैलेंडर उपलब्ध नहीं है।",
     "added": "To add to the calendar.",
     "noneToday": "आज जोड़ने के लिए कोई कार्य नहीं है।",
-    "notes": "Checking List of the list of the list of the list."
+    "notes": "Checking List of the list of the list of the list.",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "वेब डेमो मोड: यूआई + स्थानीय डेटा ठीक है। बंद अधिसूचनाएं। फोटो = फ़ाइल पिकर (फीडबैक दिखाया गया)।"

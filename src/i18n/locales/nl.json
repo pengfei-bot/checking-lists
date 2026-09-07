@@ -317,7 +317,8 @@
     "noCalendar": "Geen agenda beschikbaar.",
     "added": "Aan de agenda voor vandaag toegevoegd.",
     "noneToday": "Geen taken toe te voegen vandaag.",
-    "notes": "Toegevoegd uit controlelijsten ("
+    "notes": "Toegevoegd uit controlelijsten (",
+    "webDownloaded": "{{count}} taak/taken klaar. Open het .ics-bestand om ze aan je agenda toe te voegen."
   },
   "webBanner": {
     "text": "Web demo mode: UI + lokale gegevens OK. Notificaties uit. Foto = file picker (feedback getoond)."

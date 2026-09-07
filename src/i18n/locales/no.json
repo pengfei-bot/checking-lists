@@ -317,7 +317,8 @@
     "noCalendar": "Ingen kalender tilgjengelig.",
     "added": "{{count}} oppgave(r) lagt til kalenderen for i dag.",
     "noneToday": "Ingen oppgaver å legge til i dag.",
-    "notes": "Lagt til fra Sjekklister ({{date}})"
+    "notes": "Lagt til fra Sjekklister ({{date}})",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demo-modus: UI + lokale data OK. Varsler. Foto = filvelger (feedback vist)."

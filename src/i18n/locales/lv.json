@@ -317,7 +317,8 @@
     "noCalendar": "Nav pieejams kalendārs.",
     "added": "",
     "noneToday": "Šodien nav ko piebilst.",
-    "notes": "Pievienots no kontrolsarakstiem ("
+    "notes": "Pievienots no kontrolsarakstiem (",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demo režīms: UI + lokālie dati OK. Paziņojumi ir izslēgti. Foto = failu izvēlētājs (atgriezeniskā saite parādīta)."

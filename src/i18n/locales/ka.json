@@ -317,7 +317,8 @@
     "noCalendar": "No calendar available.",
     "added": "{{count}} task(s) added to the calendar for today.",
     "noneToday": "No tasks to add today.",
-    "notes": "Added from Famlist ({{date}})"
+    "notes": "Added from Famlist ({{date}})",
+    "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
     "text": "Web demo mode: UI + local data OK. Notifications off. Photo = file picker (feedback shown)."
