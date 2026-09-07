@@ -43,6 +43,9 @@ export async function changeAppLocale(locale: AppLocale): Promise<void> {
   if (i18n.isInitialized) {
     await i18n.changeLanguage(locale);
   }
+  // Keep <html lang> in sync for web font/engine hints.
+  const { syncDocumentLang } = await import("../theme/fonts");
+  syncDocumentLang(locale);
 }
 
 export function initI18n(lng?: AppLocale): Promise<typeof i18n> {
@@ -72,7 +75,11 @@ export function initI18n(lng?: AppLocale): Promise<typeof i18n> {
       returnEmptyString: false,
       parseMissingKeyHandler: () => "",
     })
-    .then(() => i18n);
+    .then(async () => {
+      const { syncDocumentLang } = await import("../theme/fonts");
+      syncDocumentLang(i18n.language);
+      return i18n;
+    });
 
   return initPromise;
 }

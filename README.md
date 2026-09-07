@@ -82,7 +82,7 @@ After joining with a code, the profile picker hides parent cards. If the family 
 - Stack: `i18next` + `react-i18next` + `expo-localization`
 - Catalogs: `src/i18n/locales/*.json` (56 BCP-47 locales: 29 Europe + 27 Asia)
 - Fallback chain: selected → `fr` → `en` (`returnEmptyString: false`; empty catalog values stripped so incomplete locales never show raw keys)
-- Web fonts: Google **Noto Sans** (+ Devanagari / Arabic / Hebrew / Thai / SC / JP / KR) via `src/theme/fonts.ts` so Cyrillic/Devanagari/CJK do not tofu (□)
+- Web fonts: Google **Noto Sans** (+ Devanagari / Arabic / Hebrew / Thai / SC / JP / KR) via **real CSS** in `src/theme/fonts.ts` (`html/#root *` stack + `unicode-range`); do not put CSS fallback lists in RN `fontFamily` (Hindi tofu)
 - Language picker shows native name + Latin hint when needed (e.g. `हिन्दी (Hindi)`)
 - First launch detects device locale; override in **Language** (profile picker, parent dashboard, child home)
 - Preference stored in AsyncStorage (`@checking_lists_locale`)
