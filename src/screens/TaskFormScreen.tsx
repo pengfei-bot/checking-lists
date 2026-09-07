@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
@@ -27,11 +28,11 @@ const RECURRENCES: Recurrence[] = ["daily", "weekdays", "once"];
 
 type PeriodId = "matin" | "midi" | "apresmidi" | "soir";
 
-const PERIODS: { id: PeriodId; label: string; hint: string; defaultTime: string }[] = [
-  { id: "matin", label: "Matin", hint: "06:00–11:45", defaultTime: "08:00" },
-  { id: "midi", label: "Midi", hint: "12:00–13:45", defaultTime: "12:00" },
-  { id: "apresmidi", label: "Après-midi", hint: "14:00–17:45", defaultTime: "16:00" },
-  { id: "soir", label: "Soir", hint: "18:00–22:00", defaultTime: "19:00" },
+const PERIODS: { id: PeriodId; defaultTime: string }[] = [
+  { id: "matin", defaultTime: "08:00" },
+  { id: "midi", defaultTime: "12:00" },
+  { id: "apresmidi", defaultTime: "16:00" },
+  { id: "soir", defaultTime: "19:00" },
 ];
 
 /** Quarter-hour slots so e.g. 10:15 is selectable. */
@@ -79,18 +80,19 @@ function validateForm(input: {
   onceDate: string;
 }): FieldErrors {
   const errors: FieldErrors = {};
-  if (!input.title.trim()) errors.title = "Le titre est requis.";
-  if (input.childIds.length === 0) errors.childId = "Choisis au moins un enfant.";
+  if (!input.title.trim()) errors.title = "taskForm.errTitle";
+  if (input.childIds.length === 0) errors.childId = "taskForm.errChild";
   if (!/^\d{2}:\d{2}$/.test(input.time)) {
-    errors.time = "Choisissez une heure (ex. 10:15).";
+    errors.time = "taskForm.errTime";
   }
   if (input.recurrence === "once" && !/^\d{4}-\d{2}-\d{2}$/.test(input.onceDate)) {
-    errors.onceDate = "Indiquez une date au format AAAA-MM-JJ.";
+    errors.onceDate = "taskForm.errOnceDate";
   }
   return errors;
 }
 
 export function TaskFormScreen({ navigation, route }: Props) {
+  const { t } = useTranslation();
   const blocked = useParentOnlyGuard(navigation);
   const { getTask, childrenProfiles, upsertTask, deleteTask, state } = useApp();
   const existing = route.params.taskId ? getTask(route.params.taskId) : undefined;
@@ -205,7 +207,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
       const msg = frenchCloudError(e, "Impossible d'enregistrer la tâche.");
       setFormError(msg);
       setSaving(false);
-      notifyUser("Erreur", msg);
+      notifyUser(t("common.error"), msg);
     } finally {
       setSaving(false);
     }
@@ -230,7 +232,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         const msg = frenchCloudError(e, "Impossible de supprimer la tâche.");
         setFormError(msg);
         setSaving(false);
-        notifyUser("Erreur", msg);
+        notifyUser(t("common.error"), msg);
       } finally {
         setSaving(false);
       }
@@ -249,16 +251,16 @@ export function TaskFormScreen({ navigation, route }: Props) {
   if (blocked) {
     return (
       <View style={styles.blocked}>
-        <Text style={styles.blockedText}>Espace parent réservé.</Text>
+        <Text style={styles.blockedText}>{t("roles.parentOnlyShort")}</Text>
       </View>
     );
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-      <Text style={styles.title}>{isEdit ? "Modifier la tâche" : "Nouvelle tâche"}</Text>
+      <Text style={styles.title}>{isEdit ? t("taskForm.editTitle") : t("taskForm.newTitle")}</Text>
 
-      <Text style={styles.label}>Titre</Text>
+      <Text style={styles.label}>{t("taskForm.titleLabel")}</Text>
       <TextInput
         value={title}
         onChangeText={(v) => {
@@ -273,13 +275,13 @@ export function TaskFormScreen({ navigation, route }: Props) {
         <Text style={styles.fieldError}>{fieldErrors.title}</Text>
       ) : null}
 
-      <Text style={styles.label}>Enfants</Text>
+      <Text style={styles.label}>{t("taskForm.children")}</Text>
       <Text style={styles.help}>
         Sélectionnez un ou plusieurs enfants (une tâche par enfant).
       </Text>
       <View style={styles.rowWrap}>
         {childrenProfiles.length === 0 ? (
-          <Text style={styles.help}>Aucun profil enfant — créez-en un d'abord.</Text>
+          <Text style={styles.help}>{t("taskForm.noChildren")}</Text>
         ) : (
           childrenProfiles.map((c) => {
             const selected = childIds.includes(c.id);
@@ -307,7 +309,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         <Text style={styles.fieldError}>{fieldErrors.childId}</Text>
       ) : null}
 
-      <Text style={styles.label}>Heure</Text>
+      <Text style={styles.label}>{t("taskForm.time")}</Text>
       <View style={styles.rowWrap}>
         {PERIODS.map((p) => (
           <Pressable
@@ -316,7 +318,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
             style={[styles.chip, period === p.id && styles.chipActive]}
           >
             <Text style={[styles.chipText, period === p.id && styles.chipTextActive]}>
-              {p.label}
+              {t(`taskForm.period.${p.id}`)}
             </Text>
           </Pressable>
         ))}
@@ -330,7 +332,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         ]}
       >
         <Text style={styles.timeButtonLabel}>{time || "Choisir…"}</Text>
-        <Text style={styles.timeButtonHint}>Toucher pour choisir · créneaux 15 min</Text>
+        <Text style={styles.timeButtonHint}>{t("taskForm.timeHint")}</Text>
       </Pressable>
       {attempted && fieldErrors.time ? (
         <Text style={styles.fieldError}>{fieldErrors.time}</Text>
@@ -348,7 +350,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         ))}
       </View>
 
-      <Text style={styles.label}>Récurrence</Text>
+      <Text style={styles.label}>{t("taskForm.recurrence")}</Text>
       <View style={styles.rowWrap}>
         {RECURRENCES.map((r) => (
           <Pressable
@@ -365,7 +367,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
 
       {recurrence === "once" && (
         <>
-          <Text style={styles.label}>Date (AAAA-MM-JJ)</Text>
+          <Text style={styles.label}>{t("taskForm.onceDate")}</Text>
           <TextInput
             value={onceDate}
             onChangeText={setOnceDate}
@@ -382,7 +384,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
 
       <View style={styles.switchRow}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.labelInline}>Rappel local</Text>
+          <Text style={styles.labelInline}>{t("taskForm.reminder")}</Text>
           <Text style={styles.help}>
             Sur le web: non disponible (bannière informative). Sur mobile: expo-notifications.
           </Text>
@@ -392,10 +394,10 @@ export function TaskFormScreen({ navigation, route }: Props) {
 
       {attempted && !isValid ? (
         <View style={styles.errorBox}>
-          <Text style={styles.errorBoxTitle}>À compléter :</Text>
+          <Text style={styles.errorBoxTitle}>{t("taskForm.toComplete")}</Text>
           {errorList.map((msg) => (
             <Text key={msg} style={styles.errorBoxItem}>
-              • {msg}
+              • {t(msg)}
             </Text>
           ))}
         </View>
@@ -404,7 +406,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
       {formError ? <Text style={styles.fieldError}>{formError}</Text> : null}
 
       <PrimaryButton
-        label={isEdit ? "Enregistrer" : "Créer"}
+        label={isEdit ? t("taskForm.save") : t("taskForm.create")}
         onPress={() => void onSave()}
         loading={saving}
         disabled={saving}
@@ -412,7 +414,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
       />
       {isEdit && (
         <PrimaryButton
-          label="Supprimer la tâche"
+          label={t("taskForm.delete")}
           variant="danger"
           onPress={onDelete}
           loading={saving}
@@ -421,7 +423,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         />
       )}
       <PrimaryButton
-        label="Annuler"
+        label={t("common.cancel")}
         variant="ghost"
         onPress={() => navigation.goBack()}
         disabled={saving}
@@ -436,8 +438,8 @@ export function TaskFormScreen({ navigation, route }: Props) {
       >
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Choisir l'heure</Text>
-            <Text style={styles.help}>Créneaux toutes les 15 minutes (06:00–22:00)</Text>
+            <Text style={styles.modalTitle}>{t("taskForm.pickTime")}</Text>
+            <Text style={styles.help}>{t("taskForm.slotsHint")}</Text>
             <ScrollView style={styles.modalList}>
               {ALL_TIMES.map((t) => (
                 <Pressable
@@ -458,7 +460,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
               ))}
             </ScrollView>
             <PrimaryButton
-              label="Fermer"
+              label={t("taskForm.close")}
               variant="ghost"
               onPress={() => setTimePickerOpen(false)}
               style={{ marginTop: 8 }}

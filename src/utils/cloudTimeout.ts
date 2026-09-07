@@ -1,9 +1,12 @@
+import i18n from "../i18n/i18n";
+
 /** Race a cloud promise against a hard timeout so UI never spins forever. */
 export async function withCloudTimeout<T>(
   promise: Promise<T>,
   ms = 15_000,
-  label = "Opération cloud"
+  label?: string
 ): Promise<T> {
+  const opLabel = label ?? i18n.t("cloud.defaultLabel");
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
     return await Promise.race([
@@ -12,7 +15,10 @@ export async function withCloudTimeout<T>(
         timer = setTimeout(() => {
           reject(
             new Error(
-              `${label} trop longue (${Math.round(ms / 1000)}s). Vérifiez le réseau et réessayez.`
+              i18n.t("cloud.timeout", {
+                label: opLabel,
+                seconds: Math.round(ms / 1000),
+              })
             )
           );
         }, ms);
@@ -23,7 +29,7 @@ export async function withCloudTimeout<T>(
   }
 }
 
-/** Map raw Supabase / PostgREST errors to short French messages. */
+/** Map raw Supabase / PostgREST errors to short localized messages. */
 export function frenchCloudError(err: unknown, fallback: string): string {
   const raw =
     err instanceof Error
@@ -32,7 +38,7 @@ export function frenchCloudError(err: unknown, fallback: string): string {
         ? err
         : fallback;
   const msg = raw.toLowerCase();
-  if (msg.includes("trop longue") || msg.includes("timeout")) return raw;
+  if (msg.includes("trop longue") || msg.includes("timeout") || msg.includes("took too long")) return raw;
   if (
     msg.includes("row-level security") ||
     msg.includes("rls") ||
@@ -40,16 +46,16 @@ export function frenchCloudError(err: unknown, fallback: string): string {
     msg.includes("permission denied") ||
     msg.includes("42501")
   ) {
-    return "Accès refusé (RLS). Vérifiez que votre compte parent est bien membre de la famille, puis reconnectez-vous.";
+    return i18n.t("cloud.rls");
   }
   if (msg.includes("jwt") || msg.includes("not authenticated") || msg.includes("401")) {
-    return "Session expirée. Déconnectez-vous puis reconnectez-vous.";
+    return i18n.t("cloud.sessionExpired");
   }
   if (msg.includes("failed to fetch") || msg.includes("network") || msg.includes("fetch")) {
-    return "Réseau indisponible. Vérifiez la connexion Internet.";
+    return i18n.t("cloud.network");
   }
   if (msg.includes("family") && (msg.includes("null") || msg.includes("required"))) {
-    return "Famille cloud introuvable (family_id manquant). Reconnectez-vous.";
+    return i18n.t("cloud.familyMissing");
   }
   return raw || fallback;
 }

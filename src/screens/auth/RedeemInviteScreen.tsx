@@ -10,11 +10,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAuth } from "../../auth";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { RootStackParamList } from "../../navigation/types";
+import { useTranslation } from "react-i18next";
 import { colors } from "../../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "RedeemInvite">;
 
 export function RedeemInviteScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const { redeemInvite } = useAuth();
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export function RedeemInviteScreen({ navigation }: Props) {
       await redeemInvite(code);
       navigation.replace("ProfilePicker");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Code invalide.");
+      setError(e instanceof Error ? e.message : t("redeem.invalid"));
     } finally {
       setBusy(false);
     }
@@ -38,19 +40,15 @@ export function RedeemInviteScreen({ navigation }: Props) {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <Text style={styles.title}>Rejoindre une famille</Text>
-      <Text style={styles.hint}>
-        Entrez le code à 6 caractères affiché sur le téléphone du parent (réseau Internet
-        requis). L'enfant choisira ensuite son profil. Cet appareil n'accède qu'à la
-        checklist enfant — pas au tableau de bord parent ni à la création de tâches.
-      </Text>
+      <Text style={styles.title}>{t("redeem.title")}</Text>
+      <Text style={styles.hint}>{t("redeem.hint")}</Text>
 
-      <Text style={styles.label}>Code d'invitation (6 caractères)</Text>
+      <Text style={styles.label}>{t("redeem.codeLabel")}</Text>
       <TextInput
         style={styles.input}
         value={code}
         onChangeText={(t) => setCode(t.toUpperCase())}
-        placeholder="ABC123"
+        placeholder={t("redeem.codePlaceholder")}
         autoCapitalize="characters"
         maxLength={6}
       />
@@ -58,13 +56,13 @@ export function RedeemInviteScreen({ navigation }: Props) {
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <PrimaryButton
-        label="Lier cet appareil"
+        label={t("redeem.submit")}
         loading={busy}
         onPress={() => void onSubmit()}
         style={{ marginTop: 16 }}
       />
       <PrimaryButton
-        label="Retour"
+        label={t("common.back")}
         variant="ghost"
         onPress={() => navigation.goBack()}
         style={{ marginTop: 10 }}

@@ -4,6 +4,7 @@ import { Platform } from "react-native";
 import { Task, Profile } from "../types";
 import { parseTimeToDate } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
+import i18n from "../i18n/i18n";
 
 if (Platform.OS !== "web") {
   Notifications.setNotificationHandler({
@@ -50,7 +51,7 @@ export async function scheduleTaskReminder(
 
   const id = await Notifications.scheduleNotificationAsync({
     content: {
-      title: child ? `${child.emoji} ${child.name}` : "Rappel",
+      title: child ? `${child.emoji} ${child.name}` : i18n.t("notifications.reminderFallback"),
       body: task.title,
       data: { taskId: task.id },
     },

@@ -3,30 +3,27 @@ import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { RootStackParamList } from "../../navigation/types";
+import { useTranslation } from "react-i18next";
 import { colors } from "../../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ForgotPassword">;
 
 /** Placeholder — real reset needs cloud auth (Supabase / Firebase). */
 export function ForgotPasswordScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>🔑</Text>
-      <Text style={styles.title}>Mot de passe oublié</Text>
-      <Text style={styles.body}>
-        La réinitialisation par e-mail n'est pas disponible en mode prototype local. Sur cet
-        appareil, recréez un compte parent ou utilisez « Continuer en démo ».
-      </Text>
-      <Text style={styles.note}>
-        Reset via Supabase Auth (e-mail) a brancher — et Sign in with Apple sur iOS avant App Store.
-      </Text>
+      <Text style={styles.title}>{t("forgot.title")}</Text>
+      <Text style={styles.body}>{t("forgot.body")}</Text>
+      <Text style={styles.note}>{t("forgot.note")}</Text>
       <PrimaryButton
-        label="Retour à la connexion"
+        label={t("forgot.backToSignIn")}
         onPress={() => navigation.navigate("SignIn")}
         style={{ marginTop: 20 }}
       />
       <PrimaryButton
-        label="Accueil"
+        label={t("forgot.home")}
         variant="ghost"
         onPress={() => navigation.navigate("Welcome")}
         style={{ marginTop: 10 }}

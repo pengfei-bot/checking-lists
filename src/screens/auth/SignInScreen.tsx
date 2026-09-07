@@ -11,11 +11,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAuth } from "../../auth";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { RootStackParamList } from "../../navigation/types";
+import { useTranslation } from "react-i18next";
 import { colors } from "../../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "SignIn">;
 
 export function SignInScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +31,7 @@ export function SignInScreen({ navigation }: Props) {
       await signIn({ email, password });
       navigation.replace("ProfilePicker");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Connexion impossible.");
+      setError(e instanceof Error ? e.message : t("signIn.failed"));
     } finally {
       setBusy(false);
     }
@@ -41,21 +43,21 @@ export function SignInScreen({ navigation }: Props) {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>Se connecter</Text>
-        <Text style={styles.hint}>Compte parent local (prototype).</Text>
+        <Text style={styles.title}>{t("signIn.title")}</Text>
+        <Text style={styles.hint}>{t("signIn.hint")}</Text>
 
-        <Text style={styles.label}>E-mail</Text>
+        <Text style={styles.label}>{t("signIn.email")}</Text>
         <TextInput
           style={styles.input}
           value={email}
           onChangeText={setEmail}
-          placeholder="parent@exemple.fr"
+          placeholder={t("signIn.emailPlaceholder")}
           autoCapitalize="none"
           keyboardType="email-address"
           autoComplete="email"
         />
 
-        <Text style={styles.label}>Mot de passe</Text>
+        <Text style={styles.label}>{t("signIn.password")}</Text>
         <TextInput
           style={styles.input}
           value={password}
@@ -68,19 +70,19 @@ export function SignInScreen({ navigation }: Props) {
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
         <PrimaryButton
-          label="Connexion"
+          label={t("signIn.submit")}
           loading={busy}
           onPress={() => void onSubmit()}
           style={{ marginTop: 16 }}
         />
         <PrimaryButton
-          label="Mot de passe oublié"
+          label={t("signIn.forgot")}
           variant="ghost"
           onPress={() => navigation.navigate("ForgotPassword")}
           style={{ marginTop: 10 }}
         />
         <PrimaryButton
-          label="Créer un compte"
+          label={t("signIn.createAccount")}
           variant="secondary"
           onPress={() => navigation.navigate("SignUp")}
           style={{ marginTop: 10 }}

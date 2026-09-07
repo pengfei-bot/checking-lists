@@ -8,26 +8,26 @@ import {
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
-import { formatFrenchDate, todayISO } from "../utils/dates";
+import { formatLocalizedDate, todayISO } from "../utils/dates";
 import { confirmUser, notifyUser } from "../utils/feedback";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProfilePicker">;
 
 export function ProfilePickerScreen({ navigation }: Props) {
+  const { t, i18n } = useTranslation();
   const { ready, state, setCurrentProfileId, resetDemo } = useApp();
   const { session, isDemo, isAuthenticated, isChildDevice, family, signOut } = useAuth();
 
   const parents = state.profiles.filter((p) => p.role === "parent");
   const kids = state.profiles.filter((p) => p.role === "child");
-
   const singleChildId = kids.length === 1 ? kids[0].id : null;
 
-  // Child device: never show parent profiles; auto-enter if a single child.
   useEffect(() => {
     if (!ready || !isChildDevice || !singleChildId) return;
     setCurrentProfileId(singleChildId);
@@ -38,7 +38,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loading}>Chargement…</Text>
+        <Text style={styles.loading}>{t("profiles.loading")}</Text>
       </View>
     );
   }
@@ -49,8 +49,8 @@ export function ProfilePickerScreen({ navigation }: Props) {
   ].filter(Boolean);
   const demoBanner =
     demoRoster.length > 0
-      ? `Mode démo — ${demoRoster.join(", ")}. Choisissez un profil.`
-      : "Mode démo — données seed. Choisissez un profil.";
+      ? t("profiles.demoBannerNamed", { names: demoRoster.join(", ") })
+      : t("profiles.demoBanner");
 
   const enter = (id: string, role: "parent" | "child") => {
     if (isChildDevice && role === "parent") return;
@@ -61,43 +61,45 @@ export function ProfilePickerScreen({ navigation }: Props) {
   const onReset = () => {
     void (async () => {
       const ok = await confirmUser(
-        "Réinitialiser la démo ?",
-        "Les données locales seront remplacées par le jeu de démo (parent + enfants seed).",
-        "Réinitialiser"
+        t("profiles.resetTitle"),
+        t("profiles.resetBody"),
+        t("profiles.resetConfirm")
       );
       if (!ok) return;
       await resetDemo();
-      notifyUser(
-        "Démo réinitialisée",
-        "Les données de démonstration ont été restaurées avec succès."
-      );
+      notifyUser(t("profiles.resetDoneTitle"), t("profiles.resetDoneBody"));
     })();
   };
 
   const hint = isChildDevice
-    ? `Appareil enfant · famille « ${session?.displayName ?? family?.name ?? "famille"} » — choisissez votre profil (checklist uniquement).`
+    ? t("profiles.hintChildDevice", {
+        name: session?.displayName ?? family?.name ?? t("profiles.familyFallback"),
+      })
     : isDemo
       ? demoBanner
       : isAuthenticated
-        ? `Connecté : ${session?.displayName ?? session?.email ?? "parent"}${
-            family?.inviteCode ? ` · code famille ${family.inviteCode}` : ""
-          }`
-        : "Choisissez un profil pour commencer.";
+        ? t("profiles.hintAuth", {
+            name: session?.displayName ?? session?.email ?? t("profiles.parentFallback"),
+            codePart: family?.inviteCode
+              ? t("profiles.hintAuthCode", { code: family.inviteCode })
+              : "",
+          })
+        : t("profiles.hintDefault");
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.emoji}>✅</Text>
-      <Text style={styles.title}>Checking Lists</Text>
+      <Text style={styles.title}>{t("common.appName")}</Text>
       <Text style={styles.subtitle}>
         {isChildDevice
-          ? `Mes tâches · ${formatFrenchDate(todayISO())}`
-          : `Listes de tâches famille · ${formatFrenchDate(todayISO())}`}
+          ? t("profiles.subtitleChild", { date: formatLocalizedDate(todayISO(), i18n.language) })
+          : t("profiles.subtitleFamily", { date: formatLocalizedDate(todayISO(), i18n.language) })}
       </Text>
       <Text style={styles.hint}>{hint}</Text>
 
       {!isChildDevice ? (
         <>
-          <Text style={styles.section}>Parent</Text>
+          <Text style={styles.section}>{t("profiles.sectionParent")}</Text>
           {parents.map((p) => (
             <Pressable
               key={p.id}
@@ -110,19 +112,19 @@ export function ProfilePickerScreen({ navigation }: Props) {
               <Text style={styles.cardEmoji}>{p.emoji}</Text>
               <View style={{ flex: 1 }}>
                 <Text style={styles.cardTitle}>{p.name}</Text>
-                <Text style={styles.cardMeta}>Tableau de bord · gérer les enfants</Text>
+                <Text style={styles.cardMeta}>{t("profiles.parentMeta")}</Text>
               </View>
             </Pressable>
           ))}
         </>
       ) : null}
 
-      <Text style={styles.section}>{isChildDevice ? "Qui es-tu ?" : "Enfants"}</Text>
+      <Text style={styles.section}>
+        {isChildDevice ? t("profiles.sectionWho") : t("profiles.sectionChildren")}
+      </Text>
       {kids.length === 0 ? (
         <Text style={styles.emptyKids}>
-          {isChildDevice
-            ? "Aucun profil enfant pour l'instant. Demandez au parent d'en créer un."
-            : "Aucun enfant — ajoutez-en depuis le tableau de bord parent."}
+          {isChildDevice ? t("profiles.noKidsChild") : t("profiles.noKidsParent")}
         </Text>
       ) : (
         kids.map((p) => (
@@ -137,32 +139,39 @@ export function ProfilePickerScreen({ navigation }: Props) {
             <Text style={styles.cardEmoji}>{p.emoji}</Text>
             <View style={{ flex: 1 }}>
               <Text style={styles.cardTitle}>{p.name}</Text>
-              <Text style={styles.cardMeta}>Mes tâches du jour · photo preuve</Text>
+              <Text style={styles.cardMeta}>{t("profiles.childMeta")}</Text>
             </View>
           </Pressable>
         ))
       )}
 
+      <PrimaryButton
+        label={t("common.language")}
+        variant="secondary"
+        onPress={() => navigation.navigate("LanguageSettings")}
+        style={{ marginTop: 24 }}
+      />
+
       {isAuthenticated && !isChildDevice ? (
         <PrimaryButton
-          label="Partage famille (code invitation)"
+          label={t("profiles.shareInvite")}
           variant="secondary"
           onPress={() => navigation.navigate("FamilyShare")}
-          style={{ marginTop: 24 }}
+          style={{ marginTop: 10 }}
         />
       ) : null}
 
       {isDemo ? (
         <PrimaryButton
-          label="Réinitialiser les données de démo"
+          label={t("profiles.resetDemo")}
           variant="ghost"
           onPress={onReset}
-          style={{ marginTop: isAuthenticated && !isChildDevice ? 10 : 24 }}
+          style={{ marginTop: 10 }}
         />
       ) : null}
 
       <PrimaryButton
-        label={session ? "Se déconnecter / quitter" : "Retour à l'accueil"}
+        label={session ? t("profiles.signOut") : t("profiles.backHome")}
         variant="ghost"
         onPress={() => {
           void (async () => {
@@ -170,9 +179,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
             navigation.replace("Welcome");
           })();
         }}
-        style={{
-          marginTop: isDemo || (isAuthenticated && !isChildDevice) ? 10 : 24,
-        }}
+        style={{ marginTop: 10 }}
       />
     </ScrollView>
   );

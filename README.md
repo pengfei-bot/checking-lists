@@ -76,6 +76,19 @@ Placeholder UI. Wire Supabase Auth email reset later.
 
 After joining with a code, the profile picker hides parent cards. If the family has a single child profile, the app opens that checklist automatically.
 
+
+## i18n (Europe + Asia)
+
+- Stack: `i18next` + `react-i18next` + `expo-localization`
+- Catalogs: `src/i18n/locales/*.json` (56 BCP-47 locales: 29 Europe + 27 Asia)
+- Fallback chain: selected → `fr` → `en`
+- First launch detects device locale; override in **Language** (profile picker, parent dashboard, child home)
+- Preference stored in AsyncStorage (`@checking_lists_locale`)
+
+## Child history calendar
+
+Child **Historique** is a monthly calendar (same status colors as the parent calendar, scoped to that child). Tap a day → completions + photos for that day.
+
 ## Limits
 
 - Local seed only in demo mode

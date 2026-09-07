@@ -11,11 +11,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAuth } from "../../auth";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { RootStackParamList } from "../../navigation/types";
+import { useTranslation } from "react-i18next";
 import { colors } from "../../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "SignUp">;
 
 export function SignUpScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const { signUp } = useAuth();
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
@@ -31,7 +33,7 @@ export function SignUpScreen({ navigation }: Props) {
       await signUp({ email, password, displayName, familyName });
       navigation.replace("ProfilePicker");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Inscription impossible.");
+      setError(e instanceof Error ? e.message : t("signUp.failed"));
     } finally {
       setBusy(false);
     }
@@ -43,60 +45,57 @@ export function SignUpScreen({ navigation }: Props) {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>Créer un compte parent</Text>
-        <Text style={styles.hint}>
-          Compte parent cloud (Supabase). Un code famille à 6 caractères sera généré pour que
-          l'enfant rejoigne la famille depuis son propre iPhone.
-        </Text>
+        <Text style={styles.title}>{t("signUp.title")}</Text>
+        <Text style={styles.hint}>{t("signUp.hint")}</Text>
 
-        <Text style={styles.label}>Prénom / nom</Text>
+        <Text style={styles.label}>{t("signUp.displayName")}</Text>
         <TextInput
           style={styles.input}
           value={displayName}
           onChangeText={setDisplayName}
-          placeholder="Alex"
+          placeholder={t("signUp.displayNamePlaceholder")}
           autoCapitalize="words"
         />
 
-        <Text style={styles.label}>E-mail</Text>
+        <Text style={styles.label}>{t("signUp.email")}</Text>
         <TextInput
           style={styles.input}
           value={email}
           onChangeText={setEmail}
-          placeholder="parent@exemple.fr"
+          placeholder={t("signUp.emailPlaceholder")}
           autoCapitalize="none"
           keyboardType="email-address"
           autoComplete="email"
         />
 
-        <Text style={styles.label}>Mot de passe</Text>
+        <Text style={styles.label}>{t("signUp.password")}</Text>
         <TextInput
           style={styles.input}
           value={password}
           onChangeText={setPassword}
-          placeholder="6 caractères minimum"
+          placeholder={t("signUp.passwordPlaceholder")}
           secureTextEntry
           autoComplete="password-new"
         />
 
-        <Text style={styles.label}>Nom de la famille (optionnel)</Text>
+        <Text style={styles.label}>{t("signUp.familyName")}</Text>
         <TextInput
           style={styles.input}
           value={familyName}
           onChangeText={setFamilyName}
-          placeholder="Famille Dupont"
+          placeholder={t("signUp.familyNamePlaceholder")}
         />
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
         <PrimaryButton
-          label="Créer le compte"
+          label={t("signUp.submit")}
           loading={busy}
           onPress={() => void onSubmit()}
           style={{ marginTop: 16 }}
         />
         <PrimaryButton
-          label="Déjà un compte ? Se connecter"
+          label={t("signUp.haveAccount")}
           variant="ghost"
           onPress={() => navigation.navigate("SignIn")}
           style={{ marginTop: 10 }}

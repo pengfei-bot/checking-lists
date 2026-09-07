@@ -5,11 +5,13 @@ import { useAuth } from "../../auth";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { RootStackParamList } from "../../navigation/types";
 import { useParentOnlyGuard } from "../../navigation/useParentOnlyGuard";
+import { useTranslation } from "react-i18next";
 import { colors } from "../../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "FamilyShare">;
 
 export function FamilyShareScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const blocked = useParentOnlyGuard(navigation);
   const { family, session, isAuthenticated, createInvite, isDemo } = useAuth();
   const [busy, setBusy] = useState(false);
@@ -20,9 +22,9 @@ export function FamilyShareScreen({ navigation }: Props) {
     try {
       const invite = await createInvite();
       setCode(invite.code);
-      Alert.alert("Nouveau code", `Code famille : ${invite.code}`);
+      Alert.alert(t("familyShare.newCodeTitle"), t("familyShare.newCodeMsg", { code: invite.code }));
     } catch (e) {
-      Alert.alert("Erreur", e instanceof Error ? e.message : "Impossible de générer le code.");
+      Alert.alert(t("common.error"), e instanceof Error ? e.message : t("familyShare.generateFailed"));
     } finally {
       setBusy(false);
     }
@@ -31,12 +33,10 @@ export function FamilyShareScreen({ navigation }: Props) {
   if (blocked) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Espace parent</Text>
-        <Text style={styles.body}>
-          Le partage famille (codes d'invitation) est réservé au compte parent.
-        </Text>
+        <Text style={styles.title}>{t("familyShare.parentSpace")}</Text>
+        <Text style={styles.body}>{t("familyShare.blockedBody")}</Text>
         <PrimaryButton
-          label="Retour"
+          label={t("common.back")}
           variant="ghost"
           onPress={() => navigation.replace("ProfilePicker")}
           style={{ marginTop: 16 }}
@@ -48,13 +48,10 @@ export function FamilyShareScreen({ navigation }: Props) {
   if (isDemo || !isAuthenticated) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Partage famille</Text>
-        <Text style={styles.body}>
-          Disponible après création d'un compte parent. En mode démo, utilisez les profils seed
-          sur le même appareil (sans sync cloud).
-        </Text>
+        <Text style={styles.title}>{t("familyShare.title")}</Text>
+        <Text style={styles.body}>{t("familyShare.demoBody")}</Text>
         <PrimaryButton
-          label="Créer un compte parent"
+          label={t("familyShare.createParent")}
           onPress={() => navigation.navigate("SignUp")}
           style={{ marginTop: 16 }}
         />
@@ -66,31 +63,27 @@ export function FamilyShareScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Partage famille</Text>
-      <Text style={styles.subtitle}>{family?.name ?? "Votre famille"}</Text>
-      <Text style={styles.body}>
-        Montrez ce code à votre enfant. Sur son iPhone, il ouvre Checking Lists → « Rejoindre une
-        famille » et saisit le code (connexion Internet requise). Les listes se synchronisent via
-        Supabase.
-      </Text>
+      <Text style={styles.title}>{t("familyShare.title")}</Text>
+      <Text style={styles.subtitle}>{family?.name ?? t("familyShare.yourFamily")}</Text>
+      <Text style={styles.body}>{t("familyShare.body")}</Text>
 
       <View style={styles.codeBox}>
-        <Text style={styles.codeLabel}>Code d'invitation</Text>
+        <Text style={styles.codeLabel}>{t("familyShare.inviteCode")}</Text>
         <Text style={styles.code}>{displayCode}</Text>
       </View>
 
       {session?.email ? (
-        <Text style={styles.meta}>Compte : {session.email}</Text>
+        <Text style={styles.meta}>{t("familyShare.account", { email: session.email })}</Text>
       ) : null}
 
       <PrimaryButton
-        label="Générer un nouveau code"
+        label={t("familyShare.generate")}
         loading={busy}
         onPress={() => void onRefresh()}
         style={{ marginTop: 16 }}
       />
       <PrimaryButton
-        label="Retour"
+        label={t("common.back")}
         variant="ghost"
         onPress={() => navigation.goBack()}
         style={{ marginTop: 10 }}

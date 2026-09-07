@@ -4,11 +4,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAuth } from "../../auth";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { RootStackParamList } from "../../navigation/types";
+import { useTranslation } from "react-i18next";
 import { colors } from "../../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
 
 export function WelcomeScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const { ready, session, continueAsDemo } = useAuth();
   const [busy, setBusy] = useState(false);
 
@@ -32,7 +34,7 @@ export function WelcomeScreen({ navigation }: Props) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.muted}>Chargement…</Text>
+        <Text style={styles.muted}>{t("common.loading")}</Text>
       </View>
     );
   }
@@ -41,46 +43,41 @@ export function WelcomeScreen({ navigation }: Props) {
     <View style={styles.container}>
       <Text style={styles.emoji}>✅</Text>
       <Text style={styles.title}>Checking Lists</Text>
-      <Text style={styles.subtitle}>
-        Tâches quotidiennes pour la famille. Parents : compte + code. Enfants : rejoindre avec le
-        code sur leur appareil (checklist uniquement).
-      </Text>
+      <Text style={styles.subtitle}>{t("welcome.subtitle")}</Text>
 
       <View style={styles.card}>
-        <Text style={styles.badge}>Deux entrées</Text>
+        <Text style={styles.badge}>{t("welcome.badge")}</Text>
         <Text style={styles.cardText}>
-          • Parent — créez un compte, gérez les tâches et le code famille.{"\n"}
-          • Enfant — saisissez le code sur l'iPhone de l'enfant (réseau requis). Pas d'espace
-          parent sur cet appareil.
+          {t("welcome.cardText")}
         </Text>
       </View>
 
       <PrimaryButton
-        label="Rejoindre une famille (code enfant)"
+        label={t("welcome.joinFamily")}
         onPress={() => navigation.navigate("RedeemInvite")}
         style={{ marginTop: 8 }}
       />
       <PrimaryButton
-        label="Créer un compte parent"
+        label={t("welcome.createParent")}
         variant="secondary"
         onPress={() => navigation.navigate("SignUp")}
         style={{ marginTop: 10 }}
       />
       <PrimaryButton
-        label="Se connecter (parent)"
+        label={t("welcome.signInParent")}
         variant="ghost"
         onPress={() => navigation.navigate("SignIn")}
         style={{ marginTop: 10 }}
       />
       <PrimaryButton
-        label="Continuer en démo"
+        label={t("welcome.continueDemo")}
         variant="ghost"
         loading={busy}
         onPress={() => void onDemo()}
         style={{ marginTop: 18 }}
       />
       <Text style={styles.footer}>
-        La démo reste 100 % locale (sans compte) — idéal pour tester l'UI sur le web.
+        {t("welcome.footer")}
       </Text>
     </View>
   );

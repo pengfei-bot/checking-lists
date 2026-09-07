@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { RootStackParamList } from "../navigation/types";
@@ -21,6 +22,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "ChildForm">;
 const EMOJI_CHOICES = ["🦁", "🦄", "🦊", "🐻", "🐼", "🐸", "🐰", "🐯", "🐨", "🐶", "🐱", "🌟"];
 
 export function ChildFormScreen({ navigation, route }: Props) {
+  const { t } = useTranslation();
   const blocked = useParentOnlyGuard(navigation);
   const { getProfile, childrenProfiles, addChild, updateChild, deleteChild } = useApp();
   const existing = route.params.childId ? getProfile(route.params.childId) : undefined;
@@ -40,14 +42,14 @@ export function ChildFormScreen({ navigation, route }: Props) {
   if (blocked) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg, padding: 24 }}>
-        <Text style={{ color: colors.textMuted, fontWeight: "600" }}>Espace parent réservé.</Text>
+        <Text style={{ color: colors.textMuted, fontWeight: "600" }}>{t("roles.parentOnlyShort")}</Text>
       </View>
     );
   }
 
   const onSave = async () => {
     if (!canSave) {
-      notifyUser("Formulaire", "Le prénom de l'enfant est requis.");
+      notifyUser(t("childForm.formTitle"), t("childForm.nameRequired"));
       return;
     }
     setError(null);
@@ -60,7 +62,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
           color,
         });
         setSaving(false);
-        notifyUser("Enfant mis à jour", `${name.trim()} a été enregistré.`);
+        notifyUser(t("childForm.updatedTitle"), t("childForm.updatedBody", { name: name.trim() }));
       } else {
         await addChild({
           name: name.trim(),
@@ -68,14 +70,14 @@ export function ChildFormScreen({ navigation, route }: Props) {
           color,
         });
         setSaving(false);
-        notifyUser("Enfant ajouté", `${name.trim()} apparaît dans le sélecteur et les filtres.`);
+        notifyUser(t("childForm.addedTitle"), t("childForm.addedBody", { name: name.trim() }));
       }
       navigation.goBack();
     } catch (e) {
-      const msg = frenchCloudError(e, "Impossible d'enregistrer l'enfant.");
+      const msg = frenchCloudError(e, t("childForm.saveFailed"));
       setError(msg);
       setSaving(false);
-      notifyUser("Erreur", msg);
+      notifyUser(t("common.error"), msg);
     } finally {
       setSaving(false);
     }
@@ -85,9 +87,9 @@ export function ChildFormScreen({ navigation, route }: Props) {
     if (!isEdit || !existing) return;
     void (async () => {
       const ok = await confirmUser(
-        "Supprimer cet enfant ?",
-        `« ${existing.name} » et ses tâches / complétions seront retirés. Cette action est irréversible.`,
-        "Supprimer"
+        t("childForm.deleteTitle"),
+        t("childForm.deleteBody", { name: existing.name }),
+        t("common.delete")
       );
       if (!ok) return;
       setSaving(true);
@@ -95,13 +97,13 @@ export function ChildFormScreen({ navigation, route }: Props) {
       try {
         await deleteChild(existing.id);
         setSaving(false);
-        notifyUser("Enfant supprimé", `${existing.name} a été retiré de la famille.`);
+        notifyUser(t("childForm.deletedTitle"), t("childForm.deletedBody", { name: existing.name }));
         navigation.goBack();
       } catch (e) {
-        const msg = frenchCloudError(e, "Impossible de supprimer l'enfant.");
+        const msg = frenchCloudError(e, t("childForm.deleteFailed"));
         setError(msg);
         setSaving(false);
-        notifyUser("Erreur", msg);
+        notifyUser(t("common.error"), msg);
       } finally {
         setSaving(false);
       }
@@ -110,12 +112,12 @@ export function ChildFormScreen({ navigation, route }: Props) {
 
   return (
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-      <Text style={styles.title}>{isEdit ? "Modifier l'enfant" : "Ajouter un enfant"}</Text>
+      <Text style={styles.title}>{isEdit ? t("childForm.editTitle") : t("childForm.newTitle")}</Text>
       <Text style={styles.hint}>
         Le profil apparaît dans le sélecteur, le tableau de bord, le calendrier et le formulaire de tâche.
       </Text>
 
-      <Text style={styles.label}>Prénom *</Text>
+      <Text style={styles.label}>{t("childForm.name")}</Text>
       <TextInput
         style={styles.input}
         value={name}
@@ -125,7 +127,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
         autoFocus={!isEdit}
       />
 
-      <Text style={styles.label}>Emoji (optionnel)</Text>
+      <Text style={styles.label}>{t("childForm.emoji")}</Text>
       <View style={styles.rowWrap}>
         {EMOJI_CHOICES.map((e) => (
           <Pressable
@@ -138,7 +140,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
         ))}
       </View>
 
-      <Text style={styles.label}>Couleur (optionnel)</Text>
+      <Text style={styles.label}>{t("childForm.color")}</Text>
       <View style={styles.rowWrap}>
         {childColors.map((c) => (
           <Pressable
@@ -161,7 +163,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <PrimaryButton
-        label={isEdit ? "Enregistrer" : "Ajouter l'enfant"}
+        label={isEdit ? t("childForm.save") : t("childForm.add")}
         onPress={() => void onSave()}
         loading={saving}
         disabled={!canSave || saving}
@@ -170,7 +172,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
 
       {isEdit ? (
         <PrimaryButton
-          label="Supprimer l'enfant"
+          label={t("childForm.delete")}
           variant="danger"
           onPress={onDelete}
           disabled={saving}
@@ -179,7 +181,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
       ) : null}
 
       <PrimaryButton
-        label="Annuler"
+        label={t("common.cancel")}
         variant="ghost"
         onPress={() => navigation.goBack()}
         disabled={saving}

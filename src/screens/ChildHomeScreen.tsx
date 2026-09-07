@@ -7,12 +7,13 @@ import {
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { TaskCard } from "../components/TaskCard";
 import { PrimaryButton } from "../components/PrimaryButton";
-import { formatFrenchDate, todayISO } from "../utils/dates";
+import { formatLocalizedDate, todayISO } from "../utils/dates";
 import { notifyUser } from "../utils/feedback";
 import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
 import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
@@ -21,6 +22,7 @@ import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar
 type Props = NativeStackScreenProps<RootStackParamList, "ChildHome">;
 
 export function ChildHomeScreen({ navigation }: Props) {
+  const { t, i18n } = useTranslation();
   const {
     currentProfile,
     tasksForChildToday,
@@ -35,9 +37,9 @@ export function ChildHomeScreen({ navigation }: Props) {
   if (!currentProfile || currentProfile.role !== "child") {
     return (
       <View style={styles.center}>
-        <Text>Profil enfant requis.</Text>
+        <Text>{t("roles.childRequired")}</Text>
         <PrimaryButton
-          label="Changer de profil"
+          label={t("common.changeProfile")}
           onPress={() => {
             setCurrentProfileId(null);
             navigation.replace("ProfilePicker");
@@ -49,21 +51,21 @@ export function ChildHomeScreen({ navigation }: Props) {
   }
 
   const tasks = tasksForChildToday(currentProfile.id);
-  const doneCount = tasks.filter((t) => completionFor(t.id)).length;
+  const doneCount = tasks.filter((task) => completionFor(task.id)).length;
   const progress = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
 
   const header = useMemo(
     () => (
       <View style={[styles.hero, { backgroundColor: currentProfile.color + "22" }]}>
         <Text style={styles.heroEmoji}>{currentProfile.emoji}</Text>
-        <Text style={styles.heroTitle}>Salut {currentProfile.name} !</Text>
-        <Text style={styles.heroSub}>{formatFrenchDate(todayISO())}</Text>
+        <Text style={styles.heroTitle}>{t("childHome.hello", { name: currentProfile.name })}</Text>
+        <Text style={styles.heroSub}>{formatLocalizedDate(todayISO(), i18n.language)}</Text>
         <Text style={styles.progress}>
-          {doneCount}/{tasks.length} terminees · {progress}%
+          {t("childHome.progress", { done: doneCount, total: tasks.length, percent: progress })}
         </Text>
       </View>
     ),
-    [currentProfile, doneCount, tasks.length, progress]
+    [currentProfile, doneCount, tasks.length, progress, t, i18n.language]
   );
 
   const quickDone = async (taskId: string) => {
@@ -78,41 +80,35 @@ export function ChildHomeScreen({ navigation }: Props) {
   const doneWithPhoto = async (taskId: string) => {
     const result = await pickProofImage({ quality: 0.6, preferCamera: true });
     if (result.status === "canceled") {
-      notifyUser("Photo", "Selection annulee — aucune photo ajoutee.");
+      notifyUser(t("photo.title"), t("photo.canceled"));
       return;
     }
     if (result.status === "error") {
       await markTaskDone(taskId, currentProfile.id, MOCK_PHOTO_URI);
-      notifyUser(
-        "Photo",
-        `${result.message} Une photo de demonstration a ete utilisee.`
-      );
+      notifyUser(t("photo.title"), t("photo.demoUsed", { message: result.message }));
       return;
     }
     await markTaskDone(taskId, currentProfile.id, result.uri);
-    notifyUser("Photo", "Photo preuve enregistree.");
+    notifyUser(t("photo.title"), t("photo.saved"));
   };
 
   const onReminders = async () => {
     if (!notificationsSupported()) {
-      notifyUser(
-        "Notifications",
-        "Les rappels locaux ne fonctionnent pas sur le web. Testez avec Expo Go sur un appareil reel."
-      );
+      notifyUser(t("notifications.title"), t("notifications.webUnavailable"));
       return;
     }
     const ok = await ensureNotificationPermissions();
     if (!ok) {
-      notifyUser("Permission refusee", "Activez les notifications dans les reglages.");
+      notifyUser(t("notifications.deniedTitle"), t("notifications.deniedBody"));
       return;
     }
     const n = await refreshReminders();
-    notifyUser("Rappels", `${n} rappel(s) planifie(s) pour aujourd'hui.`);
+    notifyUser(t("notifications.remindersTitle"), t("notifications.remindersScheduled", { count: n }));
   };
 
   const onCalendar = async () => {
     const result = await addTodayTasksToCalendar(state.tasks, state.profiles, currentProfile.id);
-    notifyUser("Calendrier", result.message);
+    notifyUser(t("deviceCalendar.title"), result.message);
   };
 
   return (
@@ -120,7 +116,7 @@ export function ChildHomeScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={styles.container}>
         {header}
         {tasks.length === 0 ? (
-          <Text style={styles.empty}>Pas de taches pour aujourd'hui</Text>
+          <Text style={styles.empty}>{t("childHome.empty")}</Text>
         ) : (
           tasks.map((task) => {
             const done = !!completionFor(task.id);
@@ -133,11 +129,11 @@ export function ChildHomeScreen({ navigation }: Props) {
                 rightAccessory={
                   <View style={styles.actions}>
                     <Pressable style={styles.miniBtn} onPress={() => void quickDone(task.id)}>
-                      <Text style={styles.miniText}>{done ? "UNDO" : "OK"}</Text>
+                      <Text style={styles.miniText}>{done ? t("common.undo") : t("common.ok")}</Text>
                     </Pressable>
                     {!done && (
                       <Pressable style={styles.miniBtn} onPress={() => void doneWithPhoto(task.id)}>
-                        <Text style={styles.miniText}>PHOTO</Text>
+                        <Text style={styles.miniText}>{t("common.photo")}</Text>
                       </Pressable>
                     )}
                   </View>
@@ -148,17 +144,33 @@ export function ChildHomeScreen({ navigation }: Props) {
         )}
 
         <PrimaryButton
-          label="Historique"
+          label={t("childHome.history")}
           variant="secondary"
           onPress={() => navigation.navigate("ChildHistory")}
           style={{ marginTop: 8 }}
         />
-        <PrimaryButton label="Activer / rafraichir les rappels" variant="secondary" onPress={() => void onReminders()} style={{ marginTop: 8 }} />
+        <PrimaryButton
+          label={t("common.language")}
+          variant="ghost"
+          onPress={() => navigation.navigate("LanguageSettings")}
+          style={{ marginTop: 8 }}
+        />
+        <PrimaryButton
+          label={t("childHome.reminders")}
+          variant="secondary"
+          onPress={() => void onReminders()}
+          style={{ marginTop: 8 }}
+        />
         {calendarSupported() && (
-          <PrimaryButton label="Ajouter mes taches au calendrier" variant="ghost" onPress={() => void onCalendar()} style={{ marginTop: 8 }} />
+          <PrimaryButton
+            label={t("childHome.addToCalendar")}
+            variant="ghost"
+            onPress={() => void onCalendar()}
+            style={{ marginTop: 8 }}
+          />
         )}
         <PrimaryButton
-          label="Changer de profil"
+          label={t("common.changeProfile")}
           variant="ghost"
           onPress={() => {
             setCurrentProfileId(null);

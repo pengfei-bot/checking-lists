@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
@@ -20,6 +21,7 @@ import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
 type Props = NativeStackScreenProps<RootStackParamList, "TaskDetail">;
 
 export function TaskDetailScreen({ navigation, route }: Props) {
+  const { t } = useTranslation();
   const {
     getTask,
     getProfile,
@@ -34,8 +36,8 @@ export function TaskDetailScreen({ navigation, route }: Props) {
   if (!task) {
     return (
       <View style={styles.center}>
-        <Text>Tache introuvable.</Text>
-        <PrimaryButton label="Retour" onPress={() => navigation.goBack()} style={{ marginTop: 12 }} />
+        <Text>{t("taskDetail.notFound")}</Text>
+        <PrimaryButton label={t("common.back")} onPress={() => navigation.goBack()} style={{ marginTop: 12 }} />
       </View>
     );
   }
@@ -51,18 +53,15 @@ export function TaskDetailScreen({ navigation, route }: Props) {
       if (withPhoto) {
         const result = await pickProofImage({ quality: 0.7, preferCamera: true });
         if (result.status === "canceled") {
-          notifyUser("Photo", "Selection annulee — aucune photo ajoutee.");
+          notifyUser(t("photo.title"), t("photo.canceled"));
           return;
         }
         if (result.status === "error") {
           photoUri = MOCK_PHOTO_URI;
-          notifyUser(
-            "Photo",
-            `${result.message} Une photo de demonstration a ete utilisee.`
-          );
+          notifyUser(t("photo.title"), t("photo.demoUsed", { message: result.message }));
         } else {
           photoUri = result.uri;
-          notifyUser("Photo", "Photo preuve enregistree.");
+          notifyUser(t("photo.title"), t("photo.saved"));
         }
       }
       await markTaskDone(task.id, task.childId, photoUri);
@@ -76,39 +75,36 @@ export function TaskDetailScreen({ navigation, route }: Props) {
       <Text style={styles.emoji}>{child?.emoji ?? "✅"}</Text>
       <Text style={styles.title}>{task.title}</Text>
       <Text style={styles.meta}>
-        {child?.name ?? "Enfant"} · {task.time} · {recurrenceLabel(task.recurrence)}
+        {child?.name ?? t("taskDetail.childFallback")} · {task.time} · {recurrenceLabel(task.recurrence)}
       </Text>
       <Text style={styles.meta}>
-        Rappel: {task.reminderEnabled ? "oui" : "non"} · {todayISO()}
+        {t("taskDetail.reminder", { value: task.reminderEnabled ? t("common.yes") : t("common.no"), date: todayISO() })}
       </Text>
 
       <View style={[styles.badge, done ? styles.badgeDone : styles.badgeTodo]}>
-        <Text style={styles.badgeText}>{done ? "Terminee" : "A faire"}</Text>
+        <Text style={styles.badgeText}>{done ? t("taskDetail.done") : t("taskDetail.todo")}</Text>
       </View>
 
       {done?.photoUri ? (
         <View style={styles.photoBox}>
-          <Text style={styles.label}>Photo preuve</Text>
+          <Text style={styles.label}>{t("taskDetail.photoProof")}</Text>
           <Image source={{ uri: done.photoUri }} style={styles.photo} resizeMode="cover" />
         </View>
       ) : (
-        <Text style={styles.help}>Pas encore de photo preuve.</Text>
+        <Text style={styles.help}>{t("taskDetail.noPhoto")}</Text>
       )}
 
       {Platform.OS === "web" && (
         <View style={styles.webNote}>
-          <Text style={styles.webNoteText}>
-            Demo navigateur : le bouton photo ouvre un selecteur de fichier image.
-            En cas d'erreur du selecteur, une photo mock peut etre utilisee. Notifications locales desactivees sur le web.
-          </Text>
+          <Text style={styles.webNoteText}>{t("taskDetail.webNote")}</Text>
         </View>
       )}
 
       {isChild && !done && (
         <>
-          <PrimaryButton label="Marquer fait" onPress={() => void markDone(false)} loading={busy} style={{ marginTop: 8 }} />
+          <PrimaryButton label={t("taskDetail.markDone")} onPress={() => void markDone(false)} loading={busy} style={{ marginTop: 8 }} />
           <PrimaryButton
-            label={Platform.OS === "web" ? "Fait + photo (fichier)" : "Fait + photo"}
+            label={Platform.OS === "web" ? t("taskDetail.donePhotoWeb") : t("taskDetail.donePhoto")}
             variant="secondary"
             onPress={() => void markDone(true)}
             loading={busy}
@@ -119,7 +115,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
 
       {done && (
         <PrimaryButton
-          label="Annuler la validation"
+          label={t("taskDetail.unmark")}
           variant="ghost"
           onPress={() => void unmarkTaskDone(task.id)}
           style={{ marginTop: 8 }}
@@ -128,14 +124,14 @@ export function TaskDetailScreen({ navigation, route }: Props) {
 
       {currentProfile?.role === "parent" && (
         <PrimaryButton
-          label="Modifier"
+          label={t("taskDetail.edit")}
           variant="secondary"
           onPress={() => navigation.navigate("TaskForm", { taskId: task.id })}
           style={{ marginTop: 8 }}
         />
       )}
 
-      <PrimaryButton label="Retour" variant="ghost" onPress={() => navigation.goBack()} style={{ marginTop: 8 }} />
+      <PrimaryButton label={t("common.back")} variant="ghost" onPress={() => navigation.goBack()} style={{ marginTop: 8 }} />
     </ScrollView>
   );
 }

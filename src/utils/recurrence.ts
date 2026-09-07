@@ -1,4 +1,5 @@
 import { Task } from "../types";
+import i18n from "../i18n/i18n";
 import { isWeekday, todayISO } from "./dates";
 
 export function isTaskForDate(task: Task, date = new Date()): boolean {
@@ -12,10 +13,10 @@ export function isTaskForDate(task: Task, date = new Date()): boolean {
 export function recurrenceLabel(recurrence: Task["recurrence"]): string {
   switch (recurrence) {
     case "daily":
-      return "Tous les jours";
+      return i18n.t("recurrence.daily");
     case "weekdays":
-      return "Jours de semaine";
+      return i18n.t("recurrence.weekdays");
     case "once":
-      return "Une seule fois";
+      return i18n.t("recurrence.once");
   }
 }

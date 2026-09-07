@@ -1,5 +1,6 @@
 import * as Calendar from "expo-calendar";
 import { Platform } from "react-native";
+import i18n from "../i18n/i18n";
 import { Task, Profile } from "../types";
 import { parseTimeToDate, todayISO } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
@@ -51,16 +52,16 @@ export async function addTodayTasksToCalendar(
   if (Platform.OS === "web") {
     return {
       added: 0,
-      message: "Le calendrier n'est pas disponible sur le web. Utilisez Expo Go sur un telephone.",
+      message: i18n.t("deviceCalendar.webUnavailable"),
     };
   }
   const ok = await ensureCalendarPermissions();
   if (!ok) {
-    return { added: 0, message: "Permission calendrier refusee." };
+    return { added: 0, message: i18n.t("deviceCalendar.permissionDenied") };
   }
   const calendarId = await getWritableCalendarId();
   if (!calendarId) {
-    return { added: 0, message: "Aucun calendrier disponible." };
+    return { added: 0, message: i18n.t("deviceCalendar.noCalendar") };
   }
 
   const todayTasks = tasks.filter(
@@ -75,7 +76,7 @@ export async function addTodayTasksToCalendar(
       title: child ? `[${child.name}] ${task.title}` : task.title,
       startDate: start,
       endDate: end,
-      notes: `Ajoute depuis Checking Lists (${todayISO()})`,
+      notes: i18n.t("deviceCalendar.notes", { date: todayISO() }),
       timeZone: undefined,
     });
     added += 1;
@@ -83,7 +84,7 @@ export async function addTodayTasksToCalendar(
   return {
     added,
     message: added
-      ? `${added} tache(s) ajoutee(s) au calendrier pour aujourd'hui.`
-      : "Aucune tache a ajouter aujourd'hui.",
+      ? i18n.t("deviceCalendar.added", { count: added })
+      : i18n.t("deviceCalendar.noneToday"),
   };
 }

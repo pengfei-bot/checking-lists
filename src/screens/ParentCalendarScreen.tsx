@@ -8,28 +8,29 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import {
-  WEEKDAY_LABELS_FR,
   daysInMonth,
-  formatFrenchMonthYear,
+  formatLocalizedMonthYear,
   isoFromParts,
   mondayFirstOffset,
   todayISO,
+  weekdayLabelsFor,
 } from "../utils/dates";
 import {
   DayAggregateStatus,
   buildDayOverview,
   statusColor,
-  statusLabelFr,
 } from "../utils/calendarStatus";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParentCalendar">;
 
 export function ParentCalendarScreen({ navigation }: Props) {
+  const { t, i18n } = useTranslation();
   const { currentProfile, childrenProfiles, state, setCurrentProfileId } = useApp();
   const { width } = useWindowDimensions();
   const now = new Date();
@@ -40,9 +41,9 @@ export function ParentCalendarScreen({ navigation }: Props) {
   if (!currentProfile || currentProfile.role !== "parent") {
     return (
       <View style={styles.center}>
-        <Text>Profil parent requis.</Text>
+        <Text>{t("roles.parentRequired")}</Text>
         <PrimaryButton
-          label="Changer de profil"
+          label={t("common.changeProfile")}
           onPress={() => {
             setCurrentProfileId(null);
             navigation.replace("ProfilePicker");
@@ -75,45 +76,36 @@ export function ParentCalendarScreen({ navigation }: Props) {
     const totalDays = daysInMonth(year, monthIndex);
     const offset = mondayFirstOffset(year, monthIndex);
     const out: Array<{ day: number | null; iso: string | null; status: DayAggregateStatus }> = [];
-    for (let i = 0; i < offset; i++) {
-      out.push({ day: null, iso: null, status: "empty" });
-    }
+    for (let i = 0; i < offset; i++) out.push({ day: null, iso: null, status: "empty" });
     for (let day = 1; day <= totalDays; day++) {
       const iso = isoFromParts(year, monthIndex, day);
-      const overview = buildDayOverview(
-        iso,
-        state.tasks,
-        state.completions,
-        childrenProfiles,
-        today
-      );
+      const overview = buildDayOverview(iso, state.tasks, state.completions, childrenProfiles, today);
       out.push({ day, iso, status: overview.status });
     }
-    while (out.length % 7 !== 0) {
-      out.push({ day: null, iso: null, status: "empty" });
-    }
+    while (out.length % 7 !== 0) out.push({ day: null, iso: null, status: "empty" });
     return out;
   }, [year, monthIndex, state.tasks, state.completions, childrenProfiles, today]);
 
   const gridPad = 16;
   const gap = 6;
   const cellSize = Math.min(56, Math.floor((Math.min(width, 720) - gridPad * 2 - gap * 6) / 7));
+  const weekdayLabels = weekdayLabelsFor(t);
 
   return (
     <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.navRow}>
-          <Pressable onPress={goPrev} style={styles.navBtn} accessibilityLabel="Mois précédent">
+          <Pressable onPress={goPrev} style={styles.navBtn} accessibilityLabel={t("calendar.prevMonth")}>
             <Text style={styles.navBtnText}>‹</Text>
           </Pressable>
-          <Text style={styles.monthTitle}>{formatFrenchMonthYear(year, monthIndex)}</Text>
-          <Pressable onPress={goNext} style={styles.navBtn} accessibilityLabel="Mois suivant">
+          <Text style={styles.monthTitle}>{formatLocalizedMonthYear(year, monthIndex, i18n.language)}</Text>
+          <Pressable onPress={goNext} style={styles.navBtn} accessibilityLabel={t("calendar.nextMonth")}>
             <Text style={styles.navBtnText}>›</Text>
           </Pressable>
         </View>
 
         <View style={styles.weekdayRow}>
-          {WEEKDAY_LABELS_FR.map((label) => (
+          {weekdayLabels.map((label) => (
             <View key={label} style={[styles.weekdayCell, { width: cellSize }]}>
               <Text style={styles.weekdayText}>{label}</Text>
             </View>
@@ -143,28 +135,26 @@ export function ParentCalendarScreen({ navigation }: Props) {
                     borderColor: isToday ? colors.text : colors.border,
                   },
                 ]}
-                accessibilityLabel={`${cell.day}, ${statusLabelFr(cell.status)}`}
+                accessibilityLabel={`${cell.day}, ${t(`calendar.status.${cell.status}`)}`}
               >
                 <Text style={[styles.dayNum, { color: fg }]}>{cell.day}</Text>
-                {cell.status !== "empty" ? (
-                  <View style={[styles.dot, { backgroundColor: "#fff" }]} />
-                ) : null}
+                {cell.status !== "empty" ? <View style={[styles.dot, { backgroundColor: "#fff" }]} /> : null}
               </Pressable>
             );
           })}
         </View>
 
         <View style={styles.legend}>
-          <Text style={styles.legendTitle}>Légende</Text>
+          <Text style={styles.legendTitle}>{t("calendar.legend")}</Text>
           {(
             [
-              ["all_done", "Tout fait"],
-              ["partial", "Partiel"],
-              ["missed", "Manqué (jour passé)"],
-              ["pending", "En cours / à faire (aujourd'hui)"],
-              ["empty", "Aucune tâche"],
+              ["all_done", "calendar.allDone"],
+              ["partial", "calendar.partial"],
+              ["missed", "calendar.missedPast"],
+              ["pending", "calendar.pendingToday"],
+              ["empty", "calendar.empty"],
             ] as Array<[DayAggregateStatus, string]>
-          ).map(([status, label]) => (
+          ).map(([status, key]) => (
             <View key={status} style={styles.legendRow}>
               <View
                 style={[
@@ -176,14 +166,12 @@ export function ParentCalendarScreen({ navigation }: Props) {
                   },
                 ]}
               />
-              <Text style={styles.legendLabel}>{label}</Text>
+              <Text style={styles.legendLabel}>{t(key)}</Text>
             </View>
           ))}
         </View>
 
-        <Text style={styles.hint}>
-          Touchez un jour pour voir le détail par enfant et les tâches.
-        </Text>
+        <Text style={styles.hint}>{t("calendar.hint")}</Text>
       </ScrollView>
     </View>
   );
@@ -220,33 +208,14 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "center",
   },
-  weekdayRow: {
-    flexDirection: "row",
-    gap: 6,
-    marginBottom: 6,
-  },
+  weekdayRow: { flexDirection: "row", gap: 6, marginBottom: 6 },
   weekdayCell: { alignItems: "center" },
   weekdayText: { fontSize: 12, fontWeight: "700", color: colors.textMuted },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
-  cell: {
-    borderRadius: 12,
-  },
-  cellFilled: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  grid: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
+  cell: { borderRadius: 12 },
+  cellFilled: { alignItems: "center", justifyContent: "center" },
   dayNum: { fontWeight: "800", fontSize: 14 },
-  dot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    marginTop: 2,
-    opacity: 0.85,
-  },
+  dot: { width: 4, height: 4, borderRadius: 2, marginTop: 2, opacity: 0.85 },
   legend: {
     alignSelf: "stretch",
     maxWidth: 720,
@@ -261,10 +230,5 @@ const styles = StyleSheet.create({
   legendRow: { flexDirection: "row", alignItems: "center", marginBottom: 6 },
   legendSwatch: { width: 18, height: 18, borderRadius: 6, marginRight: 10 },
   legendLabel: { color: colors.text, fontSize: 14 },
-  hint: {
-    marginTop: 16,
-    color: colors.textMuted,
-    textAlign: "center",
-    maxWidth: 400,
-  },
+  hint: { marginTop: 16, color: colors.textMuted, textAlign: "center", maxWidth: 400 },
 });

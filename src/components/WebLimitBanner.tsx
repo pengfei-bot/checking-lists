@@ -1,13 +1,15 @@
 import React from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import { colors } from "../theme/colors";
 
 export function WebLimitBanner() {
+  const { t } = useTranslation();
   if (Platform.OS !== "web") return null;
   return (
     <View style={styles.wrap}>
       <Text style={styles.text}>
-        Mode demo web : UI + donnees locales OK. Notifications desactivees. Photo = selecteur de fichier (feedback affiche).
+        {t("webBanner.text")}
       </Text>
     </View>
   );

@@ -1,3 +1,4 @@
+import i18n from "../i18n/i18n";
 import { Profile, Task, TaskCompletion } from "../types";
 import { compareISO, todayISO } from "./dates";
 import { isTaskForDate } from "./recurrence";
@@ -108,16 +109,5 @@ export function statusColor(status: DayAggregateStatus): string {
 }
 
 export function statusLabelFr(status: DayAggregateStatus): string {
-  switch (status) {
-    case "all_done":
-      return "Tout fait";
-    case "partial":
-      return "Partiel";
-    case "missed":
-      return "Manqué";
-    case "pending":
-      return "En cours";
-    case "empty":
-      return "Aucune tâche";
-  }
+  return i18n.t(`calendar.status.${status}`);
 }

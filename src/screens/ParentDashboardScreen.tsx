@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
@@ -17,7 +18,7 @@ import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { TaskCard } from "../components/TaskCard";
 import { PrimaryButton } from "../components/PrimaryButton";
-import { formatFrenchDate, todayISO } from "../utils/dates";
+import { formatLocalizedDate, todayISO } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
 import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
 import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
@@ -25,6 +26,7 @@ import { ensureNotificationPermissions, notificationsSupported } from "../servic
 type Props = NativeStackScreenProps<RootStackParamList, "ParentDashboard">;
 
 export function ParentDashboardScreen({ navigation }: Props) {
+  const { t, i18n } = useTranslation();
   const blocked = useParentOnlyGuard(navigation);
   const {
     currentProfile,
@@ -47,9 +49,9 @@ export function ParentDashboardScreen({ navigation }: Props) {
   if (blocked || !currentProfile || currentProfile.role !== "parent") {
     return (
       <View style={styles.center}>
-        <Text>{blocked ? "Espace parent réservé aux comptes parents." : "Profil parent requis."}</Text>
+        <Text>{blocked ? t("roles.parentOnly") : t("roles.parentRequired")}</Text>
         <PrimaryButton
-          label="Changer de profil"
+          label={t("common.changeProfile")}
           onPress={() => {
             setCurrentProfileId(null);
             navigation.replace("ProfilePicker");
@@ -72,38 +74,38 @@ export function ParentDashboardScreen({ navigation }: Props) {
       state.profiles,
       filterChildId === "all" ? undefined : filterChildId
     );
-    Alert.alert("Calendrier", result.message);
+    Alert.alert(t("deviceCalendar.title"), result.message);
   };
 
   const onReminders = async () => {
     if (!notificationsSupported()) {
       Alert.alert(
-        "Notifications",
-        "Indisponibles sur le web. Sur appareil: Expo Go + permission notifications."
+        t("notifications.title"),
+        t("notifications.webUnavailableParent")
       );
       return;
     }
     const ok = await ensureNotificationPermissions();
     if (!ok) {
-      Alert.alert("Permission refusee", "Activez les notifications.");
+      Alert.alert(t("notifications.deniedTitle"), t("notifications.deniedBodyShort"));
       return;
     }
     const n = await refreshReminders();
-    Alert.alert("Rappels", n + " rappel(s) planifie(s).");
+    Alert.alert(t("notifications.remindersTitle"), t("notifications.remindersScheduledShort", { count: n }));
   };
 
   return (
     <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Tableau de bord</Text>
-        <Text style={styles.sub}>{formatFrenchDate(todayISO())}</Text>
+        <Text style={styles.title}>{t("parentDash.title")}</Text>
+        <Text style={styles.sub}>{formatLocalizedDate(todayISO(), i18n.language)}</Text>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 12 }}>
           <Pressable
             onPress={() => setFilterChildId("all")}
             style={[styles.chip, filterChildId === "all" && styles.chipActive]}
           >
-            <Text style={[styles.chipText, filterChildId === "all" && styles.chipTextActive]}>Tous</Text>
+            <Text style={[styles.chipText, filterChildId === "all" && styles.chipTextActive]}>{t("common.all")}</Text>
           </Pressable>
           {childrenProfiles.map((c) => (
             <Pressable
@@ -130,13 +132,13 @@ export function ParentDashboardScreen({ navigation }: Props) {
               <Text style={styles.statValue}>
                 {done}/{total}
               </Text>
-              <Text style={styles.statLabel}>faites</Text>
+              <Text style={styles.statLabel}>{t("common.done")}</Text>
             </View>
           ))}
         </View>
 
         <PrimaryButton
-          label="Calendrier"
+          label={t("parentDash.calendar")}
           variant="secondary"
           onPress={() => navigation.navigate("ParentCalendar")}
           style={{ marginBottom: 8 }}
@@ -145,8 +147,8 @@ export function ParentDashboardScreen({ navigation }: Props) {
           <PrimaryButton
             label={
               family?.inviteCode
-                ? `Partage famille · ${family.inviteCode}`
-                : "Partage famille"
+                ? t("parentDash.shareFamilyCode", { code: family.inviteCode })
+                : t("parentDash.shareFamily")
             }
             variant="ghost"
             onPress={() => navigation.navigate("FamilyShare")}
@@ -154,18 +156,18 @@ export function ParentDashboardScreen({ navigation }: Props) {
           />
         ) : null}
         <PrimaryButton
-          label="+ Nouvelle tache"
+          label={t("parentDash.newTask")}
           onPress={() => navigation.navigate("TaskForm", {})}
           style={{ marginBottom: 8 }}
         />
         <PrimaryButton
-          label="+ Ajouter un enfant"
+          label={t("parentDash.addChild")}
           variant="secondary"
           onPress={() => navigation.navigate("ChildForm", {})}
           style={{ marginBottom: 12 }}
         />
 
-        <Text style={styles.section}>Enfants</Text>
+        <Text style={styles.section}>{t("parentDash.children")}</Text>
         <View style={styles.kidsManage}>
           {childrenProfiles.map((child) => (
             <Pressable
@@ -175,14 +177,14 @@ export function ParentDashboardScreen({ navigation }: Props) {
             >
               <Text style={styles.statEmoji}>{child.emoji}</Text>
               <Text style={styles.kidManageName}>{child.name}</Text>
-              <Text style={styles.kidManageEdit}>Modifier</Text>
+              <Text style={styles.kidManageEdit}>{t("common.edit")}</Text>
             </Pressable>
           ))}
         </View>
 
-        <Text style={styles.section}>Aujourd'hui</Text>
+        <Text style={styles.section}>{t("parentDash.today")}</Text>
         {todayTasks.length === 0 ? (
-          <Text style={styles.empty}>Aucune tache pour ce filtre.</Text>
+          <Text style={styles.empty}>{t("parentDash.emptyFilter")}</Text>
         ) : (
           todayTasks.map((task) => {
             const child = childrenProfiles.find((c) => c.id === task.childId);
@@ -199,7 +201,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
                       onPress={() => navigation.navigate("TaskForm", { taskId: task.id })}
                       style={styles.editBtn}
                     >
-                      <Text>Edit</Text>
+                      <Text>{t("parentDash.edit")}</Text>
                     </Pressable>
                   }
                 />
@@ -211,12 +213,18 @@ export function ParentDashboardScreen({ navigation }: Props) {
           })
         )}
 
-        <PrimaryButton label="Rappels du jour" variant="secondary" onPress={() => void onReminders()} style={{ marginTop: 8 }} />
+        <PrimaryButton label={t("parentDash.reminders")} variant="secondary" onPress={() => void onReminders()} style={{ marginTop: 8 }} />
         {(calendarSupported() || Platform.OS === "web") && (
-          <PrimaryButton label="Ajouter au calendrier" variant="ghost" onPress={() => void onCalendar()} style={{ marginTop: 8 }} />
+          <PrimaryButton label={t("parentDash.addCalendar")} variant="ghost" onPress={() => void onCalendar()} style={{ marginTop: 8 }} />
         )}
         <PrimaryButton
-          label="Changer de profil"
+          label={t("common.language")}
+          variant="ghost"
+          onPress={() => navigation.navigate("LanguageSettings")}
+          style={{ marginTop: 8 }}
+        />
+        <PrimaryButton
+          label={t("common.changeProfile")}
           variant="ghost"
           onPress={() => {
             setCurrentProfileId(null);
