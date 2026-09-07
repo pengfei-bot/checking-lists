@@ -55,63 +55,84 @@ import locale_km from "./locales/km.json";
 import locale_lo from "./locales/lo.json";
 import locale_mn from "./locales/mn.json";
 
+
+/** Drop "" values so i18next falls through to fallbackLng (fr → en). */
+function stripEmptyStrings<T>(value: T): T {
+  if (typeof value === "string") {
+    return (value.trim() === "" ? undefined : value) as T;
+  }
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      const cleaned = stripEmptyStrings(v);
+      if (cleaned !== undefined) out[k] = cleaned;
+    }
+    return out as T;
+  }
+  return value;
+}
+
+function pack(translation: typeof fr) {
+  return { translation: stripEmptyStrings(translation) as typeof fr };
+}
+
 /** Metro-safe explicit resource map for all supported locales. */
 export const resources: Record<string, { translation: typeof fr }> = {
-  en: { translation: en },
-  fr: { translation: fr },
-  "de": { translation: locale_de },
-  "es": { translation: locale_es },
-  "it": { translation: locale_it },
-  "pt": { translation: locale_pt },
-  "nl": { translation: locale_nl },
-  "pl": { translation: locale_pl },
-  "ru": { translation: locale_ru },
-  "uk": { translation: locale_uk },
-  "ro": { translation: locale_ro },
-  "el": { translation: locale_el },
-  "sv": { translation: locale_sv },
-  "da": { translation: locale_da },
-  "fi": { translation: locale_fi },
-  "no": { translation: locale_no },
-  "cs": { translation: locale_cs },
-  "sk": { translation: locale_sk },
-  "hu": { translation: locale_hu },
-  "bg": { translation: locale_bg },
-  "hr": { translation: locale_hr },
-  "sr": { translation: locale_sr },
-  "sl": { translation: locale_sl },
-  "lt": { translation: locale_lt },
-  "lv": { translation: locale_lv },
-  "et": { translation: locale_et },
-  "ga": { translation: locale_ga },
-  "mt": { translation: locale_mt },
-  "tr": { translation: locale_tr },
-  "zh-Hans": { translation: locale_zh_Hans },
-  "zh-Hant": { translation: locale_zh_Hant },
-  "ja": { translation: locale_ja },
-  "ko": { translation: locale_ko },
-  "hi": { translation: locale_hi },
-  "th": { translation: locale_th },
-  "vi": { translation: locale_vi },
-  "id": { translation: locale_id },
-  "ms": { translation: locale_ms },
-  "fil": { translation: locale_fil },
-  "bn": { translation: locale_bn },
-  "ta": { translation: locale_ta },
-  "ur": { translation: locale_ur },
-  "fa": { translation: locale_fa },
-  "ar": { translation: locale_ar },
-  "he": { translation: locale_he },
-  "kk": { translation: locale_kk },
-  "uz": { translation: locale_uz },
-  "az": { translation: locale_az },
-  "ka": { translation: locale_ka },
-  "hy": { translation: locale_hy },
-  "ne": { translation: locale_ne },
-  "si": { translation: locale_si },
-  "my": { translation: locale_my },
-  "km": { translation: locale_km },
-  "lo": { translation: locale_lo },
-  "mn": { translation: locale_mn },
+  en: pack(en),
+  fr: pack(fr),
+  "de": pack(locale_de),
+  "es": pack(locale_es),
+  "it": pack(locale_it),
+  "pt": pack(locale_pt),
+  "nl": pack(locale_nl),
+  "pl": pack(locale_pl),
+  "ru": pack(locale_ru),
+  "uk": pack(locale_uk),
+  "ro": pack(locale_ro),
+  "el": pack(locale_el),
+  "sv": pack(locale_sv),
+  "da": pack(locale_da),
+  "fi": pack(locale_fi),
+  "no": pack(locale_no),
+  "cs": pack(locale_cs),
+  "sk": pack(locale_sk),
+  "hu": pack(locale_hu),
+  "bg": pack(locale_bg),
+  "hr": pack(locale_hr),
+  "sr": pack(locale_sr),
+  "sl": pack(locale_sl),
+  "lt": pack(locale_lt),
+  "lv": pack(locale_lv),
+  "et": pack(locale_et),
+  "ga": pack(locale_ga),
+  "mt": pack(locale_mt),
+  "tr": pack(locale_tr),
+  "zh-Hans": pack(locale_zh_Hans),
+  "zh-Hant": pack(locale_zh_Hant),
+  "ja": pack(locale_ja),
+  "ko": pack(locale_ko),
+  "hi": pack(locale_hi),
+  "th": pack(locale_th),
+  "vi": pack(locale_vi),
+  "id": pack(locale_id),
+  "ms": pack(locale_ms),
+  "fil": pack(locale_fil),
+  "bn": pack(locale_bn),
+  "ta": pack(locale_ta),
+  "ur": pack(locale_ur),
+  "fa": pack(locale_fa),
+  "ar": pack(locale_ar),
+  "he": pack(locale_he),
+  "kk": pack(locale_kk),
+  "uz": pack(locale_uz),
+  "az": pack(locale_az),
+  "ka": pack(locale_ka),
+  "hy": pack(locale_hy),
+  "ne": pack(locale_ne),
+  "si": pack(locale_si),
+  "my": pack(locale_my),
+  "km": pack(locale_km),
+  "lo": pack(locale_lo),
+  "mn": pack(locale_mn),
 };
 

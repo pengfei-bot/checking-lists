@@ -75,6 +75,85 @@ export const LOCALE_LABELS: Record<AppLocale, string> = {
   mn: "Монгол",
 };
 
+
+/** Latin / English names for picker clarity when native script may tofu. */
+export const LOCALE_LATIN_NAMES: Record<AppLocale, string> = {
+  en: "English",
+  fr: "French",
+  de: "German",
+  es: "Spanish",
+  it: "Italian",
+  pt: "Portuguese",
+  nl: "Dutch",
+  pl: "Polish",
+  ru: "Russian",
+  uk: "Ukrainian",
+  ro: "Romanian",
+  el: "Greek",
+  sv: "Swedish",
+  da: "Danish",
+  fi: "Finnish",
+  no: "Norwegian",
+  cs: "Czech",
+  sk: "Slovak",
+  hu: "Hungarian",
+  bg: "Bulgarian",
+  hr: "Croatian",
+  sr: "Serbian",
+  sl: "Slovenian",
+  lt: "Lithuanian",
+  lv: "Latvian",
+  et: "Estonian",
+  ga: "Irish",
+  mt: "Maltese",
+  tr: "Turkish",
+  "zh-Hans": "Chinese Simplified",
+  "zh-Hant": "Chinese Traditional",
+  ja: "Japanese",
+  ko: "Korean",
+  hi: "Hindi",
+  th: "Thai",
+  vi: "Vietnamese",
+  id: "Indonesian",
+  ms: "Malay",
+  fil: "Filipino",
+  bn: "Bengali",
+  ta: "Tamil",
+  ur: "Urdu",
+  fa: "Persian",
+  ar: "Arabic",
+  he: "Hebrew",
+  kk: "Kazakh",
+  uz: "Uzbek",
+  az: "Azerbaijani",
+  ka: "Georgian",
+  hy: "Armenian",
+  ne: "Nepali",
+  si: "Sinhala",
+  my: "Burmese",
+  km: "Khmer",
+  lo: "Lao",
+  mn: "Mongolian",
+};
+
+/** Native name + Latin transliteration, e.g. "हिन्दी (Hindi)". */
+export function formatLocaleLabel(code: AppLocale): string {
+  const native = LOCALE_LABELS[code];
+  const latin = LOCALE_LATIN_NAMES[code];
+  if (!latin || latin === native) return native;
+  // Append Latin name when native label uses non-Latin scripts (Cyrillic, CJK, …).
+  let needsLatinHint = false;
+  for (const ch of native) {
+    const cp = ch.codePointAt(0) ?? 0;
+    if (cp <= 0x24f) continue; // Basic Latin + Latin-1 + Extended-A/B
+    if (cp >= 0x1e00 && cp <= 0x1eff) continue; // Latin Extended Additional
+    needsLatinHint = true;
+    break;
+  }
+  if (!needsLatinHint) return native;
+  return `${native} (${latin})`;
+}
+
 export function resolveDeviceLocale(tag: string | undefined | null): AppLocale {
   if (!tag) return "fr";
   const normalized = tag.replace(/_/g, "-");

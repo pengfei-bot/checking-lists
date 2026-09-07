@@ -15,6 +15,7 @@ import {
   EUROPE_LOCALES,
   LOCALE_LABELS,
   changeAppLocale,
+  formatLocaleLabel,
 } from "../i18n";
 import { RootStackParamList } from "../navigation/types";
 import { colors } from "../theme/colors";
@@ -36,7 +37,7 @@ export function LanguageSettingsScreen({ navigation }: Props) {
       setBusy(true);
       try {
         await changeAppLocale(locale);
-        notifyUser(t("language.saved"), LOCALE_LABELS[locale]);
+        notifyUser(t("language.saved"), formatLocaleLabel(locale));
       } finally {
         setBusy(false);
       }
@@ -54,7 +55,7 @@ export function LanguageSettingsScreen({ navigation }: Props) {
       >
         <View style={{ flex: 1 }}>
           <Text style={[styles.rowTitle, active && styles.rowTitleActive]}>
-            {LOCALE_LABELS[code]}
+            {formatLocaleLabel(code)}
           </Text>
           <Text style={styles.rowCode}>{code}</Text>
         </View>
@@ -70,7 +71,9 @@ export function LanguageSettingsScreen({ navigation }: Props) {
         <Text style={styles.subtitle}>{t("language.subtitle")}</Text>
         <Text style={styles.current}>
           {t("language.current", {
-            name: LOCALE_LABELS[current] ?? current,
+            name: formatLocaleLabel(
+              (current in LOCALE_LABELS ? current : "fr") as AppLocale
+            ),
           })}
         </Text>
 

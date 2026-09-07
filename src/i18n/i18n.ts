@@ -60,10 +60,17 @@ export function initI18n(lng?: AppLocale): Promise<typeof i18n> {
     .init({
       resources,
       lng: initial,
+      // Selected locale → French → English for missing/empty keys.
       fallbackLng: ["fr", "en"],
+      supportedLngs: [...SUPPORTED_LOCALES],
+      nonExplicitSupportedLngs: true,
+      load: "currentOnly",
       compatibilityJSON: "v4",
       interpolation: { escapeValue: false },
       returnNull: false,
+      // Incomplete catalogs sometimes ship "" — treat as missing so fr/en fill in.
+      returnEmptyString: false,
+      parseMissingKeyHandler: () => "",
     })
     .then(() => i18n);
 
