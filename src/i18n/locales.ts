@@ -193,6 +193,43 @@ export function resolveDeviceLocale(tag: string | undefined | null): AppLocale {
   return byPrimary ?? "fr";
 }
 
+
+/**
+ * Extra resource keys that map onto a canonical AppLocale.
+ * i18next may resolve zh-Hans → zh / zh-hans / zh-CN; keep catalogs under all forms.
+ * (Only Chinese uses script/region tags among our supported locales today.)
+ */
+export const LOCALE_RESOURCE_ALIASES: Record<string, AppLocale> = {
+  "zh-hans": "zh-Hans",
+  "zh-CN": "zh-Hans",
+  "zh-cn": "zh-Hans",
+  zh: "zh-Hans",
+  "zh-hant": "zh-Hant",
+  "zh-TW": "zh-Hant",
+  "zh-tw": "zh-Hant",
+  "zh-HK": "zh-Hant",
+  "zh-hk": "zh-Hant",
+  "zh-MO": "zh-Hant",
+  "zh-mo": "zh-Hant",
+};
+
+/** Canonical AppLocale for an i18n language / alias tag, or null if unknown. */
+export function canonicalizeLocale(tag: string | undefined | null): AppLocale | null {
+  if (!tag) return null;
+  if ((SUPPORTED_LOCALES as readonly string[]).includes(tag)) {
+    return tag as AppLocale;
+  }
+  const aliased = LOCALE_RESOURCE_ALIASES[tag];
+  if (aliased) return aliased;
+  // case-insensitive alias / supported match
+  const lower = tag.toLowerCase();
+  for (const [alias, canonical] of Object.entries(LOCALE_RESOURCE_ALIASES)) {
+    if (alias.toLowerCase() === lower) return canonical;
+  }
+  const exact = SUPPORTED_LOCALES.find((l) => l.toLowerCase() === lower);
+  return exact ?? null;
+}
+
 export function dateLocaleTag(locale: string): string {
   if (locale === "zh-Hans") return "zh-CN";
   if (locale === "zh-Hant") return "zh-TW";

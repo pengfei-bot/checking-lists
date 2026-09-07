@@ -14,6 +14,7 @@ import {
   AppLocale,
   EUROPE_LOCALES,
   LOCALE_LABELS,
+  canonicalizeLocale,
   changeAppLocale,
   formatLocaleLabel,
 } from "../i18n";
@@ -26,7 +27,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "LanguageSettings">;
 export function LanguageSettingsScreen({ navigation }: Props) {
   const { t, i18n } = useTranslation();
   const [busy, setBusy] = useState(false);
-  const current = (i18n.language as AppLocale) || "fr";
+  const current = canonicalizeLocale(i18n.language) ?? "fr";
 
   const europe = useMemo(() => [...EUROPE_LOCALES], []);
   const asia = useMemo(() => [...ASIA_LOCALES], []);
@@ -45,7 +46,7 @@ export function LanguageSettingsScreen({ navigation }: Props) {
   };
 
   const renderLocale = (code: AppLocale) => {
-    const active = current === code || current.startsWith(code);
+    const active = current === code;
     return (
       <Pressable
         key={code}
@@ -71,9 +72,7 @@ export function LanguageSettingsScreen({ navigation }: Props) {
         <Text style={styles.subtitle}>{t("language.subtitle")}</Text>
         <Text style={styles.current}>
           {t("language.current", {
-            name: formatLocaleLabel(
-              (current in LOCALE_LABELS ? current : "fr") as AppLocale
-            ),
+            name: formatLocaleLabel(current),
           })}
         </Text>
 

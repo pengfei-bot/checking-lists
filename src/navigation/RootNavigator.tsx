@@ -29,7 +29,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator() {
   const { ready, session } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   if (!ready) {
     return (
@@ -45,7 +45,7 @@ export function RootNavigator() {
   return (
     <View style={styles.root}>
       <WebLimitBanner />
-      <NavigationContainer>
+      <NavigationContainer key={i18n.language}>
         <Stack.Navigator
           initialRouteName={initial}
           screenOptions={{

@@ -4,7 +4,9 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import {
   AppLocale,
+  LOCALE_RESOURCE_ALIASES,
   LOCALE_STORAGE_KEY,
+  canonicalizeLocale,
   resolveDeviceLocale,
   SUPPORTED_LOCALES,
 } from "./locales";
@@ -48,6 +50,12 @@ export async function changeAppLocale(locale: AppLocale): Promise<void> {
   syncDocumentLang(locale);
 }
 
+/** All resource keys i18next may look up (canonical + aliases). */
+export const I18N_SUPPORTED_LNGS = [
+  ...SUPPORTED_LOCALES,
+  ...Object.keys(LOCALE_RESOURCE_ALIASES),
+] as const;
+
 export function initI18n(lng?: AppLocale): Promise<typeof i18n> {
   if (i18n.isInitialized) {
     if (lng && i18n.language !== lng) {
@@ -65,8 +73,11 @@ export function initI18n(lng?: AppLocale): Promise<typeof i18n> {
       lng: initial,
       // Selected locale → French → English for missing/empty keys.
       fallbackLng: ["fr", "en"],
-      supportedLngs: [...SUPPORTED_LOCALES],
-      nonExplicitSupportedLngs: true,
+      // Include zh / zh-CN / … aliases. Keep nonExplicitSupportedLngs false:
+      // with true, i18next checks language-part "zh" only, rejects zh-Hans when
+      // "zh" is absent from supportedLngs, and falls back to fr (UI unchanged).
+      supportedLngs: [...I18N_SUPPORTED_LNGS],
+      nonExplicitSupportedLngs: false,
       load: "currentOnly",
       compatibilityJSON: "v4",
       interpolation: { escapeValue: false },
@@ -77,7 +88,11 @@ export function initI18n(lng?: AppLocale): Promise<typeof i18n> {
     })
     .then(async () => {
       const { syncDocumentLang } = await import("../theme/fonts");
-      syncDocumentLang(i18n.language);
+      const canonical = canonicalizeLocale(i18n.language) ?? initial;
+      if (canonical !== i18n.language) {
+        await i18n.changeLanguage(canonical);
+      }
+      syncDocumentLang(canonical);
       return i18n;
     });
 
