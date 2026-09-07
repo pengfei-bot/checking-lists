@@ -2,6 +2,10 @@ import { AppState, Profile, Task, TaskCompletion } from "../types";
 import { addDaysISO, todayISO } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
 
+/** Soft orange placeholder used for seeded photo-proof history. */
+const DEMO_PHOTO_URI =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAIAAAAn5KxJAAAARElEQVR42u3OQQkAAAgEsOufyQh20ocphMECLNP1QkRFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRc8CbP33g1mcWGcAAAAASUVORK5CYII=";
+
 export const PARENT_ID = "profile_parent_demo";
 export const CHILD_LEO_ID = "profile_child_leo";
 export const CHILD_MIA_ID = "profile_child_mia";
@@ -242,12 +246,16 @@ export function buildDemoCompletions(
 
     for (const task of toComplete) {
       seq += 1;
+      const withPhoto =
+        task.id === DEMO_TASK_IDS.leoCat ||
+        task.title.toLowerCase().includes("photo");
       completions.push({
         id: `done_seed_${seq}`,
         taskId: task.id,
         childId: task.childId,
         date,
         completedAt: `${date}T${task.time}:00.000Z`,
+        photoUri: withPhoto ? DEMO_PHOTO_URI : undefined,
       });
     }
   }

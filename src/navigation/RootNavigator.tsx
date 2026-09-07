@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuth } from "../auth";
 import { WebLimitBanner } from "../components/WebLimitBanner";
 import { ChildFormScreen } from "../screens/ChildFormScreen";
+import { ChildHistoryScreen } from "../screens/ChildHistoryScreen";
 import { ChildHomeScreen } from "../screens/ChildHomeScreen";
 import { ParentCalendarScreen } from "../screens/ParentCalendarScreen";
 import { ParentDashboardScreen } from "../screens/ParentDashboardScreen";
@@ -89,6 +90,11 @@ export function RootNavigator() {
             name="ChildHome"
             component={ChildHomeScreen}
             options={{ title: "Mes taches" }}
+          />
+          <Stack.Screen
+            name="ChildHistory"
+            component={ChildHistoryScreen}
+            options={{ title: "Historique" }}
           />
           <Stack.Screen
             name="ParentDashboard"

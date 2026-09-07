@@ -147,6 +147,12 @@ export function ChildHomeScreen({ navigation }: Props) {
           })
         )}
 
+        <PrimaryButton
+          label="Historique"
+          variant="secondary"
+          onPress={() => navigation.navigate("ChildHistory")}
+          style={{ marginTop: 8 }}
+        />
         <PrimaryButton label="Activer / rafraichir les rappels" variant="secondary" onPress={() => void onReminders()} style={{ marginTop: 8 }} />
         {calendarSupported() && (
           <PrimaryButton label="Ajouter mes taches au calendrier" variant="ghost" onPress={() => void onCalendar()} style={{ marginTop: 8 }} />

@@ -71,7 +71,7 @@ Placeholder UI. Wire Supabase Auth email reset later.
 | Surface | Who | Can do |
 |---------|-----|--------|
 | Parent (authenticated) | Parent account | Dashboard, create/edit tasks & children, family invite code, calendar |
-| Child device (`child_device`) | After redeem invite | Child profiles only → checklist / photo proof. **No** parent dashboard, TaskForm, ChildForm, or FamilyShare admin |
+| Child device (`child_device`) | After redeem invite | Child profiles only → checklist / photo proof / **Historique**. **No** parent dashboard, TaskForm, ChildForm, or FamilyShare admin |
 | Demo | Local seed | Both parent and child profiles on the same device (no cloud) |
 
 After joining with a code, the profile picker hides parent cards. If the family has a single child profile, the app opens that checklist automatically.

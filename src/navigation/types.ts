@@ -7,6 +7,7 @@ export type RootStackParamList = {
   FamilyShare: undefined;
   ProfilePicker: undefined;
   ChildHome: undefined;
+  ChildHistory: undefined;
   ParentDashboard: undefined;
   ParentCalendar: undefined;
   ParentDayDetail: { date: string };
