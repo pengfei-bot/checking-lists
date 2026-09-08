@@ -7,6 +7,7 @@ cd "$ROOT"
 bun install
 EXPO_BASE_URL=/checking-lists bunx expo export --platform web
 cp dist/index.html dist/404.html
+cp privacy.html dist/privacy.html
 touch dist/.nojekyll
 TMP=$(mktemp -d)
 cp -a dist/. "$TMP/"
