@@ -52,7 +52,11 @@
     "createParent": "Ստեղծել ծնողի հաշիվ",
     "signInParent": "Մուտք (ծնող)",
     "continueDemo": "Շարունակել դեմոյով",
-    "footer": "Դեմոն 100% տեղական է (առանց հաշվի) — իդեալական է վեբում UI փորձարկելու համար։"
+    "footer": "Դեմոն 100% տեղական է (առանց հաշվի) — իդեալական է վեբում UI փորձարկելու համար։",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Sign in",

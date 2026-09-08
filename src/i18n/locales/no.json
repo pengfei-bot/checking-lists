@@ -52,7 +52,11 @@
     "createParent": "Opprett forelderkonto",
     "signInParent": "Logg inn (foreldre)",
     "continueDemo": "Fortsett i demo",
-    "footer": "Demo forblir 100% lokal (ingen konto) — ideell for å teste UI på nettet."
+    "footer": "Demo forblir 100% lokal (ingen konto) — ideell for å teste UI på nettet.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Logg inn",

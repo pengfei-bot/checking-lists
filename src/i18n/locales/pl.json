@@ -52,7 +52,11 @@
     "createParent": "Utwórz konto macierzyste",
     "signInParent": "Zaloguj się (rodzic)",
     "continueDemo": "Kontynuuj w demo",
-    "footer": "Demo pozostaje w 100% lokalnym (bez konta) - idealny do testowania interfejsu użytkownika w sieci."
+    "footer": "Demo pozostaje w 100% lokalnym (bez konta) - idealny do testowania interfejsu użytkownika w sieci.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Podpisz",

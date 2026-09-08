@@ -52,7 +52,11 @@
     "createParent": "建立家長帳號",
     "signInParent": "登入（家長）",
     "continueDemo": "繼續演示",
-    "footer": "演示模式完全本機（無需帳號）——適合在網頁上測試介面。"
+    "footer": "演示模式完全本機（無需帳號）——適合在網頁上測試介面。",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "登入",

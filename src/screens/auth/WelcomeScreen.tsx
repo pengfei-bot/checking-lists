@@ -1,5 +1,12 @@
-import React, { useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAuth } from "../../auth";
 import { PrimaryButton } from "../../components/PrimaryButton";
@@ -11,24 +18,13 @@ type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
 
 export function WelcomeScreen({ navigation }: Props) {
   const { t } = useTranslation();
-  const { ready, session, continueAsDemo } = useAuth();
-  const [busy, setBusy] = useState(false);
+  const { ready, session } = useAuth();
 
   React.useEffect(() => {
     if (ready && session) {
       navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
     }
   }, [ready, session, navigation]);
-
-  const onDemo = async () => {
-    setBusy(true);
-    try {
-      await continueAsDemo();
-      navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
-    } finally {
-      setBusy(false);
-    }
-  };
 
   if (!ready) {
     return (
@@ -41,50 +37,53 @@ export function WelcomeScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <Image source={require("../../../assets/icon.png")} style={styles.logo} accessibilityLabel="Famlist" />
+      <Image
+        source={require("../../../assets/icon.png")}
+        style={styles.logo}
+        accessibilityLabel="Famlist"
+      />
       <Text style={styles.title}>Famlist</Text>
       <Text style={styles.subtitle}>{t("welcome.subtitle")}</Text>
 
-      <View style={styles.card}>
-        <Text style={styles.badge}>{t("welcome.badge")}</Text>
-        <Text style={styles.cardText}>
-          {t("welcome.cardText")}
-        </Text>
+      <View style={[styles.roleCard, styles.parentCard]}>
+        <Text style={styles.roleEmoji}>👨‍👩‍👧</Text>
+        <Text style={styles.roleTitle}>{t("welcome.parentTitle")}</Text>
+        <Text style={styles.roleHint}>{t("welcome.parentHint")}</Text>
+        <PrimaryButton
+          label={t("welcome.signInParent")}
+          onPress={() => navigation.navigate("SignIn")}
+          style={{ marginTop: 12 }}
+        />
+        <Pressable
+          onPress={() => navigation.navigate("SignUp")}
+          style={({ pressed }) => [styles.linkBtn, { opacity: pressed ? 0.7 : 1 }]}
+        >
+          <Text style={styles.linkText}>{t("welcome.createParent")}</Text>
+        </Pressable>
       </View>
 
-      <PrimaryButton
-        label={t("welcome.joinFamily")}
-        onPress={() => navigation.navigate("RedeemInvite")}
-        style={{ marginTop: 8 }}
-      />
-      <PrimaryButton
-        label={t("welcome.createParent")}
-        variant="secondary"
-        onPress={() => navigation.navigate("SignUp")}
-        style={{ marginTop: 10 }}
-      />
-      <PrimaryButton
-        label={t("welcome.signInParent")}
-        variant="ghost"
-        onPress={() => navigation.navigate("SignIn")}
-        style={{ marginTop: 10 }}
-      />
-      <PrimaryButton
-        label={t("welcome.continueDemo")}
-        variant="ghost"
-        loading={busy}
-        onPress={() => void onDemo()}
-        style={{ marginTop: 18 }}
-      />
-      <Text style={styles.footer}>
-        {t("welcome.footer")}
-      </Text>
+      <View style={[styles.roleCard, styles.childCard]}>
+        <Text style={styles.roleEmoji}>🧒</Text>
+        <Text style={styles.roleTitle}>{t("welcome.childTitle")}</Text>
+        <Text style={styles.roleHint}>{t("welcome.childHint")}</Text>
+        <PrimaryButton
+          label={t("welcome.joinFamily")}
+          variant="secondary"
+          onPress={() => navigation.navigate("RedeemInvite")}
+          style={{ marginTop: 12 }}
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.bg,
+  },
   muted: { marginTop: 12, color: colors.textMuted },
   container: {
     flex: 1,
@@ -92,7 +91,13 @@ const styles = StyleSheet.create({
     padding: 24,
     justifyContent: "center",
   },
-  logo: { width: 88, height: 88, borderRadius: 20, alignSelf: "center", marginBottom: 8 },
+  logo: {
+    width: 88,
+    height: 88,
+    borderRadius: 20,
+    alignSelf: "center",
+    marginBottom: 8,
+  },
   title: {
     fontSize: 30,
     fontWeight: "800",
@@ -105,32 +110,44 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginTop: 10,
     lineHeight: 22,
-    marginBottom: 20,
+    marginBottom: 22,
   },
-  card: {
-    backgroundColor: colors.primarySoft,
-    borderRadius: 14,
-    padding: 14,
-    marginBottom: 16,
+  roleCard: {
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.card,
   },
-  badge: {
-    alignSelf: "flex-start",
-    backgroundColor: colors.primary,
-    color: "#fff",
+  parentCard: {
+    backgroundColor: colors.parentBg,
+    borderColor: "#D6E6FF",
+  },
+  childCard: {
+    backgroundColor: colors.kidBg,
+    borderColor: "#FFE0C2",
+  },
+  roleEmoji: { fontSize: 28, marginBottom: 6 },
+  roleTitle: {
+    fontSize: 18,
     fontWeight: "800",
-    fontSize: 11,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    overflow: "hidden",
-    marginBottom: 8,
+    color: colors.text,
   },
-  cardText: { color: colors.primary, fontWeight: "600", lineHeight: 20 },
-  footer: {
-    marginTop: 16,
-    textAlign: "center",
+  roleHint: {
+    marginTop: 6,
     color: colors.textMuted,
-    fontSize: 13,
-    lineHeight: 18,
+    lineHeight: 20,
+    fontSize: 14,
+  },
+  linkBtn: {
+    marginTop: 12,
+    alignItems: "center",
+    paddingVertical: 6,
+  },
+  linkText: {
+    color: colors.primary,
+    fontWeight: "700",
+    fontSize: 15,
   },
 });

@@ -52,7 +52,11 @@
     "createParent": "Elternkonto erstellen",
     "signInParent": "(Mutter)",
     "continueDemo": "Weiter in der Demo",
-    "footer": "Demo bleibt 100% lokal (kein Konto) - ideal zum Testen der Benutzeroberfläche im Internet."
+    "footer": "Demo bleibt 100% lokal (kein Konto) - ideal zum Testen der Benutzeroberfläche im Internet.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Zeichen",

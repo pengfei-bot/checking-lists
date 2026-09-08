@@ -52,7 +52,11 @@
     "createParent": "Δημιουργία λογαριασμού γονέα",
     "signInParent": "Σύνδεση (γονέας)",
     "continueDemo": "Συνέχεια στο demo",
-    "footer": "Demo παραμένει 100% τοπικό (χωρίς λογαριασμό) - ιδανικό για τη δοκιμή του UI στο διαδίκτυο."
+    "footer": "Demo παραμένει 100% τοπικό (χωρίς λογαριασμό) - ιδανικό για τη δοκιμή του UI στο διαδίκτυο.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Υπογραφή",

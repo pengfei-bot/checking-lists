@@ -52,7 +52,11 @@
     "createParent": "创建父账户",
     "signInParent": "签(父母)",
     "continueDemo": "ဒемоဖြင့် ဆက်လုပ်မည်",
-    "footer": "Demo保持100%本地(无账户)——最理想的网络测试UI."
+    "footer": "Demo保持100%本地(无账户)——最理想的网络测试UI.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "签名",

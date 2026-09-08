@@ -52,7 +52,11 @@
     "createParent": "親アカウントを作成する",
     "signInParent": "サインイン(親)",
     "continueDemo": "デモを続ける",
-    "footer": "デモは100%ローカル(アカウントなし)で、Web上でUIをテストするのに理想的です。"
+    "footer": "デモは100%ローカル(アカウントなし)で、Web上でUIをテストするのに理想的です。",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "サインイン",

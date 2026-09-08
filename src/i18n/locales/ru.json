@@ -52,7 +52,11 @@
     "createParent": "Создать родительский аккаунт",
     "signInParent": "Вход (родитель)",
     "continueDemo": "Продолжить в демо",
-    "footer": "Демо остается на 100% локальным (без учетной записи) — идеально подходит для тестирования пользовательского интерфейса в Интернете."
+    "footer": "Демо остается на 100% локальным (без учетной записи) — идеально подходит для тестирования пользовательского интерфейса в Интернете.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Войти",

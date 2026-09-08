@@ -52,7 +52,11 @@
     "createParent": "Creează cont părinte",
     "signInParent": "Semn success",
     "continueDemo": "Continuă în demo",
-    "footer": "Demo rămâne 100% locale (nici un cont) ideal pentru testarea UI pe web."
+    "footer": "Demo rămâne 100% locale (nici un cont) ideal pentru testarea UI pe web.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Semnează",

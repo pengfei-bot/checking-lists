@@ -52,7 +52,11 @@
     "createParent": "Az anyaszámla létrehozása",
     "signInParent": "Aláírás (szülő)",
     "continueDemo": "Folytatás demóban",
-    "footer": "Demo marad 100% helyi (nincs fiók) - ideális tesztelésére az UI az interneten."
+    "footer": "Demo marad 100% helyi (nincs fiók) - ideális tesztelésére az UI az interneten.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Jelentkezz be!",

@@ -52,7 +52,11 @@
     "createParent": "Създаване на сметка майка",
     "signInParent": "Вписване (родител)",
     "continueDemo": "Продължение в демо",
-    "footer": "Demo остава 100% локален (без сметка)  годежен за тестване на UI в интернет."
+    "footer": "Demo остава 100% локален (без сметка)  годежен за тестване на UI в интернет.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Подпишете се.",

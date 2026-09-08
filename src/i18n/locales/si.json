@@ -52,7 +52,11 @@
     "createParent": "माता-पिता खाता बनाएं",
     "signInParent": "साइन इन करें (parent)",
     "continueDemo": "ඩෙමෝ සමඟ ඉදිරියට",
-    "footer": "डेमो 100% स्थानीय रहता है (कोई खाता नहीं) - वेब पर यूआई के परीक्षण के लिए आदर्श।"
+    "footer": "डेमो 100% स्थानीय रहता है (कोई खाता नहीं) - वेब पर यूआई के परीक्षण के लिए आदर्श।",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "साइन इन करें",

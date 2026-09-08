@@ -52,7 +52,11 @@
     "createParent": "والدین کا اکاؤنٹ بنائیں",
     "signInParent": "نشانی",
     "continueDemo": "جمہوریت میں جاری رہیں",
-    "footer": "ڈی‌مو 100 فیصد مقامی ( کوئی اکاؤنٹ نہیں ) — ویب‌سائٹ پر یو آئی کی جانچ کرنے کے لئے آئی‌آئی‌وی کا استعمال ۔"
+    "footer": "ڈی‌مو 100 فیصد مقامی ( کوئی اکاؤنٹ نہیں ) — ویب‌سائٹ پر یو آئی کی جانچ کرنے کے لئے آئی‌آئی‌وی کا استعمال ۔",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "نشانی",

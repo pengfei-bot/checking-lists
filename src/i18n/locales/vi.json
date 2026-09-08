@@ -52,7 +52,11 @@
     "createParent": "Tạo tài khoản cha",
     "signInParent": "Ký tên (cha mẹ)",
     "continueDemo": "Tiếp tục trong chứng minh",
-    "footer": "Demo ở lại 100% (không có tài khoản) — lý tưởng để thử nghiệm UI trên web."
+    "footer": "Demo ở lại 100% (không có tài khoản) — lý tưởng để thử nghiệm UI trên web.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Ký vào",

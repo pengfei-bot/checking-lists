@@ -52,7 +52,11 @@
     "createParent": "ebeveyn hesabı oluşturun",
     "signInParent": "Sign in (baba)",
     "continueDemo": "Demoya devam et",
-    "footer": "Demo% 100 yerel (hayır hesabı) kalır - Web'deki UI test etmek için idealdir."
+    "footer": "Demo% 100 yerel (hayır hesabı) kalır - Web'deki UI test etmek için idealdir.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Sign in in Sign in",

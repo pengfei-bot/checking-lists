@@ -52,7 +52,11 @@
     "createParent": "Створити обліковий запис",
     "signInParent": "Вхід (парент)",
     "continueDemo": "Продовжити демо",
-    "footer": "Насолоджуйтесь демо-грою 100% локальної (без акаунту) — ідеально підходить для тестування UI на сайті."
+    "footer": "Насолоджуйтесь демо-грою 100% локальної (без акаунту) — ідеально підходить для тестування UI на сайті.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Увійти",

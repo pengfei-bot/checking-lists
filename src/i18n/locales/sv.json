@@ -52,7 +52,11 @@
     "createParent": "Skapa föräldrakonto",
     "signInParent": "Logga in (förälder)",
     "continueDemo": "Fortsätt i demo",
-    "footer": "Demo stannar 100% lokal (inget konto) - perfekt för att testa UI på webben."
+    "footer": "Demo stannar 100% lokal (inget konto) - perfekt för att testa UI på webben.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Logga in",

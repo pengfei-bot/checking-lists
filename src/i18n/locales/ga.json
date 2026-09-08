@@ -52,7 +52,11 @@
     "createParent": "foirm duille: líneach",
     "signInParent": "Cláraigh i (tuismitheoir)",
     "continueDemo": "Leanúint ar aghaidh i taispeána",
-    "footer": "Demo fhanann 100% áitiúil (gan cuntas) - oiriúnach le haghaidh tástáil an Chomhéadain ar an ngréasán."
+    "footer": "Demo fhanann 100% áitiúil (gan cuntas) - oiriúnach le haghaidh tástáil an Chomhéadain ar an ngréasán.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Sínigh isteach",

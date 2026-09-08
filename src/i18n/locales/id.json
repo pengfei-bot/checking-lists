@@ -52,7 +52,11 @@
     "createParent": "Buat akun induk",
     "signInParent": "Masuk (orang tua)",
     "continueDemo": "Lanjutkan dalam demo",
-    "footer": "Demo tetap 100% lokal (tidak ada akun) - ideal untuk menguji UI di web."
+    "footer": "Demo tetap 100% lokal (tidak ada akun) - ideal untuk menguji UI di web.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Masuk",

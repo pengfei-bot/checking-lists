@@ -52,7 +52,11 @@
     "createParent": "Ustvari matični račun",
     "signInParent": "Prijavite se (starši)",
     "continueDemo": "Nadaljuj v demo",
-    "footer": "Demo ostane 100 % lokalno (brez računa) – idealno za testiranje UI na spletu."
+    "footer": "Demo ostane 100 % lokalno (brez računa) – idealno za testiranje UI na spletu.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Vpišite se",

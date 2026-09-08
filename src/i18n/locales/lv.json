@@ -52,7 +52,11 @@
     "createParent": "Izveidot mātesuzņēmuma kontu",
     "signInParent": "Paraksts (vecāks)",
     "continueDemo": "Turpināt demo",
-    "footer": "Demo paliek 100% lokāli (nav konta) — ideāli piemērots UI testēšanai tīmeklī."
+    "footer": "Demo paliek 100% lokāli (nav konta) — ideāli piemērots UI testēšanai tīmeklī.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Paraksts",

@@ -52,7 +52,11 @@
     "createParent": "Vytvořit mateřský účet",
     "signInParent": "Přihlásit se (rodič)",
     "continueDemo": "Pokračovat v demo",
-    "footer": "Demo zůstává 100% lokální (bez účtu) - ideální pro testování UI na webu."
+    "footer": "Demo zůstává 100% lokální (bez účtu) - ideální pro testování UI na webu.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Přihlaste se.",

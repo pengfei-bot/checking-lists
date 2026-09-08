@@ -52,7 +52,11 @@
     "createParent": "ঊর্ধ্বতন অ্যাকাউন্ট নির্মাণ করুন",
     "signInParent": "সাইন ইন করুন (parent)",
     "continueDemo": "এগিয়ে চলুন",
-    "footer": "নমুনা ১০০% স্থানীয় (কোন অ্যাকাউন্ট নেই) - ওয়েবে UI পরীক্ষা করার জন্য আদর্শ।"
+    "footer": "নমুনা ১০০% স্থানীয় (কোন অ্যাকাউন্ট নেই) - ওয়েবে UI পরীক্ষা করার জন্য আদর্শ।",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "সাইন ইন করুন",

@@ -52,7 +52,11 @@
     "createParent": "부모 계정 만들기",
     "signInParent": "로그인 (parent)",
     "continueDemo": "계속 데모",
-    "footer": "데모는 100 % 로컬 (계정 없음) - 웹에서 UI를 테스트하는 데 이상적입니다."
+    "footer": "데모는 100 % 로컬 (계정 없음) - 웹에서 UI를 테스트하는 데 이상적입니다.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "이름 *",

@@ -52,7 +52,11 @@
     "createParent": "Crear cuenta de padre",
     "signInParent": "Iniciar sesión (padre)",
     "continueDemo": "Continuar en demo",
-    "footer": "Demo permanece 100% local (sin cuenta) — ideal para probar la interfaz de usuario en la web."
+    "footer": "Demo permanece 100% local (sin cuenta) — ideal para probar la interfaz de usuario en la web.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Iniciar sesión",

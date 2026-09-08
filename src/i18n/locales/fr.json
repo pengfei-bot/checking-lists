@@ -45,14 +45,18 @@
     "parentOnlyShort": "Espace parent réservé."
   },
   "welcome": {
-    "subtitle": "Tâches quotidiennes pour la famille. Parents : compte + code. Enfants : rejoindre avec le code sur leur appareil (checklist uniquement).",
+    "subtitle": "Listes de tâches pour toute la famille.",
     "badge": "Deux entrées",
-    "cardText": "• Parent — créez un compte, gérez les tâches et le code famille.\n• Enfant — saisissez le code sur l'iPhone de l'enfant (réseau requis). Pas d'espace parent sur cet appareil.",
-    "joinFamily": "Rejoindre une famille (code enfant)",
+    "cardText": "",
+    "joinFamily": "Entrer le code famille",
     "createParent": "Créer un compte parent",
-    "signInParent": "Se connecter (parent)",
+    "signInParent": "Se connecter",
     "continueDemo": "Continuer en démo",
-    "footer": "La démo reste 100 % locale (sans compte) — idéal pour tester l'UI sur le web."
+    "footer": "",
+    "parentTitle": "Je suis parent",
+    "parentHint": "Connectez-vous pour gérer les tâches, le calendrier et le code famille.",
+    "childTitle": "Je suis un enfant",
+    "childHint": "Entrez le code donné par un parent sur cet appareil."
   },
   "signIn": {
     "title": "Se connecter",

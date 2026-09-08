@@ -52,7 +52,11 @@
     "createParent": "สร้างบัญชีผู้ใช้แม่",
     "signInParent": "เซ็นใน (ค่าปริยาย)",
     "continueDemo": "បន្តជាមួយ demo",
-    "footer": "เดโม ยัง คง อยู่ ใน ท้อง ถิ่น (ไม่ มี บัญชี) 100 เปอร์เซ็นต์ — เหมาะ ที่ จะ ทดสอบ ยูไอ บน เว็บไซต์."
+    "footer": "เดโม ยัง คง อยู่ ใน ท้อง ถิ่น (ไม่ มี บัญชี) 100 เปอร์เซ็นต์ — เหมาะ ที่ จะ ทดสอบ ยูไอ บน เว็บไซต์.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "เข้าสู่ระบบ",

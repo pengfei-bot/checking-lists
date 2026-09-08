@@ -52,7 +52,11 @@
     "createParent": "إنشاء حساب الوالدين",
     "signInParent": "التوقيع (الوالد)",
     "continueDemo": "استمروا",
-    "footer": "Demo stays 100% local (no account) — ideal for testing the UI on the web."
+    "footer": "Demo stays 100% local (no account) — ideal for testing the UI on the web.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "وقع",

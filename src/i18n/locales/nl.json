@@ -52,7 +52,11 @@
     "createParent": "Ouderaccount aanmaken",
     "signInParent": "Aanmelden (ouder)",
     "continueDemo": "Doorgaan in demo",
-    "footer": "Demo blijft 100% lokaal (geen account) ideaal voor het testen van de UI op het web."
+    "footer": "Demo blijft 100% lokaal (geen account) ideaal voor het testen van de UI op het web.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Aanmelden",

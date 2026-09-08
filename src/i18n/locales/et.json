@@ -52,7 +52,11 @@
     "createParent": "Emakonto loomine",
     "signInParent": "Sisselogimine (vanem)",
     "continueDemo": "Jätka demos",
-    "footer": "Demo jääb 100% kohalikuks (ilma kontota) - ideaalne kasutajaliidese testimiseks veebis."
+    "footer": "Demo jääb 100% kohalikuks (ilma kontota) - ideaalne kasutajaliidese testimiseks veebis.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Kirjutage alla",

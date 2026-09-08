@@ -52,7 +52,11 @@
     "createParent": "Sukurti pagrindinę paskyrą",
     "signInParent": "Pasirašymas (pagrindinis)",
     "continueDemo": "Tęsti demo",
-    "footer": "Demo lieka 100% vietos (be sąskaitos) - idealiai tinka išbandyti UI internete."
+    "footer": "Demo lieka 100% vietos (be sąskaitos) - idealiai tinka išbandyti UI internete.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Prisijungti",

@@ -52,7 +52,11 @@
     "createParent": "Luo emotili",
     "signInParent": "Kirjaudu sisään (vanhempi)",
     "continueDemo": "Jatka demolla",
-    "footer": "Demo pysyy 100% paikallinen (ei tiliä) ... ihanteellinen testaamaan käyttöliittymä verkossa."
+    "footer": "Demo pysyy 100% paikallinen (ei tiliä) ... ihanteellinen testaamaan käyttöliittymä verkossa.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Kirjaudu sisään",

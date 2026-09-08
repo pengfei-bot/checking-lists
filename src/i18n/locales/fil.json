@@ -52,7 +52,11 @@
     "createParent": "Gumawa ng account bilang magulang",
     "signInParent": "Tanda sa (magulang)",
     "continueDemo": "Ipagpatuloy ang demo",
-    "footer": "Ang Demo ay nananatiling 100% lokal (walang kuwenta) — tamang - tama para sa pagsubok sa UI sa web."
+    "footer": "Ang Demo ay nananatiling 100% lokal (walang kuwenta) — tamang - tama para sa pagsubok sa UI sa web.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Tanda sa Loob",

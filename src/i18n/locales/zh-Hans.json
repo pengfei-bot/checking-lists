@@ -52,7 +52,11 @@
     "createParent": "创建家长账户",
     "signInParent": "登录（家长）",
     "continueDemo": "继续演示",
-    "footer": "演示模式完全本地（无需账户）——适合在网页上测试界面。"
+    "footer": "演示模式完全本地（无需账户）——适合在网页上测试界面。",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "登录",

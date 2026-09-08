@@ -52,7 +52,11 @@
     "createParent": "Crea un account genitore",
     "signInParent": "Accedi (parent)",
     "continueDemo": "Continuare nella demo",
-    "footer": "Demo rimane al 100% locale (senza account) — ideale per testare l'interfaccia utente sul web."
+    "footer": "Demo rimane al 100% locale (senza account) — ideale per testare l'interfaccia utente sul web.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Firma",

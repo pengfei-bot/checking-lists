@@ -52,7 +52,11 @@
     "createParent": "მშობლის ანგარიშის შექმნა",
     "signInParent": "შესვლა (მშობელი)",
     "continueDemo": "დემოთი გაგრძელება",
-    "footer": "დემო 100% ლოკალურია (ანგარიშის გარეშე) — იდეალურია ვებზე UI-ის შესამოწმებლად."
+    "footer": "დემო 100% ლოკალურია (ანგარიშის გარეშე) — იდეალურია ვებზე UI-ის შესამოწმებლად.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "შესვლა",

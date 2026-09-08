@@ -52,7 +52,11 @@
     "createParent": "Vytvoriť materský účet",
     "signInParent": "Podpis (rodičia)",
     "continueDemo": "Pokračovať v demo",
-    "footer": "Demo zostáva 100% miestne (bez účtu) "
+    "footer": "Demo zostáva 100% miestne (bez účtu) ",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Prihlásiť sa",

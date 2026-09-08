@@ -52,7 +52,11 @@
     "createParent": "Kompüter hesabı",
     "signInParent": "Qalereya",
     "continueDemo": "Oxunub",
-    "footer": "Demo 100% yerlidir (heç bir hesab) - web UI test üçün ideal."
+    "footer": "Demo 100% yerlidir (heç bir hesab) - web UI test üçün ideal.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Giriş",

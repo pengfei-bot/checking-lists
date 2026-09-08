@@ -52,7 +52,11 @@
     "createParent": "ایجاد حساب والدین",
     "signInParent": "ثبت نام در (پدر و مادر)",
     "continueDemo": "ادامه در دموی",
-    "footer": "دمو 100٪ محلی (بدون حساب) - ایده آل برای تست UI در وب است."
+    "footer": "دمو 100٪ محلی (بدون حساب) - ایده آل برای تست UI در وب است.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "ثبت نام در",

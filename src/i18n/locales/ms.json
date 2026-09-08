@@ -52,7 +52,11 @@
     "createParent": "Buat folder induk",
     "signInParent": "Daftar Masuk (parent)",
     "continueDemo": "Teruskan dalam demo",
-    "footer": "Demo promo tetap 100% lokal (tanpa akun) — cocok untuk menguji UI di web."
+    "footer": "Demo promo tetap 100% lokal (tanpa akun) — cocok untuk menguji UI di web.",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Sign in",

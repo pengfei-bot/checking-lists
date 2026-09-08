@@ -45,14 +45,18 @@
     "parentOnlyShort": "Parent area only."
   },
   "welcome": {
-    "subtitle": "Daily tasks for the family. Parents: account + code. Children: join with the code on their device (checklist only).",
-    "badge": "Two ways in",
-    "cardText": "• Parent — create an account, manage tasks and the family code.\n• Child — enter the code on the child's iPhone (network required). No parent area on that device.",
-    "joinFamily": "Join a family (child code)",
-    "createParent": "Create parent account",
-    "signInParent": "Sign in (parent)",
-    "continueDemo": "Continue in demo",
-    "footer": "Demo stays 100% local (no account) — ideal for testing the UI on the web."
+    "subtitle": "Task lists for the whole family.",
+    "badge": "Two entries",
+    "cardText": "",
+    "joinFamily": "Enter family code",
+    "createParent": "Create a parent account",
+    "signInParent": "Sign in",
+    "continueDemo": "Continue as demo",
+    "footer": "",
+    "parentTitle": "I'm a parent",
+    "parentHint": "Sign in to manage tasks, the calendar, and the family code.",
+    "childTitle": "I'm a child",
+    "childHint": "Enter the code a parent gave you on this device."
   },
   "signIn": {
     "title": "Sign in",
