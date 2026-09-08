@@ -15,10 +15,11 @@
     "yes": "جی ہاں",
     "no": "کچھ نہیں",
     "all": "تمام",
-    "done": "کیا ہوا",
+    "done": "مکمل",
     "changeProfile": "صوتی پرو فا ئل",
     "language": "زبان",
-    "settings": "ترتیبات"
+    "settings": "ترتیبات",
+    "doneAt": "{{time}} پر مکمل"
   },
   "nav": {
     "signUp": "اکاؤنٹ بنائیں",
@@ -220,7 +221,8 @@
     "donePhoto": "+ تصویر",
     "donePhotoWeb": "+ تصویر (File)",
     "unmark": "غیر متصل",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "{{time}} پر مکمل"
   },
   "taskForm": {
     "titleLabel": "فائلز",

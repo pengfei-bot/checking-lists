@@ -18,7 +18,8 @@
     "done": "完成",
     "changeProfile": "切换资料",
     "language": "语言",
-    "settings": "设置"
+    "settings": "设置",
+    "doneAt": "完成于 {{time}}"
   },
   "nav": {
     "signUp": "创建账户",
@@ -220,7 +221,8 @@
     "donePhoto": "完成 + 图片",
     "donePhotoWeb": "完成 + 照片 (文件)",
     "unmark": "撤消补全",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "完成于 {{time}}"
   },
   "taskForm": {
     "titleLabel": "标题",

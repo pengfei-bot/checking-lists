@@ -15,10 +15,11 @@
     "yes": "Sí.",
     "no": "no",
     "all": "Todos",
-    "done": "hecho",
+    "done": "Hecho",
     "changeProfile": "Perfil de conmutación",
     "language": "Idioma",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "doneAt": "Hecho a las {{time}}"
   },
   "nav": {
     "signUp": "Crear cuenta",
@@ -220,7 +221,8 @@
     "donePhoto": "Done + foto",
     "donePhotoWeb": "Hecho + foto (archivo)",
     "unmark": "Completación de los servicios",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Hecho a las {{time}}"
   },
   "taskForm": {
     "titleLabel": "Título",

@@ -15,10 +15,11 @@
     "yes": "نعم",
     "no": "لا",
     "all": "كل شيء",
-    "done": "أنجز",
+    "done": "تم",
     "changeProfile": "مسح ملف",
     "language": "اللغة",
-    "settings": "التركيبات"
+    "settings": "التركيبات",
+    "doneAt": "تم في {{time}}"
   },
   "nav": {
     "signUp": "حساب الإنشاءات",
@@ -220,7 +221,8 @@
     "donePhoto": "تمت + صورة",
     "donePhotoWeb": "حرر + صورة (صفر)",
     "unmark": "إنجاز غير مكتمل",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "تم في {{time}}"
   },
   "taskForm": {
     "titleLabel": "العنوان",

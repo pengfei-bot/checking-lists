@@ -15,10 +15,11 @@
     "yes": "й",
     "no": "немає",
     "all": "Всі",
-    "done": "Увійти",
+    "done": "Готово",
     "changeProfile": "Профіль вимикача",
     "language": "Українська",
-    "settings": "Налаштування"
+    "settings": "Налаштування",
+    "doneAt": "Готово о {{time}}"
   },
   "nav": {
     "signUp": "Створити обліковий запис",
@@ -220,7 +221,8 @@
     "donePhoto": "Done + фото",
     "donePhotoWeb": "Done + фото (файл)",
     "unmark": "Без завершення",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Готово о {{time}}"
   },
   "taskForm": {
     "titleLabel": "Головна",

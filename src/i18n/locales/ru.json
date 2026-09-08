@@ -15,10 +15,11 @@
     "yes": "да",
     "no": "нет",
     "all": "Все",
-    "done": "сделанный",
+    "done": "Готово",
     "changeProfile": "Профиль коммутации",
     "language": "Язык языка",
-    "settings": "Настройки"
+    "settings": "Настройки",
+    "doneAt": "Готово в {{time}}"
   },
   "nav": {
     "signUp": "Создать аккаунт",
@@ -220,7 +221,8 @@
     "donePhoto": "Сделано + фото",
     "donePhotoWeb": "Сделано + фото (файл)",
     "unmark": "Завершение",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Готово в {{time}}"
   },
   "taskForm": {
     "titleLabel": "Название",

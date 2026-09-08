@@ -15,10 +15,11 @@
     "yes": "jah",
     "no": "ei",
     "all": "Kõik",
-    "done": "teinud",
+    "done": "Tehtud",
     "changeProfile": "Lülitusprofiil",
     "language": "Keel",
-    "settings": "Seadistused"
+    "settings": "Seadistused",
+    "doneAt": "Tehtud kell {{time}}"
   },
   "nav": {
     "signUp": "Konto loomine",
@@ -220,7 +221,8 @@
     "donePhoto": "Tehtud + foto",
     "donePhotoWeb": "Koostatud + foto (toimik)",
     "unmark": "Lõpetamine võetakse tagasi",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Tehtud kell {{time}}"
   },
   "taskForm": {
     "titleLabel": "Pealkiri",

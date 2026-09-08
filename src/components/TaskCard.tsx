@@ -1,18 +1,29 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import { Task } from "../types";
 import { colors } from "../theme/colors";
 import { recurrenceLabel } from "../utils/recurrence";
+import { formatCompletionTime } from "../utils/dates";
 
 interface Props {
   task: Task;
   done?: boolean;
+  completedAt?: string;
   childName?: string;
   onPress?: () => void;
   rightAccessory?: React.ReactNode;
 }
 
-export function TaskCard({ task, done, childName, onPress, rightAccessory }: Props) {
+export function TaskCard({ task, done, completedAt, childName, onPress, rightAccessory }: Props) {
+  const { t, i18n } = useTranslation();
+  const doneTime = done && completedAt ? formatCompletionTime(completedAt, i18n.language) : null;
+  const doneLabel = done
+    ? doneTime
+      ? `· ✅ ${t("common.doneAt", { time: doneTime })}`
+      : `· ✅ ${t("common.done")}`
+    : "";
+
   return (
     <Pressable
       onPress={onPress}
@@ -30,7 +41,7 @@ export function TaskCard({ task, done, childName, onPress, rightAccessory }: Pro
             {childName ? `${childName} · ` : ""}
             {recurrenceLabel(task.recurrence)}
             {task.reminderEnabled ? " · 🔔" : ""}
-            {done ? " · ✅ Fait" : ""}
+            {doneLabel ? ` ${doneLabel}` : ""}
           </Text>
         </View>
       </View>

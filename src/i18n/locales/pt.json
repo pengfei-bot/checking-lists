@@ -15,10 +15,11 @@
     "yes": "sim",
     "no": "não",
     "all": "Tudo",
-    "done": "feito",
+    "done": "Feito",
     "changeProfile": "Mudar de perfil",
     "language": "Língua",
-    "settings": "Configurações"
+    "settings": "Configurações",
+    "doneAt": "Feito às {{time}}"
   },
   "nav": {
     "signUp": "Criar conta",
@@ -220,7 +221,8 @@
     "donePhoto": "Feito + foto",
     "donePhotoWeb": "Feito + foto (ficheiro)",
     "unmark": "Desfazer a completação",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Feito às {{time}}"
   },
   "taskForm": {
     "titleLabel": "Título",

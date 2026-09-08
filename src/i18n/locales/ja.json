@@ -15,10 +15,11 @@
     "yes": "お問い合わせ",
     "no": "なし",
     "all": "すべて",
-    "done": "行程",
+    "done": "完了",
     "changeProfile": "スイッチプロファイル",
     "language": "用語集",
-    "settings": "コンテンツ"
+    "settings": "コンテンツ",
+    "doneAt": "{{time}} に完了"
   },
   "nav": {
     "signUp": "アカウントの作成",
@@ -220,7 +221,8 @@
     "donePhoto": "ドン + 写真",
     "donePhotoWeb": "ドン + 写真 (ファイル)",
     "unmark": "Undo 完了",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "{{time}} に完了"
   },
   "taskForm": {
     "titleLabel": "タイトル",

@@ -15,10 +15,11 @@
     "yes": "tak",
     "no": "nie",
     "all": "Wszystkie",
-    "done": "gotowe",
+    "done": "Gotowe",
     "changeProfile": "Profil przełącznika",
     "language": "Język",
-    "settings": "Ustawienia"
+    "settings": "Ustawienia",
+    "doneAt": "Gotowe o {{time}}"
   },
   "nav": {
     "signUp": "Utwórz konto",
@@ -220,7 +221,8 @@
     "donePhoto": "Zrobione + zdjęcie",
     "donePhotoWeb": "Zrobione + zdjęcie (plik)",
     "unmark": "Cofnij ukończenie",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Gotowe o {{time}}"
   },
   "taskForm": {
     "titleLabel": "Tytuł",

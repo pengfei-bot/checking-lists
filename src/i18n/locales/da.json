@@ -15,10 +15,11 @@
     "yes": "ja",
     "no": "ng",
     "all": "Alle",
-    "done": "landbruget",
+    "done": "Færdig",
     "changeProfile": "Skift profil",
     "language": "Sprog",
-    "settings": "Indstillinger"
+    "settings": "Indstillinger",
+    "doneAt": "Færdig kl. {{time}}"
   },
   "nav": {
     "signUp": "Opret konto",
@@ -220,7 +221,8 @@
     "donePhoto": "Færdig + foto",
     "donePhotoWeb": "Færdig + foto (fil)",
     "unmark": "Fortryd afslutning",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Færdig kl. {{time}}"
   },
   "taskForm": {
     "titleLabel": "Titel",

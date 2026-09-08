@@ -15,10 +15,11 @@
     "yes": "yes",
     "no": "no",
     "all": "All",
-    "done": "done",
+    "done": "Done",
     "changeProfile": "Switch profile",
     "language": "Language",
-    "settings": "Settings"
+    "settings": "Settings",
+    "doneAt": "Done at {{time}}"
   },
   "nav": {
     "signUp": "Create account",
@@ -220,7 +221,8 @@
     "donePhoto": "Done + photo",
     "donePhotoWeb": "Done + photo (file)",
     "unmark": "Undo completion",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Done at {{time}}"
   },
   "taskForm": {
     "titleLabel": "Title",

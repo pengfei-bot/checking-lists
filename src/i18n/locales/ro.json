@@ -15,10 +15,11 @@
     "yes": "Da.",
     "no": "nu",
     "all": "Toate",
-    "done": "Gata.",
+    "done": "Gata",
     "changeProfile": "Schimbă profilul",
     "language": "Limba",
-    "settings": "Configurări"
+    "settings": "Configurări",
+    "doneAt": "Gata la {{time}}"
   },
   "nav": {
     "signUp": "Creează cont",
@@ -220,7 +221,8 @@
     "donePhoto": "Adoptată + fotografie",
     "donePhotoWeb": "Adoptat + fotografie (dosar)",
     "unmark": "Desfă completarea",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Gata la {{time}}"
   },
   "taskForm": {
     "titleLabel": "Titlu",

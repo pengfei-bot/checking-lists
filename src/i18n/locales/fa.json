@@ -15,10 +15,11 @@
     "yes": "بله بله بله",
     "no": "هیچ",
     "all": "همه چیز",
-    "done": "انجام شده",
+    "done": "انجام شد",
     "changeProfile": "Switch profile",
     "language": "زبان زبان زبان",
-    "settings": "تنظیمات"
+    "settings": "تنظیمات",
+    "doneAt": "انجام‌شده در {{time}}"
   },
   "nav": {
     "signUp": "ایجاد حساب کاربری",
@@ -220,7 +221,8 @@
     "donePhoto": "انجام + عکس",
     "donePhotoWeb": "انجام + عکس (فایل)",
     "unmark": "تکمیل Undo",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "انجام‌شده در {{time}}"
   },
   "taskForm": {
     "titleLabel": "عنوان",

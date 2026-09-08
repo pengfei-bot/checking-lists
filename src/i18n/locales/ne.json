@@ -15,10 +15,11 @@
     "yes": "हाँ",
     "no": "नहीं",
     "all": "सब",
-    "done": "किया",
+    "done": "सकियो",
     "changeProfile": "प्रोफ़ाइल स्विच करें",
     "language": "भाषा",
-    "settings": "सेटिंग"
+    "settings": "सेटिंग",
+    "doneAt": "{{time}} मा सकियो"
   },
   "nav": {
     "signUp": "खाता बनाना",
@@ -220,7 +221,8 @@
     "donePhoto": "फोटो",
     "donePhotoWeb": "Done + photo (file)",
     "unmark": "पूरा करना",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "{{time}} मा सकियो"
   },
   "taskForm": {
     "titleLabel": "शीर्षक",

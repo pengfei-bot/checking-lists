@@ -15,10 +15,11 @@
     "yes": "დიახ",
     "no": "არა",
     "all": "ყველა",
-    "done": "შესრულებული",
+    "done": "შესრულებულია",
     "changeProfile": "პროფილის შეცვლა",
     "language": "ენა",
-    "settings": "პარამეტრები"
+    "settings": "პარამეტრები",
+    "doneAt": "შესრულდა {{time}}-ზე"
   },
   "nav": {
     "signUp": "ანგარიშის შექმნა",
@@ -220,7 +221,8 @@
     "donePhoto": "Done + photo",
     "donePhotoWeb": "Done + photo (file)",
     "unmark": "Undo completion",
-    "edit": "რედაქტირება"
+    "edit": "რედაქტირება",
+    "doneAt": "შესრულდა {{time}}-ზე"
   },
   "taskForm": {
     "titleLabel": "Title",

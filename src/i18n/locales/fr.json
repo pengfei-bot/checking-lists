@@ -15,10 +15,11 @@
     "yes": "oui",
     "no": "non",
     "all": "Tous",
-    "done": "faites",
+    "done": "Fait",
     "changeProfile": "Changer de profil",
     "language": "Langue",
-    "settings": "Réglages"
+    "settings": "Réglages",
+    "doneAt": "Fait à {{time}}"
   },
   "nav": {
     "signUp": "Créer un compte",
@@ -220,7 +221,8 @@
     "donePhoto": "Fait + photo",
     "donePhotoWeb": "Fait + photo (fichier)",
     "unmark": "Annuler la validation",
-    "edit": "Modifier"
+    "edit": "Modifier",
+    "doneAt": "Fait à {{time}}"
   },
   "taskForm": {
     "titleLabel": "Titre",

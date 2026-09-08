@@ -15,10 +15,11 @@
     "yes": "Да.",
     "no": "ве",
     "all": "Всички",
-    "done": "Готово.",
+    "done": "Готово",
     "changeProfile": "Профил на превключване",
     "language": "Език",
-    "settings": "Настройки"
+    "settings": "Настройки",
+    "doneAt": "Готово в {{time}}"
   },
   "nav": {
     "signUp": "Създаване на сметка",
@@ -220,7 +221,8 @@
     "donePhoto": "Готово + снимка",
     "donePhotoWeb": "Готово + снимка (файл)",
     "unmark": "Отмяна",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Готово в {{time}}"
   },
   "taskForm": {
     "titleLabel": "Заглавие",

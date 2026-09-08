@@ -18,7 +18,8 @@
     "done": "Valmis",
     "changeProfile": "Vaihda profiilia",
     "language": "Kieli",
-    "settings": "Asetukset"
+    "settings": "Asetukset",
+    "doneAt": "Valmis klo {{time}}"
   },
   "nav": {
     "signUp": "Luo tili",
@@ -220,7 +221,8 @@
     "donePhoto": "Valmis + valokuva",
     "donePhotoWeb": "Valmis + valokuva (tiedosto)",
     "unmark": "Peru valmistuminen",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Valmis klo {{time}}"
   },
   "taskForm": {
     "titleLabel": "Osasto",

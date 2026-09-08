@@ -15,10 +15,11 @@
     "yes": "da",
     "no": "ne",
     "all": "Vse",
-    "done": "opravljeno",
+    "done": "Gotovo",
     "changeProfile": "Pretovičenje profila",
     "language": "Jezik",
-    "settings": "Nastavitve"
+    "settings": "Nastavitve",
+    "doneAt": "Gotovo u {{time}}"
   },
   "nav": {
     "signUp": "Ustvari račun",
@@ -220,7 +221,8 @@
     "donePhoto": "Opravljeno + fotografija",
     "donePhotoWeb": "Opravljeno + fotografija (file)",
     "unmark": "Razveljavi dokončanje",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Gotovo u {{time}}"
   },
   "taskForm": {
     "titleLabel": "Naslov",

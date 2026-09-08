@@ -15,10 +15,11 @@
     "yes": "yes",
     "no": "qeyd",
     "all": "Bütün hüquqlar",
-    "done": "Yapon",
+    "done": "Bitdi",
     "changeProfile": "Açıq profil",
     "language": "Qadın",
-    "settings": "Settings"
+    "settings": "Settings",
+    "doneAt": "{{time}}-da bitdi"
   },
   "nav": {
     "signUp": "Qeydiyyat",
@@ -220,7 +221,8 @@
     "donePhoto": "Qeydiyyat",
     "donePhotoWeb": "Done + foto (file)",
     "unmark": "Domen qeydiyyatı",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "{{time}}-da bitdi"
   },
   "taskForm": {
     "titleLabel": "Ümumi",

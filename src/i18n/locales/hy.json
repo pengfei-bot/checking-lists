@@ -15,10 +15,11 @@
     "yes": "yes",
     "no": "no",
     "all": "All",
-    "done": "done",
+    "done": "Արված է",
     "changeProfile": "Փոխել պրոֆիլը",
     "language": "Լեզու",
-    "settings": "Settings"
+    "settings": "Settings",
+    "doneAt": "Արված է {{time}}-ին"
   },
   "nav": {
     "signUp": "Create account",
@@ -220,7 +221,8 @@
     "donePhoto": "Done + photo",
     "donePhotoWeb": "Done + photo (file)",
     "unmark": "Undo completion",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Արված է {{time}}-ին"
   },
   "taskForm": {
     "titleLabel": "Title",

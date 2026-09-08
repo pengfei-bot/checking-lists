@@ -15,10 +15,11 @@
     "yes": "ya",
     "no": "tidak",
     "all": "Semua",
-    "done": "selesai",
+    "done": "Selesai",
     "changeProfile": "Ganti profil",
     "language": "Bahasa",
-    "settings": "Pengaturan"
+    "settings": "Pengaturan",
+    "doneAt": "Selesai pukul {{time}}"
   },
   "nav": {
     "signUp": "Buat akun",
@@ -220,7 +221,8 @@
     "donePhoto": "Selesai + foto",
     "donePhotoWeb": "Selesai + foto (berkas)",
     "unmark": "Melengkapi ulang",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Selesai pukul {{time}}"
   },
   "taskForm": {
     "titleLabel": "Judul",

@@ -15,10 +15,11 @@
     "yes": "Igen",
     "no": "Nem",
     "all": "Valamennyi",
-    "done": "kész",
+    "done": "Kész",
     "changeProfile": "Váltás profil",
     "language": "Nyelv",
-    "settings": "Beállítások"
+    "settings": "Beállítások",
+    "doneAt": "Kész {{time}}-kor"
   },
   "nav": {
     "signUp": "Számla létrehozása",
@@ -220,7 +221,8 @@
     "donePhoto": "Kész + fotó",
     "donePhotoWeb": "Kész + fénykép (fájl)",
     "unmark": "A befejezés visszavonása",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Kész {{time}}-kor"
   },
   "taskForm": {
     "titleLabel": "Cím",

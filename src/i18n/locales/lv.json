@@ -15,10 +15,11 @@
     "yes": "jā",
     "no": "nav",
     "all": "Visi",
-    "done": "izdarīts",
+    "done": "Izpildīts",
     "changeProfile": "Pārslēgt profilu",
     "language": "Valoda",
-    "settings": "Iestatījumi"
+    "settings": "Iestatījumi",
+    "doneAt": "Izpildīts plkst. {{time}}"
   },
   "nav": {
     "signUp": "Izveidot kontu",
@@ -220,7 +221,8 @@
     "donePhoto": "Pabeigts + fotoattēls",
     "donePhotoWeb": "Pabeigts + fotoattēls (fails)",
     "unmark": "Atsaukt pabeigšanu",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Izpildīts plkst. {{time}}"
   },
   "taskForm": {
     "titleLabel": "Nosaukums",

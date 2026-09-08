@@ -7,7 +7,7 @@ import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { dateLocaleTag } from "../i18n";
-import { parseISODate } from "../utils/dates";
+import { formatCompletionTime, parseISODate } from "../utils/dates";
 import {
   buildDayOverview,
   statusColor,
@@ -15,15 +15,6 @@ import {
 import { TaskCompletion } from "../types";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChildDayDetail">;
-
-function formatCompletionTime(iso: string, locale: string): string | null {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return null;
-  return d.toLocaleTimeString(dateLocaleTag(locale), {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 export function ChildDayDetailScreen({ navigation, route }: Props) {
   const { date } = route.params;

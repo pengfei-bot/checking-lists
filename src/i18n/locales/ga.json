@@ -15,10 +15,11 @@
     "yes": "cineál gas: in airde",
     "no": "cineál gas: in airde",
     "all": "Gach duine",
-    "done": "déanta as",
+    "done": "Déanta",
     "changeProfile": "Próifíl Athraigh",
     "language": "Teanga",
-    "settings": "An tSraith Shinsearach"
+    "settings": "An tSraith Shinsearach",
+    "doneAt": "Déanta ag {{time}}"
   },
   "nav": {
     "signUp": "foirm duille: líneach",
@@ -220,7 +221,8 @@
     "donePhoto": "Arna dhéanamh sa Bhruiséil",
     "donePhotoWeb": "Arna dhéanamh in Strasbourg",
     "unmark": "chríochnaigh sé",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Déanta ag {{time}}"
   },
   "taskForm": {
     "titleLabel": "Teideal",

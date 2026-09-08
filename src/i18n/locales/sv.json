@@ -15,10 +15,11 @@
     "yes": "Ja",
     "no": "Ingen",
     "all": "Allt allt",
-    "done": "gjort gjort",
+    "done": "Klart",
     "changeProfile": "Växla profil",
     "language": "Språkspråk",
-    "settings": "Inställningar"
+    "settings": "Inställningar",
+    "doneAt": "Klart kl. {{time}}"
   },
   "nav": {
     "signUp": "Skapa konto",
@@ -220,7 +221,8 @@
     "donePhoto": "Done + foto",
     "donePhotoWeb": "Done + foto (fil)",
     "unmark": "Undo slutförande",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Klart kl. {{time}}"
   },
   "taskForm": {
     "titleLabel": "Titel",

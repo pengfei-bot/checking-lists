@@ -18,7 +18,8 @@
     "done": "সম্পন্ন",
     "changeProfile": "প্রোফাইল পরিবর্তন করুন",
     "language": "ভাষা",
-    "settings": "বৈশিষ্ট্য"
+    "settings": "বৈশিষ্ট্য",
+    "doneAt": "{{time}}-এ সম্পন্ন"
   },
   "nav": {
     "signUp": "অ্যাকাউন্ট তৈরি করুন",
@@ -220,7 +221,8 @@
     "donePhoto": "+ সম্পন্ন করা ছবি",
     "donePhotoWeb": "+ ছবি সম্পন্ন হয়েছে (ফাইল)",
     "unmark": "বাতিল করা সম্পন্ন",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "{{time}}-এ সম্পন্ন"
   },
   "taskForm": {
     "titleLabel": "শিরোনাম",

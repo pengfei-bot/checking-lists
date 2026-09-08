@@ -15,10 +15,11 @@
     "yes": "对",
     "no": "无",
     "all": "全体",
-    "done": "已执行",
+    "done": "ပြီးပါပြီ",
     "changeProfile": "切换配置",
     "language": "ဘာသာစကား",
-    "settings": "设置"
+    "settings": "设置",
+    "doneAt": "{{time}} တွင် ပြီးပါပြီ"
   },
   "nav": {
     "signUp": "创建账户",
@@ -220,7 +221,8 @@
     "donePhoto": "完成 + 图片",
     "donePhotoWeb": "完成 + 照片 (文件)",
     "unmark": "撤消补全",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "{{time}} တွင် ပြီးပါပြီ"
   },
   "taskForm": {
     "titleLabel": "标题",

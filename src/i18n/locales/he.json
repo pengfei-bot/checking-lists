@@ -15,10 +15,11 @@
     "yes": "כן כן כן",
     "no": "לא",
     "all": "הכל",
-    "done": "עשה",
+    "done": "בוצע",
     "changeProfile": "פרופיל Switch",
     "language": "שפה",
-    "settings": "הגדרות הגדרות"
+    "settings": "הגדרות הגדרות",
+    "doneAt": "בוצע ב-{{time}}"
   },
   "nav": {
     "signUp": "יצירת חשבון",
@@ -220,7 +221,8 @@
     "donePhoto": "ביצוע + תמונה",
     "donePhotoWeb": "תמונה + (file)",
     "unmark": "סיום",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "בוצע ב-{{time}}"
   },
   "taskForm": {
     "titleLabel": "Title",

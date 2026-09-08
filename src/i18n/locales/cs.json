@@ -15,10 +15,11 @@
     "yes": "ano",
     "no": "ne",
     "all": "Všechny",
-    "done": "Hotovo.",
+    "done": "Hotovo",
     "changeProfile": "Přepínací profil",
     "language": "Jazyk",
-    "settings": "Nastavení"
+    "settings": "Nastavení",
+    "doneAt": "Hotovo v {{time}}"
   },
   "nav": {
     "signUp": "Vytvořit účet",
@@ -220,7 +221,8 @@
     "donePhoto": "Hotovo + foto",
     "donePhotoWeb": "Hotovo + foto (soubor)",
     "unmark": "Zrušit dokončení",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Hotovo v {{time}}"
   },
   "taskForm": {
     "titleLabel": "Název",

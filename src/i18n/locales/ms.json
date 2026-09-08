@@ -15,10 +15,11 @@
     "yes": "Ya",
     "no": "Tidak",
     "all": "Semua",
-    "done": "Dilakukan",
+    "done": "Selesai",
     "changeProfile": "Profil switch",
     "language": "Bahasa Mandarin",
-    "settings": "Tetapan Profil"
+    "settings": "Tetapan Profil",
+    "doneAt": "Selesai pada {{time}}"
   },
   "nav": {
     "signUp": "Buat akun",
@@ -220,7 +221,8 @@
     "donePhoto": "Selesai Selesai + foto",
     "donePhotoWeb": "Selesai Selesai + foto (berkas)",
     "unmark": "Buat asal penyempurnaan",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Selesai pada {{time}}"
   },
   "taskForm": {
     "titleLabel": "Gelaran",

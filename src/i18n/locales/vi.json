@@ -15,10 +15,11 @@
     "yes": "có",
     "no": "không",
     "all": "Tất cả",
-    "done": "xong",
+    "done": "Xong",
     "changeProfile": "Đổi hồ sơ",
     "language": "Ngôn ngữ",
-    "settings": "Thiết lập"
+    "settings": "Thiết lập",
+    "doneAt": "Xong lúc {{time}}"
   },
   "nav": {
     "signUp": "Tạo tài khoản",
@@ -220,7 +221,8 @@
     "donePhoto": "Hoàn tất + ảnh chụp",
     "donePhotoWeb": "Hoàn thành + ảnh (tập tin)",
     "unmark": "Hoàn tất hoàn tất",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Xong lúc {{time}}"
   },
   "taskForm": {
     "titleLabel": "Tựa",

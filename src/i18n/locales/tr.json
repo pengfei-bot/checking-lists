@@ -15,10 +15,11 @@
     "yes": "evet evet",
     "no": "Hayır hayır hayır hayır hayır hayır hayır",
     "all": "Bütün Bütün Hepsi",
-    "done": "done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done done",
+    "done": "Tamam",
     "changeProfile": "Anahtar profili",
     "language": "Dil Dili",
-    "settings": "Ayarlar"
+    "settings": "Ayarlar",
+    "doneAt": "{{time}} tarihinde tamamlandı"
   },
   "nav": {
     "signUp": "Create account",
@@ -220,7 +221,8 @@
     "donePhoto": "Done + fotoğraf",
     "donePhotoWeb": "Done + fotoğraf (file)",
     "unmark": "Undo tamamlanma",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "{{time}} tarihinde tamamlandı"
   },
   "taskForm": {
     "titleLabel": "Başlık:",

@@ -18,7 +18,8 @@
     "done": "Fatto",
     "changeProfile": "Profilo di commutazione",
     "language": "Lingua",
-    "settings": "Impostazioni impostazioni"
+    "settings": "Impostazioni impostazioni",
+    "doneAt": "Fatto alle {{time}}"
   },
   "nav": {
     "signUp": "Crea account",
@@ -220,7 +221,8 @@
     "donePhoto": "Fatto + foto",
     "donePhotoWeb": "Fatto + foto (file)",
     "unmark": "Completamento",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Fatto alle {{time}}"
   },
   "taskForm": {
     "titleLabel": "Titolo",

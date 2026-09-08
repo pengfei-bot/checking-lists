@@ -15,10 +15,11 @@
     "yes": "Ja",
     "no": "Nein",
     "all": "alle",
-    "done": "fertig",
+    "done": "Erledigt",
     "changeProfile": "Weichen:",
     "language": "Sprache",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "doneAt": "Erledigt um {{time}}"
   },
   "nav": {
     "signUp": "Konto erstellen",
@@ -220,7 +221,8 @@
     "donePhoto": "Geschehen + Foto",
     "donePhotoWeb": "Erledigt + Foto (Datei)",
     "unmark": "Rückgängiger Abschluss",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Erledigt um {{time}}"
   },
   "taskForm": {
     "titleLabel": "Titel",

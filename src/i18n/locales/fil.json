@@ -15,10 +15,11 @@
     "yes": "Oo",
     "no": "hindi",
     "all": "Lahat",
-    "done": "tapos",
+    "done": "Tapos",
     "changeProfile": "Larawan ng Stwitch",
     "language": "Wika",
-    "settings": "Mga Pagtatakda"
+    "settings": "Mga Pagtatakda",
+    "doneAt": "Tapos nang {{time}}"
   },
   "nav": {
     "signUp": "Gumawa ng account",
@@ -220,7 +221,8 @@
     "donePhoto": "Ginawa + larawan",
     "donePhotoWeb": "Gawin + Larawan (file)",
     "unmark": "Hindi tapos",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Tapos nang {{time}}"
   },
   "taskForm": {
     "titleLabel": "Titulo",

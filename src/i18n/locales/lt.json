@@ -15,10 +15,11 @@
     "yes": "taip",
     "no": "ne",
     "all": "Visi",
-    "done": "atlikta",
+    "done": "Atlikta",
     "changeProfile": "Perjungti profilį",
     "language": "Kalba",
-    "settings": "Nustatymai"
+    "settings": "Nustatymai",
+    "doneAt": "Atlikta {{time}}"
   },
   "nav": {
     "signUp": "Sukurti paskyrą",
@@ -220,7 +221,8 @@
     "donePhoto": "Atlikta + nuotrauka",
     "donePhotoWeb": "Atlikta + nuotrauka (failas)",
     "unmark": "Atšaukti užbaigimą",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Atlikta {{time}}"
   },
   "taskForm": {
     "titleLabel": "Pavadinimas",

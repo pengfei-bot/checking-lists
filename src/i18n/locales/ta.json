@@ -18,7 +18,8 @@
     "done": "முடிந்தது",
     "changeProfile": "சுயவிவரத்தை மாற்று",
     "language": "மொழி",
-    "settings": "அமைப்புகள்"
+    "settings": "அமைப்புகள்",
+    "doneAt": "{{time}} மணிக்கு முடிந்தது"
   },
   "nav": {
     "signUp": "கணக்கு உருவாக்கு",
@@ -220,7 +221,8 @@
     "donePhoto": "फोटो",
     "donePhotoWeb": "Done + photo (file)",
     "unmark": "पूरा करना",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "{{time}} மணிக்கு முடிந்தது"
   },
   "taskForm": {
     "titleLabel": "शीर्षक",

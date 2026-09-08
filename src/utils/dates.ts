@@ -94,3 +94,12 @@ export function mondayFirstOffset(year: number, monthIndex: number): number {
 export function isoFromParts(year: number, monthIndex: number, day: number): string {
   return todayISO(new Date(year, monthIndex, day));
 }
+
+export function formatCompletionTime(iso: string, locale: string): string | null {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleTimeString(dateLocaleTag(locale), {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}

@@ -18,7 +18,8 @@
     "done": "Hotovo",
     "changeProfile": "Profil prepínača",
     "language": "Jazyk",
-    "settings": "Nastavenie"
+    "settings": "Nastavenie",
+    "doneAt": "Hotovo o {{time}}"
   },
   "nav": {
     "signUp": "Vytvoriť účet",
@@ -220,7 +221,8 @@
     "donePhoto": "Hotovo + foto",
     "donePhotoWeb": "Hotovo + foto (súbor)",
     "unmark": "Dokončiť",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Hotovo o {{time}}"
   },
   "taskForm": {
     "titleLabel": "Názov",

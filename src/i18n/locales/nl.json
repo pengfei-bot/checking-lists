@@ -15,10 +15,11 @@
     "yes": "ja",
     "no": "nee",
     "all": "Alles",
-    "done": "klaar",
+    "done": "Klaar",
     "changeProfile": "Profiel wijzigen",
     "language": "Taal",
-    "settings": "Instellingen"
+    "settings": "Instellingen",
+    "doneAt": "Klaar om {{time}}"
   },
   "nav": {
     "signUp": "Account aanmaken",
@@ -220,7 +221,8 @@
     "donePhoto": "Klaar + foto",
     "donePhotoWeb": "Klaar + foto (bestand)",
     "unmark": "Voltooien ongedaan maken",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Klaar om {{time}}"
   },
   "taskForm": {
     "titleLabel": "Titel",

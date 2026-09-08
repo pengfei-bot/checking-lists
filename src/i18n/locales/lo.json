@@ -15,10 +15,11 @@
     "yes": "ใช่",
     "no": "ไม่",
     "all": "ทั้งหมด",
-    "done": "เรียบร้อยแล้ว",
+    "done": "ສຳເລັດ",
     "changeProfile": "สลับโพรไฟล์",
     "language": "ພາສາ",
-    "settings": "ตั้งค่า"
+    "settings": "ตั้งค่า",
+    "doneAt": "ສຳເລັດເວລາ {{time}}"
   },
   "nav": {
     "signUp": "สร้างบัญชีผู้ใช้",
@@ -220,7 +221,8 @@
     "donePhoto": "ลบทั้งเธรด",
     "donePhotoWeb": "ลบทั้งเธรด",
     "unmark": "เลิกทําการเติมให้สมบูรณ์",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "ສຳເລັດເວລາ {{time}}"
   },
   "taskForm": {
     "titleLabel": "ชื่อ",

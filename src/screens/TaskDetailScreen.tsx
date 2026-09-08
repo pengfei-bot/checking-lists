@@ -14,14 +14,14 @@ import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { recurrenceLabel } from "../utils/recurrence";
-import { todayISO } from "../utils/dates";
+import { formatCompletionTime, todayISO } from "../utils/dates";
 import { notifyUser } from "../utils/feedback";
 import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskDetail">;
 
 export function TaskDetailScreen({ navigation, route }: Props) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     getTask,
     getProfile,
@@ -45,6 +45,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
   const child = getProfile(task.childId);
   const done = completionFor(task.id);
   const isChild = currentProfile?.role === "child";
+  const doneAtTime = done ? formatCompletionTime(done.completedAt, i18n.language) : null;
 
   const markDone = async (withPhoto: boolean) => {
     setBusy(true);
@@ -84,6 +85,10 @@ export function TaskDetailScreen({ navigation, route }: Props) {
       <View style={[styles.badge, done ? styles.badgeDone : styles.badgeTodo]}>
         <Text style={styles.badgeText}>{done ? t("taskDetail.done") : t("taskDetail.todo")}</Text>
       </View>
+
+      {doneAtTime ? (
+        <Text style={styles.meta}>{t("taskDetail.doneAt", { time: doneAtTime })}</Text>
+      ) : null}
 
       {done?.photoUri ? (
         <View style={styles.photoBox}>

@@ -15,10 +15,11 @@
     "yes": "Ja",
     "no": "nei",
     "all": "Alle",
-    "done": "ferdig",
+    "done": "Ferdig",
     "changeProfile": "Bytt profil",
     "language": "Språk",
-    "settings": "Innstillinger"
+    "settings": "Innstillinger",
+    "doneAt": "Ferdig kl. {{time}}"
   },
   "nav": {
     "signUp": "Opprett konto",
@@ -220,7 +221,8 @@
     "donePhoto": "Ferdig + foto",
     "donePhotoWeb": "Ferdig + bilde (fil)",
     "unmark": "Angre fullført",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "Ferdig kl. {{time}}"
   },
   "taskForm": {
     "titleLabel": "Tittel",

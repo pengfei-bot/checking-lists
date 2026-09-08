@@ -15,10 +15,11 @@
     "yes": "이름 *",
     "no": "없음",
     "all": "모든 것",
-    "done": "이름 *",
+    "done": "완료",
     "changeProfile": "Switch 프로파일",
     "language": "* 이름",
-    "settings": "계정 설정"
+    "settings": "계정 설정",
+    "doneAt": "{{time}}에 완료"
   },
   "nav": {
     "signUp": "계정 만들기",
@@ -220,7 +221,8 @@
     "donePhoto": "Done + 사진",
     "donePhotoWeb": "Done + 사진 (파일)",
     "unmark": "취소 완료",
-    "edit": "Edit"
+    "edit": "Edit",
+    "doneAt": "{{time}}에 완료"
   },
   "taskForm": {
     "titleLabel": "이름 *",

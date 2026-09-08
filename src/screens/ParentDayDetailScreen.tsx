@@ -6,7 +6,7 @@ import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
-import { formatLocalizedDate } from "../utils/dates";
+import { formatCompletionTime, formatLocalizedDate } from "../utils/dates";
 import { buildDayOverview, statusColor } from "../utils/calendarStatus";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParentDayDetail">;
@@ -65,20 +65,30 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
                     {childDay.done}/{childDay.total} · {t(`calendar.status.${childDay.status}`)}
                   </Text>
                 </View>
-                {childDay.tasks.map(({ task, done }) => (
-                  <Pressable
-                    key={task.id}
-                    onPress={() => navigation.navigate("TaskDetail", { taskId: task.id })}
-                    style={[styles.taskRow, done && styles.taskDone]}
-                  >
-                    <Text style={styles.taskCheck}>{done ? "✅" : "⬜"}</Text>
-                    <View style={{ flex: 1 }}>
-                      <Text style={[styles.taskTitle, done && styles.taskTitleDone]}>{task.title}</Text>
-                      <Text style={styles.taskMeta}>{task.time}</Text>
-                    </View>
-                    <Text style={styles.taskLink}>{t("calendar.detailLink")}</Text>
-                  </Pressable>
-                ))}
+                {childDay.tasks.map(({ task, done, completion }) => {
+                  const doneTime =
+                    done && completion?.completedAt
+                      ? formatCompletionTime(completion.completedAt, i18n.language)
+                      : null;
+                  const metaParts = [task.time];
+                  if (doneTime) {
+                    metaParts.push(t("common.doneAt", { time: doneTime }));
+                  }
+                  return (
+                    <Pressable
+                      key={task.id}
+                      onPress={() => navigation.navigate("TaskDetail", { taskId: task.id })}
+                      style={[styles.taskRow, done && styles.taskDone]}
+                    >
+                      <Text style={styles.taskCheck}>{done ? "✅" : "⬜"}</Text>
+                      <View style={{ flex: 1 }}>
+                        <Text style={[styles.taskTitle, done && styles.taskTitleDone]}>{task.title}</Text>
+                        <Text style={styles.taskMeta}>{metaParts.join(" · ")}</Text>
+                      </View>
+                      <Text style={styles.taskLink}>{t("calendar.detailLink")}</Text>
+                    </Pressable>
+                  );
+                })}
               </View>
             );
           })
