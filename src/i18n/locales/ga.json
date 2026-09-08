@@ -149,7 +149,8 @@
     "empty": "Níl aon tascanna don lá atá inniu ann",
     "history": "Stair na Staire",
     "reminders": "Cumasaigh / meabhrúcháin athnuachana",
-    "addToCalendar": "Cuir mo chuid cúraimí leis an bhféilire"
+    "addToCalendar": "Cuir mo chuid cúraimí leis an bhféilire",
+    "more": "More"
   },
   "childHistory": {
     "title": "Stair na Staire",

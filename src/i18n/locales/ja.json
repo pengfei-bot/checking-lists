@@ -149,7 +149,8 @@
     "empty": "今日のタスクはありません",
     "history": "プロフィール",
     "reminders": "有効/リフレッシュ リマインダー",
-    "addToCalendar": "カレンダーにタスクを追加"
+    "addToCalendar": "カレンダーにタスクを追加",
+    "more": "More"
   },
   "childHistory": {
     "title": "プロフィール",

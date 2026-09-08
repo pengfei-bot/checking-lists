@@ -149,7 +149,8 @@
     "empty": "Inga uppgifter för idag",
     "history": "Historia historia",
     "reminders": "Aktivera / uppdatera påminnelser",
-    "addToCalendar": "Lägg till mina uppgifter i kalendern"
+    "addToCalendar": "Lägg till mina uppgifter i kalendern",
+    "more": "More"
   },
   "childHistory": {
     "title": "Historia historia",

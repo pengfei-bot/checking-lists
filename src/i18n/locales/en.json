@@ -149,7 +149,8 @@
     "empty": "No tasks for today",
     "history": "History",
     "reminders": "Enable / refresh reminders",
-    "addToCalendar": "Add my tasks to the calendar"
+    "addToCalendar": "Add my tasks to the calendar",
+    "more": "More"
   },
   "childHistory": {
     "title": "History",

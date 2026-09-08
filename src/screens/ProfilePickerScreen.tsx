@@ -29,11 +29,29 @@ export function ProfilePickerScreen({ navigation }: Props) {
   const kids = state.profiles.filter((p) => p.role === "child");
   const singleChildId = kids.length === 1 ? kids[0].id : null;
 
+  // Resume last profile (and always auto-enter when this device is a child with one kid).
   useEffect(() => {
-    if (!ready || !isChildDevice || !singleChildId) return;
-    setCurrentProfileId(singleChildId);
-    navigation.reset({ index: 0, routes: [{ name: "ChildHome" }] });
-  }, [ready, isChildDevice, singleChildId, navigation, setCurrentProfileId]);
+    if (!ready) return;
+    if (isChildDevice && singleChildId) {
+      if (state.currentProfileId !== singleChildId) setCurrentProfileId(singleChildId);
+      navigation.reset({ index: 0, routes: [{ name: "ChildHome" }] });
+      return;
+    }
+    const remembered = state.profiles.find((p) => p.id === state.currentProfileId);
+    if (!remembered) return;
+    navigation.reset({
+      index: 0,
+      routes: [{ name: remembered.role === "parent" ? "ParentDashboard" : "ChildHome" }],
+    });
+  }, [
+    ready,
+    isChildDevice,
+    singleChildId,
+    state.currentProfileId,
+    state.profiles,
+    navigation,
+    setCurrentProfileId,
+  ]);
 
   if (!ready) {
     return (

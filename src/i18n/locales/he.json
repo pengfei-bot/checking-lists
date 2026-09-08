@@ -149,7 +149,8 @@
     "empty": "אין משימות להיום",
     "history": "היסטוריה",
     "reminders": "תזכורות רעננות",
-    "addToCalendar": "הוסף את המשימות שלי ללוח השנה"
+    "addToCalendar": "הוסף את המשימות שלי ללוח השנה",
+    "more": "More"
   },
   "childHistory": {
     "title": "היסטוריה",

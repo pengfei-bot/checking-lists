@@ -149,7 +149,8 @@
     "empty": "Żadnych zadań na dziś.",
     "history": "Historia",
     "reminders": "Włącz / odśwież przypomnienia",
-    "addToCalendar": "Dodaj moje zadania do kalendarza"
+    "addToCalendar": "Dodaj moje zadania do kalendarza",
+    "more": "More"
   },
   "childHistory": {
     "title": "Historia",

@@ -149,7 +149,8 @@
     "empty": "Hôm nay không có việc gì",
     "history": "Lịch sử",
     "reminders": "Bật/ tắt bộ nhắc lại",
-    "addToCalendar": "Thêm công việc của tôi vào lịch"
+    "addToCalendar": "Thêm công việc của tôi vào lịch",
+    "more": "More"
   },
   "childHistory": {
     "title": "Lịch sử",

@@ -149,7 +149,8 @@
     "empty": "Ingen opgaver i dag",
     "history": "Historie",
     "reminders": "Aktivér / opdatér påmindelser",
-    "addToCalendar": "Tilføj mine opgaver til kalenderen"
+    "addToCalendar": "Tilføj mine opgaver til kalenderen",
+    "more": "More"
   },
   "childHistory": {
     "title": "Historie",

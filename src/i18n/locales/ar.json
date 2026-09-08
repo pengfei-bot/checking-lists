@@ -149,7 +149,8 @@
     "empty": "لا مهام اليوم",
     "history": "التاريخ",
     "reminders": "رسائل تذكيرية تمكينية/جديدة",
-    "addToCalendar": "أضف مهمتي إلى التقويم"
+    "addToCalendar": "أضف مهمتي إلى التقويم",
+    "more": "More"
   },
   "childHistory": {
     "title": "التاريخ",

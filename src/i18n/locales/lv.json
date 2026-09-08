@@ -149,7 +149,8 @@
     "empty": "Šodienai nav uzdevumu",
     "history": "Vēsture",
     "reminders": "Ieslēgt/ atsvaidzināt atgādinājumus",
-    "addToCalendar": "Pievienot kalendāru maniem uzdevumiem"
+    "addToCalendar": "Pievienot kalendāru maniem uzdevumiem",
+    "more": "More"
   },
   "childHistory": {
     "title": "Vēsture",

@@ -149,7 +149,8 @@
     "empty": "Geen taken voor vandaag",
     "history": "Voorgeschiedenis",
     "reminders": "Herinneringen inschakelen/verversen",
-    "addToCalendar": "Mijn taken aan de agenda toevoegen"
+    "addToCalendar": "Mijn taken aan de agenda toevoegen",
+    "more": "More"
   },
   "childHistory": {
     "title": "Voorgeschiedenis",

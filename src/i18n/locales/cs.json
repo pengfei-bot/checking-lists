@@ -149,7 +149,8 @@
     "empty": "Pro dnešek žádné úkoly.",
     "history": "Historie",
     "reminders": "Povolit / obnovit upomínky",
-    "addToCalendar": "Přidat mé úkoly do kalendáře"
+    "addToCalendar": "Přidat mé úkoly do kalendáře",
+    "more": "More"
   },
   "childHistory": {
     "title": "Historie",

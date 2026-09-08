@@ -149,7 +149,8 @@
     "empty": "Ei tehtäviä tänään",
     "history": "Historia",
     "reminders": "Ota käyttöön / virkistää muistutuksia",
-    "addToCalendar": "Lisää tehtäväni kalenteriin"
+    "addToCalendar": "Lisää tehtäväni kalenteriin",
+    "more": "More"
   },
   "childHistory": {
     "title": "Historia",

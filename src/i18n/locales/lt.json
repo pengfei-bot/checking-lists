@@ -149,7 +149,8 @@
     "empty": "Šiandien užduočių nėra",
     "history": "Istorija",
     "reminders": "Įjungti / atnaujinti priminimus",
-    "addToCalendar": "Pridėti mano užduotis į kalendorių"
+    "addToCalendar": "Pridėti mano užduotis į kalendorių",
+    "more": "More"
   },
   "childHistory": {
     "title": "Istorija",

@@ -149,7 +149,8 @@
     "empty": "Tidak ada tugas untuk hari ini",
     "history": "Sejarah",
     "reminders": "Benarkan / segarkan peringatan",
-    "addToCalendar": "Tambahkan tugas saya ke kalender"
+    "addToCalendar": "Tambahkan tugas saya ke kalender",
+    "more": "More"
   },
   "childHistory": {
     "title": "Sejarah",

@@ -149,7 +149,8 @@
     "empty": "今天没有任务",
     "history": "历史",
     "reminders": "启用/ 刷新提醒",
-    "addToCalendar": "将我的任务添加到日历"
+    "addToCalendar": "将我的任务添加到日历",
+    "more": "More"
   },
   "childHistory": {
     "title": "မှတ်တမ်း",

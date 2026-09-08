@@ -149,7 +149,8 @@
     "empty": "Brez nalog za danes",
     "history": "Zgodovina",
     "reminders": "Omogoči / osveži opomnike",
-    "addToCalendar": "Dodaj moje naloge v koledar"
+    "addToCalendar": "Dodaj moje naloge v koledar",
+    "more": "More"
   },
   "childHistory": {
     "title": "Zgodovina",

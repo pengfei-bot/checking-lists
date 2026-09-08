@@ -149,7 +149,8 @@
     "empty": "오늘에 대한 작업 없음",
     "history": "- 연혁",
     "reminders": "/ 새로 고침 알림",
-    "addToCalendar": "내 작업을 캘린더에 추가"
+    "addToCalendar": "내 작업을 캘린더에 추가",
+    "more": "More"
   },
   "childHistory": {
     "title": "- 연혁",

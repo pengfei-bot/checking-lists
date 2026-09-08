@@ -149,7 +149,8 @@
     "empty": "Sin tareas para hoy",
     "history": "Historia",
     "reminders": "Habilitar / renovar recordatorios",
-    "addToCalendar": "Añadir mis tareas al calendario"
+    "addToCalendar": "Añadir mis tareas al calendario",
+    "more": "More"
   },
   "childHistory": {
     "title": "Historia",

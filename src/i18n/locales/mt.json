@@ -149,7 +149,8 @@
     "empty": "Nessun compito per oggi",
     "history": "Storia",
     "reminders": "Attivare / aggiornare i promemoria",
-    "addToCalendar": "Aggiungi i miei compiti al calendario"
+    "addToCalendar": "Aggiungi i miei compiti al calendario",
+    "more": "More"
   },
   "childHistory": {
     "title": "Storia",

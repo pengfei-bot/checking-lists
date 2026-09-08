@@ -149,7 +149,8 @@
     "empty": "Nenhuma tarefa para hoje",
     "history": "Histórico",
     "reminders": "Activar/ actualizar os lembretes",
-    "addToCalendar": "Adicionar as minhas tarefas ao calendário"
+    "addToCalendar": "Adicionar as minhas tarefas ao calendário",
+    "more": "More"
   },
   "childHistory": {
     "title": "Histórico",

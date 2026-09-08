@@ -149,7 +149,8 @@
     "empty": "Walang mga gawain sa ngayon",
     "history": "Kasaysayan",
     "reminders": "Malugod / Nakapagpapaginhawang mga paalaala",
-    "addToCalendar": "Idagdag ang aking mga atas sa kalendaryo"
+    "addToCalendar": "Idagdag ang aking mga atas sa kalendaryo",
+    "more": "More"
   },
   "childHistory": {
     "title": "Kasaysayan",

@@ -149,7 +149,8 @@
     "empty": "Keine Aufgaben für heute",
     "history": "Geschichte",
     "reminders": "Ermöglichen / Erfrischen von Erinnerungen",
-    "addToCalendar": "Hinzufügen meiner Aufgaben zum Kalender"
+    "addToCalendar": "Hinzufügen meiner Aufgaben zum Kalender",
+    "more": "More"
   },
   "childHistory": {
     "title": "Geschichte",

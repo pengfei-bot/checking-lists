@@ -149,7 +149,8 @@
     "empty": "Bugün için görev yok",
     "history": "Tarih Tarihi",
     "reminders": "Enable / yeni hatırlatmalar",
-    "addToCalendar": "Görevlerimi takvime ekleyin"
+    "addToCalendar": "Görevlerimi takvime ekleyin",
+    "more": "More"
   },
   "childHistory": {
     "title": "Tarih Tarihi",

@@ -149,7 +149,8 @@
     "empty": "Žiadne úlohy pre dnešok",
     "history": "Dejiny",
     "reminders": "Povoliť / obnoviť pripomienky",
-    "addToCalendar": "Pridajte moje úlohy do kalendára"
+    "addToCalendar": "Pridajte moje úlohy do kalendára",
+    "more": "More"
   },
   "childHistory": {
     "title": "Dejiny",

@@ -5,6 +5,7 @@ import {
   cloudUpdateChild, cloudUpsertTask, loadCloudAppState,
 } from "../data/cloudSync";
 import { loadAppState, resetDemoData, saveAppState } from "../data/storage";
+import { loadLastProfileId, saveLastProfileId } from "../data/lastProfile";
 import { rescheduleTodayReminders } from "../services/notifications";
 import { childColors } from "../theme/colors";
 import { AppState, Profile, Task, TaskCompletion } from "../types";
@@ -55,14 +56,29 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (!authReady) return;
     setReady(false);
     try {
+      const remembered = await loadLastProfileId();
       if (familyId) {
         const loaded = await loadCloudAppState(familyId, session?.displayName || session?.email || "Parent");
-        setState(loaded);
-        await safeReminders(loaded.tasks, loaded.profiles);
+        const currentProfileId =
+          remembered && loaded.profiles.some((p) => p.id === remembered) ? remembered : null;
+        const next = { ...loaded, currentProfileId };
+        setState(next);
+        await safeReminders(next.tasks, next.profiles);
       } else {
         const loaded = await loadAppState();
-        setState(loaded);
-        await safeReminders(loaded.tasks, loaded.profiles);
+        const currentProfileId =
+          (remembered && loaded.profiles.some((p) => p.id === remembered)
+            ? remembered
+            : loaded.currentProfileId) ?? null;
+        if (currentProfileId !== loaded.currentProfileId) {
+          const next = { ...loaded, currentProfileId };
+          setState(next);
+          await saveAppState(next);
+          await safeReminders(next.tasks, next.profiles);
+        } else {
+          setState(loaded);
+          await safeReminders(loaded.tasks, loaded.profiles);
+        }
       }
     } catch {
       /* keep previous state; UI must leave the loading gate */
@@ -81,7 +97,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const currentProfile = useMemo(() => state.profiles.find((p) => p.id === state.currentProfileId) ?? null, [state.profiles, state.currentProfileId]);
   const childrenProfiles = useMemo(() => state.profiles.filter((p) => p.role === "child"), [state.profiles]);
   const parentProfile = useMemo(() => state.profiles.find((p) => p.role === "parent") ?? null, [state.profiles]);
-  const setCurrentProfileId = useCallback((id: string | null) => { void persistLocal({ ...state, currentProfileId: id }); }, [persistLocal, state]);
+  const setCurrentProfileId = useCallback((id: string | null) => {
+    void saveLastProfileId(id);
+    void persistLocal({ ...state, currentProfileId: id });
+  }, [persistLocal, state]);
   const tasksForChildToday = useCallback((childId: string) => state.tasks.filter((t) => t.childId === childId && isTaskForDate(t)).sort((a, b) => a.time.localeCompare(b.time)), [state.tasks]);
   const completionFor = useCallback((taskId: string, date = todayISO()) => state.completions.find((c) => c.taskId === taskId && c.date === date), [state.completions]);
 

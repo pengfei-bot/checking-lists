@@ -149,7 +149,8 @@
     "empty": "Ma nincs feladat.",
     "history": "Történelem",
     "reminders": "Emlékeztető engedélyezése / frissítése",
-    "addToCalendar": "Feladataim hozzáadása a naptárhoz"
+    "addToCalendar": "Feladataim hozzáadása a naptárhoz",
+    "more": "More"
   },
   "childHistory": {
     "title": "Történelem",

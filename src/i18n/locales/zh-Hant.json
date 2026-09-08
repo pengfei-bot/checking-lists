@@ -149,7 +149,8 @@
     "empty": "今天沒有任務",
     "history": "歷史紀錄",
     "reminders": "啟用 / 重新整理提醒",
-    "addToCalendar": "將我的任務加入行事曆"
+    "addToCalendar": "將我的任務加入行事曆",
+    "more": "More"
   },
   "childHistory": {
     "title": "歷史",

@@ -149,7 +149,8 @@
     "empty": "Այսօր առաջադրանքներ չկան",
     "history": "Պատմություն",
     "reminders": "Enable / refresh reminders",
-    "addToCalendar": "Add my tasks to the calendar"
+    "addToCalendar": "Add my tasks to the calendar",
+    "more": "More"
   },
   "childHistory": {
     "title": "Պատմություն",

@@ -149,7 +149,8 @@
     "empty": "Nici o sarcină pentru astăzi",
     "history": "Istoric",
     "reminders": "Activează/reîmprospătează amintirile",
-    "addToCalendar": "Adăugați sarcinile mele la calendar"
+    "addToCalendar": "Adăugați sarcinile mele la calendar",
+    "more": "More"
   },
   "childHistory": {
     "title": "Istoric",

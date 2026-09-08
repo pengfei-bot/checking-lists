@@ -149,7 +149,8 @@
     "empty": "Pas de tâches pour aujourd'hui",
     "history": "Historique",
     "reminders": "Activer / rafraîchir les rappels",
-    "addToCalendar": "Ajouter mes tâches au calendrier"
+    "addToCalendar": "Ajouter mes tâches au calendrier",
+    "more": "Plus"
   },
   "childHistory": {
     "title": "Historique",

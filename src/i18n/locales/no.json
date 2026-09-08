@@ -149,7 +149,8 @@
     "empty": "Ingen oppgaver i dag",
     "history": "Historie",
     "reminders": "Aktiver / oppdater påminnelser",
-    "addToCalendar": "Legg til oppgavene mine i kalenderen"
+    "addToCalendar": "Legg til oppgavene mine i kalenderen",
+    "more": "More"
   },
   "childHistory": {
     "title": "Historie",
