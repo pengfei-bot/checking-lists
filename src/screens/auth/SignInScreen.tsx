@@ -29,7 +29,7 @@ export function SignInScreen({ navigation }: Props) {
     setBusy(true);
     try {
       await signIn({ email, password });
-      navigation.replace("ProfilePicker");
+      navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
     } catch (e) {
       setError(e instanceof Error ? e.message : t("signIn.failed"));
     } finally {

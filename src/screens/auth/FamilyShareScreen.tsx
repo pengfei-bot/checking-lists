@@ -38,7 +38,7 @@ export function FamilyShareScreen({ navigation }: Props) {
         <PrimaryButton
           label={t("common.back")}
           variant="ghost"
-          onPress={() => navigation.replace("ProfilePicker")}
+          onPress={() => navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] })}
           style={{ marginTop: 16 }}
         />
       </View>

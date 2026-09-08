@@ -32,7 +32,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
   useEffect(() => {
     if (!ready || !isChildDevice || !singleChildId) return;
     setCurrentProfileId(singleChildId);
-    navigation.replace("ChildHome");
+    navigation.reset({ index: 0, routes: [{ name: "ChildHome" }] });
   }, [ready, isChildDevice, singleChildId, navigation, setCurrentProfileId]);
 
   if (!ready) {
@@ -56,7 +56,10 @@ export function ProfilePickerScreen({ navigation }: Props) {
   const enter = (id: string, role: "parent" | "child") => {
     if (isChildDevice && role === "parent") return;
     setCurrentProfileId(id);
-    navigation.replace(role === "parent" ? "ParentDashboard" : "ChildHome");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: role === "parent" ? "ParentDashboard" : "ChildHome" }],
+    });
   };
 
   const onReset = () => {

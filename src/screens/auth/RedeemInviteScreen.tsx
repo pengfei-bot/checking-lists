@@ -27,7 +27,7 @@ export function RedeemInviteScreen({ navigation }: Props) {
     setBusy(true);
     try {
       await redeemInvite(code);
-      navigation.replace("ProfilePicker");
+      navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
     } catch (e) {
       setError(e instanceof Error ? e.message : t("redeem.invalid"));
     } finally {

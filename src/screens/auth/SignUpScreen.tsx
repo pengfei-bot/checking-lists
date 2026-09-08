@@ -31,7 +31,7 @@ export function SignUpScreen({ navigation }: Props) {
     setBusy(true);
     try {
       await signUp({ email, password, displayName, familyName });
-      navigation.replace("ProfilePicker");
+      navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
     } catch (e) {
       setError(e instanceof Error ? e.message : t("signUp.failed"));
     } finally {

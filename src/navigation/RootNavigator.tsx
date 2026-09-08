@@ -55,17 +55,17 @@ export function RootNavigator() {
             contentStyle: { backgroundColor: colors.bg },
           }}
         >
-          <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false, title: "Famlist" }} />
           <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: t("nav.signUp") }} />
           <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: t("nav.signIn") }} />
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: t("nav.forgotPassword") }} />
           <Stack.Screen name="RedeemInvite" component={RedeemInviteScreen} options={{ title: t("nav.redeemInvite") }} />
           <Stack.Screen name="FamilyShare" component={FamilyShareScreen} options={{ title: t("nav.familyShare") }} />
           <Stack.Screen name="ProfilePicker" component={ProfilePickerScreen} options={{ title: t("nav.whoAreYou"), headerShown: false }} />
-          <Stack.Screen name="ChildHome" component={ChildHomeScreen} options={{ title: t("nav.childHome") }} />
+          <Stack.Screen name="ChildHome" component={ChildHomeScreen} options={{ title: t("nav.childHome"), headerBackVisible: false }} />
           <Stack.Screen name="ChildHistory" component={ChildHistoryScreen} options={{ title: t("nav.childHistory") }} />
           <Stack.Screen name="ChildDayDetail" component={ChildDayDetailScreen} options={{ title: t("nav.childDay") }} />
-          <Stack.Screen name="ParentDashboard" component={ParentDashboardScreen} options={{ title: t("nav.parentDashboard") }} />
+          <Stack.Screen name="ParentDashboard" component={ParentDashboardScreen} options={{ title: t("nav.parentDashboard"), headerBackVisible: false }} />
           <Stack.Screen name="ParentCalendar" component={ParentCalendarScreen} options={{ title: t("nav.parentCalendar") }} />
           <Stack.Screen name="ParentDayDetail" component={ParentDayDetailScreen} options={{ title: t("nav.parentDay") }} />
           <Stack.Screen name="TaskForm" component={TaskFormScreen} options={{ title: t("nav.taskForm"), presentation: "modal" }} />

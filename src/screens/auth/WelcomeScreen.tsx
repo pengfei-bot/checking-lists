@@ -16,7 +16,7 @@ export function WelcomeScreen({ navigation }: Props) {
 
   React.useEffect(() => {
     if (ready && session) {
-      navigation.replace("ProfilePicker");
+      navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
     }
   }, [ready, session, navigation]);
 
@@ -24,7 +24,7 @@ export function WelcomeScreen({ navigation }: Props) {
     setBusy(true);
     try {
       await continueAsDemo();
-      navigation.replace("ProfilePicker");
+      navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
     } finally {
       setBusy(false);
     }
