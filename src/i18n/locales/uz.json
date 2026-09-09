@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Sign in in Sign in",
-    "hint": "Yerel ebeveyn hesabı (prototip).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "E-posta e-posta e-posta",
     "password": "Şifre Şifre",
     "emailPlaceholder": "ebeveyn@ör.com",
@@ -113,7 +113,14 @@
     "generate": "Genrate a new code",
     "newCodeTitle": "Yeni kod",
     "newCodeMsg": "Aile kodu: {{code}}",
-    "generateFailed": "Kod oluşturamadı."
+    "generateFailed": "Kod oluşturamadı.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Aile görevi listeleri · {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "Bu filtre için görev yok.",
     "reminders": "Bugünün hatırlatmaları",
     "addCalendar": "Takvime Ekle",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Bugun · {{name}}"
   },
   "calendar": {
     "legend": "Legend Legend",

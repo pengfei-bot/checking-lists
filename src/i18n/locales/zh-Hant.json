@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "登入",
-    "hint": "本機家長帳號（原型）。",
+    "hint": "家長帳戶透過 Supabase（雲端）同步。",
     "email": "電子郵件",
     "password": "密碼",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "產生新邀請碼",
     "newCodeTitle": "新邀請碼",
     "newCodeMsg": "家庭邀請碼：{{code}}",
-    "generateFailed": "無法產生邀請碼。"
+    "generateFailed": "無法產生邀請碼。",
+    "copyCode": "複製邀請碼",
+    "copiedTitle": "已複製",
+    "copiedMsg": "已複製代碼 {{code}}。",
+    "copyFailed": "無法複製代碼。",
+    "copyEmpty": "沒有可複製的邀請碼。",
+    "confirmRegenTitle": "產生新邀請碼？",
+    "confirmRegenBody": "舊邀請碼將失效。繼續嗎？"
   },
   "profiles": {
     "subtitleFamily": "家庭任務清單 · {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "此過度器沒有工作 。",
     "reminders": "今天的提醒",
     "addCalendar": "新增到行事曆",
-    "edit": "Edit"
+    "edit": "編輯",
+    "todayFor": "今天 · {{name}}"
   },
   "calendar": {
     "legend": "图例",

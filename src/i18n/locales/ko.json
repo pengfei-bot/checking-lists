@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "이름 *",
-    "hint": "지역 부모 계정 (prototype).",
+    "hint": "보호자 계정은 Supabase(클라우드)와 동기화됩니다.",
     "email": "이름 *",
     "password": "비밀번호",
     "emailPlaceholder": "이메일: support@example.com",
@@ -113,7 +113,14 @@
     "generate": "새 코드를 생성",
     "newCodeTitle": "새로운 코드",
     "newCodeMsg": "Family0 Family",
-    "generateFailed": "코드를 생성 할 수 없습니다."
+    "generateFailed": "코드를 생성 할 수 없습니다.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "·  00",
@@ -182,7 +189,8 @@
     "emptyFilter": "이 필터의 작업이 없습니다.",
     "reminders": "오늘의 알림",
     "addCalendar": "본문 바로가기",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "오늘 · {{name}}"
   },
   "calendar": {
     "legend": "인기 있는",

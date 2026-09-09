@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Sínigh isteach",
-    "hint": "Cuntas tuismitheora áitiúil (cineál).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "Naisc go dtí suíomhanna eile",
     "password": "Post a fhógairt",
     "emailPlaceholder": "ga - Conference &amp; Seminars",
@@ -113,7 +113,14 @@
     "generate": "Gin cód nua",
     "newCodeTitle": "cód nua",
     "newCodeMsg": "cód teaghlaigh: 105 mm",
-    "generateFailed": "Níorbh fhéidir a ghiniúint an cód."
+    "generateFailed": "Níorbh fhéidir a ghiniúint an cód.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Liostaí tasc teaghlaigh · †",
@@ -182,7 +189,8 @@
     "emptyFilter": "Uimh tascanna don scagaire.",
     "reminders": "Meabhrúiteoirí an lae inniu",
     "addCalendar": "Cuir le féilire",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Inniu · {{name}}"
   },
   "calendar": {
     "legend": "Finscéal",

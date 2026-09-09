@@ -18,7 +18,8 @@ type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
 
 export function WelcomeScreen({ navigation }: Props) {
   const { t } = useTranslation();
-  const { ready, session } = useAuth();
+  const { ready, session, continueAsDemo } = useAuth();
+  const [demoBusy, setDemoBusy] = React.useState(false);
 
   React.useEffect(() => {
     if (ready && session) {
@@ -73,6 +74,24 @@ export function WelcomeScreen({ navigation }: Props) {
           style={{ marginTop: 12 }}
         />
       </View>
+
+      <PrimaryButton
+        label={t("welcome.continueDemo")}
+        variant="ghost"
+        loading={demoBusy}
+        onPress={() => {
+          void (async () => {
+            setDemoBusy(true);
+            try {
+              await continueAsDemo();
+              navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
+            } finally {
+              setDemoBusy(false);
+            }
+          })();
+        }}
+        style={{ marginTop: 4 }}
+      />
     </View>
   );
 }

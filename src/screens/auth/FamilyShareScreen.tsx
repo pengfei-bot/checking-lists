@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, Platform, Share, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAuth } from "../../auth";
 import { PrimaryButton } from "../../components/PrimaryButton";
@@ -10,12 +10,42 @@ import { colors } from "../../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "FamilyShare">;
 
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (Platform.OS === "web") {
+      const nav = typeof navigator !== "undefined" ? navigator : null;
+      if (nav?.clipboard?.writeText) {
+        await nav.clipboard.writeText(text);
+        return true;
+      }
+    }
+    await Share.share({ message: text });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function FamilyShareScreen({ navigation }: Props) {
   const { t } = useTranslation();
   const blocked = useParentOnlyGuard(navigation);
   const { family, session, isAuthenticated, createInvite, isDemo } = useAuth();
   const [busy, setBusy] = useState(false);
   const [code, setCode] = useState(family?.inviteCode ?? "");
+
+  const onCopy = async () => {
+    const value = code || family?.inviteCode || "";
+    if (!value || value === "————") {
+      Alert.alert(t("common.error"), t("familyShare.copyEmpty"));
+      return;
+    }
+    const ok = await copyToClipboard(value);
+    if (ok) {
+      Alert.alert(t("familyShare.copiedTitle"), t("familyShare.copiedMsg", { code: value }));
+    } else {
+      Alert.alert(t("common.error"), t("familyShare.copyFailed"));
+    }
+  };
 
   const onRefresh = async () => {
     setBusy(true);
@@ -28,6 +58,13 @@ export function FamilyShareScreen({ navigation }: Props) {
     } finally {
       setBusy(false);
     }
+  };
+
+  const confirmRefresh = () => {
+    Alert.alert(t("familyShare.confirmRegenTitle"), t("familyShare.confirmRegenBody"), [
+      { text: t("common.cancel"), style: "cancel" },
+      { text: t("familyShare.generate"), style: "destructive", onPress: () => void onRefresh() },
+    ]);
   };
 
   if (blocked) {
@@ -77,10 +114,16 @@ export function FamilyShareScreen({ navigation }: Props) {
       ) : null}
 
       <PrimaryButton
+        label={t("familyShare.copyCode")}
+        variant="secondary"
+        onPress={() => void onCopy()}
+        style={{ marginTop: 16 }}
+      />
+      <PrimaryButton
         label={t("familyShare.generate")}
         loading={busy}
-        onPress={() => void onRefresh()}
-        style={{ marginTop: 16 }}
+        onPress={confirmRefresh}
+        style={{ marginTop: 10 }}
       />
       <PrimaryButton
         label={t("common.back")}

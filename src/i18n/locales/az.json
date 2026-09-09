@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Giriş",
-    "hint": "Yerli uşaq hesabı (prototip).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "E-poçt",
     "password": "Qeydiyyat",
     "emailPlaceholder": "Yadda saxla",
@@ -113,7 +113,14 @@
     "generate": "Yeni kod",
     "newCodeTitle": "Yeni kod",
     "newCodeMsg": "{{code}}",
-    "generateFailed": "kodu yaradır."
+    "generateFailed": "kodu yaradır.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "{{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "Bu filter üçün heç bir şəkillər.",
     "reminders": "Bu gün xüsusiyyətlər",
     "addCalendar": "Daxil ol",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Bu gün · {{name}}"
   },
   "calendar": {
     "legend": "Kateqoriya",

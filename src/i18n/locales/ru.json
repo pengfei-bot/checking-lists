@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Войти",
-    "hint": "Локальный родительский аккаунт (прототип).",
+    "hint": "Родительский аккаунт синхронизируется через Supabase (облако).",
     "email": "Электронная почта",
     "password": "Пароль",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "Создайте новый код",
     "newCodeTitle": "Новый код",
     "newCodeMsg": "Семейный код:  0 ",
-    "generateFailed": "Не удалось создать код."
+    "generateFailed": "Не удалось создать код.",
+    "copyCode": "Скопировать код",
+    "copiedTitle": "Скопировано",
+    "copiedMsg": "Код {{code}} скопирован.",
+    "copyFailed": "Не удалось скопировать код.",
+    "copyEmpty": "Нет кода для копирования.",
+    "confirmRegenTitle": "Сгенерировать новый код?",
+    "confirmRegenBody": "Старый код перестанет работать. Продолжить?"
   },
   "profiles": {
     "subtitleFamily": "Списки семейных задач ·  0 ",
@@ -182,7 +189,8 @@
     "emptyFilter": "Нет задач для этого фильтра.",
     "reminders": "Сегодняшние напоминания",
     "addCalendar": "Добавить в календарь",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Сегодня · {{name}}"
   },
   "calendar": {
     "legend": "Легенда",

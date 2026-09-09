@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Увійти",
-    "hint": "Місцевий батьківський рахунок (прототип).",
+    "hint": "Батьківський акаунт синхронізується через Supabase (хмара).",
     "email": "Веб-сайт",
     "password": "Логін",
     "emailPlaceholder": "Веб-сайт: www.example.com",
@@ -113,7 +113,14 @@
     "generate": "Створення нового коду",
     "newCodeTitle": "Новий код",
     "newCodeMsg": "浜у 涓 蹇",
-    "generateFailed": "Чи не генерувати код."
+    "generateFailed": "Чи не генерувати код.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Списки завдань сім'ї · 0",
@@ -182,7 +189,8 @@
     "emptyFilter": "Немає завдань для даного фільтра.",
     "reminders": "Сьогодні нагадування",
     "addCalendar": "Додати до календаря",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Сьогодні · {{name}}"
   },
   "calendar": {
     "legend": "Леся",

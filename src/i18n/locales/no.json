@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Logg inn",
-    "hint": "Lokal foreldrekonto (prototype).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "E-post",
     "password": "Passord",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "Opprette en ny kode",
     "newCodeTitle": "Ny kode",
     "newCodeMsg": "Familiekode: {{code}}",
-    "generateFailed": "Kunne ikke generere koden."
+    "generateFailed": "Kunne ikke generere koden.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Familieoppgavelister · {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "Ingen oppgaver for dette filteret.",
     "reminders": "Dagens påminnelser",
     "addCalendar": "Legg til i kalender",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "I dag · {{name}}"
   },
   "calendar": {
     "legend": "Legend",

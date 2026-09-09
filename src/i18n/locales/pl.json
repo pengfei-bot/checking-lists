@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Podpisz",
-    "hint": "Lokalne konto rodzica (prototyp).",
+    "hint": "Konto rodzica synchronizowane przez Supabase (chmura).",
     "email": "E-mail",
     "password": "Hasło",
     "emailPlaceholder": "rodzic @ example.com",
@@ -113,7 +113,14 @@
     "generate": "Generuj nowy kod",
     "newCodeTitle": "Nowy kod",
     "newCodeMsg": "Kod rodziny: Xi0",
-    "generateFailed": "Nie można wygenerować kodu."
+    "generateFailed": "Nie można wygenerować kodu.",
+    "copyCode": "Kopiuj kod",
+    "copiedTitle": "Skopiowano",
+    "copiedMsg": "Kod {{code}} skopiowany.",
+    "copyFailed": "Nie udało się skopiować kodu.",
+    "copyEmpty": "Brak kodu do skopiowania.",
+    "confirmRegenTitle": "Wygenerować nowy kod?",
+    "confirmRegenBody": "Poprzedni kod przestanie działać. Kontynuować?"
   },
   "profiles": {
     "subtitleFamily": "Listy zadaniowe rodziny · Simpson0",
@@ -182,7 +189,8 @@
     "emptyFilter": "Brak zadań dla tego filtra.",
     "reminders": "Dzisiejsze przypomnienia",
     "addCalendar": "Dodaj do kalendarza",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Dzisiaj · {{name}}"
   },
   "calendar": {
     "legend": "Legenda",

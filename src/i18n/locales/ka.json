@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "შესვლა",
-    "hint": "ლოკალური მშობლის ანგარიში (პროტოტიპი).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "ელფოსტა",
     "password": "პაროლი",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "ახალი კოდის გენერირება",
     "newCodeTitle": "ახალი კოდი",
     "newCodeMsg": "ოჯახის კოდი: {{code}}",
-    "generateFailed": "კოდის გენერირება ვერ მოხერხდა."
+    "generateFailed": "კოდის გენერირება ვერ მოხერხდა.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "ოჯახის დავალებების სიები · {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "No tasks for this filter.",
     "reminders": "Today's reminders",
     "addCalendar": "Add to calendar",
-    "edit": "რედაქტირება"
+    "edit": "რედაქტირება",
+    "todayFor": "დღეს · {{name}}"
   },
   "calendar": {
     "legend": "ლეგენდა",

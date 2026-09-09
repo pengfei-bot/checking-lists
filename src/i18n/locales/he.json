@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "היכנס",
-    "hint": "חשבון ההורה המקומי (prototype).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "דואר אלקטרוני",
     "password": "סיסמה",
     "emailPlaceholder": "הורים@example.com",
@@ -113,7 +113,14 @@
     "generate": "ליצור קוד חדש",
     "newCodeTitle": "קוד חדש",
     "newCodeMsg": "קוד משפחתי: ⟦0",
-    "generateFailed": "לא יכול ליצור את הקוד."
+    "generateFailed": "לא יכול ליצור את הקוד.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "רשימות עבודה משפחתיות - {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "אין משימות לפילטר הזה.",
     "reminders": "התזכורת של היום",
     "addCalendar": "הוסף לוח השנה",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "היום · {{name}}"
   },
   "calendar": {
     "legend": "אגדה",

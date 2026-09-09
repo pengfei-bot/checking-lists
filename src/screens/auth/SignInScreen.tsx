@@ -76,12 +76,6 @@ export function SignInScreen({ navigation }: Props) {
           style={{ marginTop: 16 }}
         />
         <PrimaryButton
-          label={t("signIn.forgot")}
-          variant="ghost"
-          onPress={() => navigation.navigate("ForgotPassword")}
-          style={{ marginTop: 10 }}
-        />
-        <PrimaryButton
           label={t("signIn.createAccount")}
           variant="secondary"
           onPress={() => navigation.navigate("SignUp")}

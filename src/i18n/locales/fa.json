@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "ثبت نام در",
-    "hint": "حساب محلی والدین (prototype)",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "ایمیل ایمیل",
     "password": "Password",
     "emailPlaceholder": "والدین @example.com",
@@ -113,7 +113,14 @@
     "generate": "ایجاد یک کد جدید",
     "newCodeTitle": "کد جدید",
     "newCodeMsg": "کد خانوادگی: {{code}}",
-    "generateFailed": "نمی تواند کد را تولید کند."
+    "generateFailed": "نمی تواند کد را تولید کند.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "فهرست وظایف خانوادگی · {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "هیچ وظیفه ای برای این فیلتر وجود ندارد.",
     "reminders": "یادآوری امروز",
     "addCalendar": "اضافه کردن به تقویم",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "امروز · {{name}}"
   },
   "calendar": {
     "legend": "افسانه های Legend",

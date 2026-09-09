@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Kirjutage alla",
-    "hint": "Kohalik emakonto (prototüüp).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "Email",
     "password": "Parool",
     "emailPlaceholder": "parent@ example. com",
@@ -113,7 +113,14 @@
     "generate": "Uue koodi genereerimine",
     "newCodeTitle": "Uus kood",
     "newCodeMsg": "Perekonna kood: {{code}}",
-    "generateFailed": "Koodi genereerimine nurjus."
+    "generateFailed": "Koodi genereerimine nurjus.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Perekonna ülesannete nimekirjad · {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "Filtril ei ole ülesandeid.",
     "reminders": "Tänased meeldetuletused",
     "addCalendar": "Lisa kalendrisse",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Täna · {{name}}"
   },
   "calendar": {
     "legend": "Legend",

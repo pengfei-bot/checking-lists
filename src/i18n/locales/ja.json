@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "サインイン",
-    "hint": "ローカル親アカウント(プロトタイプ)。",
+    "hint": "保護者アカウントは Supabase（クラウド）と同期されます。",
     "email": "電子メール",
     "password": "パスワード",
     "emailPlaceholder": "Parent@example.com は、",
@@ -113,7 +113,14 @@
     "generate": "新しいコードを生成する",
     "newCodeTitle": "新しいコード",
     "newCodeMsg": "家族コード: ⟦00",
-    "generateFailed": "コードを生成できません。"
+    "generateFailed": "コードを生成できません。",
+    "copyCode": "コードをコピー",
+    "copiedTitle": "コピーしました",
+    "copiedMsg": "コード {{code}} をコピーしました。",
+    "copyFailed": "コードをコピーできませんでした。",
+    "copyEmpty": "コピーするコードがありません。",
+    "confirmRegenTitle": "新しいコードを発行しますか？",
+    "confirmRegenBody": "以前のコードは使えなくなります。続けますか？"
   },
   "profiles": {
     "subtitleFamily": "ファミリータスクリスト・ ⟦00",
@@ -182,7 +189,8 @@
     "emptyFilter": "このフィルタのタスクはありません。",
     "reminders": "今日のリマインダー",
     "addCalendar": "カレンダーに追加",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "今日 · {{name}}"
   },
   "calendar": {
     "legend": "レジェンド",

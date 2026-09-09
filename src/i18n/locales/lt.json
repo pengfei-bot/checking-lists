@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Prisijungti",
-    "hint": "Vietinė patronuojančioji sąskaita (prototipas).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "E. paštas",
     "password": "Slaptažodis",
     "emailPlaceholder": "parent @ example.com",
@@ -113,7 +113,14 @@
     "generate": "Generuoti naują kodą",
     "newCodeTitle": "Naujas kodas",
     "newCodeMsg": "Šeimyninis kodas: neyy 0",
-    "generateFailed": "Nepavyko sukurti kodo."
+    "generateFailed": "Nepavyko sukurti kodo.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Šeimos užduočių sąrašai · Mūsų šeima",
@@ -182,7 +189,8 @@
     "emptyFilter": "Šiam filtrui jokių užduočių.",
     "reminders": "Šiandienos priminimai",
     "addCalendar": "Įtraukti į kalendorių",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Šiandien · {{name}}"
   },
   "calendar": {
     "legend": "Paaiškinimai",

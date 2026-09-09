@@ -41,8 +41,8 @@ export function ParentDashboardScreen({ navigation }: Props) {
 
   const todayTasks = useMemo(() => {
     return state.tasks
-      .filter((t) => isTaskForDate(t))
-      .filter((t) => filterChildId === "all" || t.childId === filterChildId)
+      .filter((task) => isTaskForDate(task))
+      .filter((task) => filterChildId === "all" || task.childId === filterChildId)
       .sort((a, b) => a.time.localeCompare(b.time));
   }, [state.tasks, filterChildId]);
 
@@ -63,10 +63,19 @@ export function ParentDashboardScreen({ navigation }: Props) {
   }
 
   const stats = childrenProfiles.map((child) => {
-    const tasks = state.tasks.filter((t) => t.childId === child.id && isTaskForDate(t));
-    const done = tasks.filter((t) => completionFor(t.id)).length;
+    const tasks = state.tasks.filter((task) => task.childId === child.id && isTaskForDate(task));
+    const done = tasks.filter((task) => completionFor(task.id)).length;
     return { child, total: tasks.length, done };
   });
+
+  const selectedChild =
+    filterChildId === "all" ? null : childrenProfiles.find((c) => c.id === filterChildId) ?? null;
+  const todayTitle = selectedChild
+    ? t("parentDash.todayFor", { name: `${selectedChild.emoji} ${selectedChild.name}` })
+    : t("parentDash.today");
+
+  const visibleStats =
+    filterChildId === "all" ? stats : stats.filter(({ child }) => child.id === filterChildId);
 
   const onCalendar = async () => {
     const result = await addTodayTasksToCalendar(
@@ -79,10 +88,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
 
   const onReminders = async () => {
     if (!notificationsSupported()) {
-      Alert.alert(
-        t("notifications.title"),
-        t("notifications.webUnavailableParent")
-      );
+      Alert.alert(t("notifications.title"), t("notifications.webUnavailableParent"));
       return;
     }
     const ok = await ensureNotificationPermissions();
@@ -94,18 +100,76 @@ export function ParentDashboardScreen({ navigation }: Props) {
     Alert.alert(t("notifications.remindersTitle"), t("notifications.remindersScheduledShort", { count: n }));
   };
 
+  const openMoreMenu = () => {
+    const buttons: {
+      text: string;
+      style?: "cancel" | "destructive" | "default";
+      onPress?: () => void;
+    }[] = [
+      {
+        text: t("common.language"),
+        onPress: () => navigation.navigate("LanguageSettings"),
+      },
+      {
+        text: t("common.changeProfile"),
+        onPress: () => {
+          setCurrentProfileId(null);
+          navigation.replace("ProfilePicker");
+        },
+      },
+      {
+        text: t("parentDash.reminders"),
+        onPress: () => void onReminders(),
+      },
+    ];
+    if (calendarSupported()) {
+      buttons.push({
+        text: t("parentDash.addCalendar"),
+        onPress: () => void onCalendar(),
+      });
+    }
+    buttons.push({ text: t("common.cancel"), style: "cancel" });
+
+    if (Platform.OS === "ios") {
+      Alert.alert(t("common.settings"), undefined, buttons);
+    } else {
+      // Android / web: Alert supports buttons; same path.
+      Alert.alert(t("common.settings"), undefined, buttons);
+    }
+  };
+
+  const goNewTask = () => navigation.navigate("TaskForm", {});
+
+  const shareLabel = family?.inviteCode
+    ? t("parentDash.shareFamilyCode", { code: family.inviteCode })
+    : t("parentDash.shareFamily");
+
   return (
     <View style={styles.root}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>{t("parentDash.title")}</Text>
-        <Text style={styles.sub}>{formatLocalizedDate(todayISO(), i18n.language)}</Text>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <View style={styles.headerRow}>
+          <View style={styles.headerText}>
+            <Text style={styles.title}>{t("parentDash.title")}</Text>
+            <Text style={styles.sub}>{formatLocalizedDate(todayISO(), i18n.language)}</Text>
+          </View>
+          <Pressable
+            onPress={openMoreMenu}
+            accessibilityRole="button"
+            accessibilityLabel={t("common.settings")}
+            style={({ pressed }) => [styles.menuBtn, { opacity: pressed ? 0.7 : 1 }]}
+          >
+            <Text style={styles.menuDots}>⋯</Text>
+          </Pressable>
+        </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 12 }}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsScroll}>
           <Pressable
             onPress={() => setFilterChildId("all")}
             style={[styles.chip, filterChildId === "all" && styles.chipActive]}
           >
-            <Text style={[styles.chipText, filterChildId === "all" && styles.chipTextActive]}>{t("common.all")}</Text>
+            <Text style={[styles.chipText, filterChildId === "all" && styles.chipTextActive]}>
+              {t("common.all")}
+            </Text>
           </Pressable>
           {childrenProfiles.map((c) => (
             <Pressable
@@ -124,67 +188,74 @@ export function ParentDashboardScreen({ navigation }: Props) {
           ))}
         </ScrollView>
 
-        <View style={styles.statsRow}>
-          {stats.map(({ child, total, done }) => (
-            <View key={child.id} style={[styles.statCard, { borderColor: child.color }]}>
-              <Text style={styles.statEmoji}>{child.emoji}</Text>
-              <Text style={styles.statName}>{child.name}</Text>
-              <Text style={styles.statValue}>
-                {done}/{total}
-              </Text>
-              <Text style={styles.statLabel}>{t("common.done")}</Text>
-            </View>
-          ))}
-        </View>
-
-        <PrimaryButton
-          label={t("parentDash.calendar")}
-          variant="secondary"
-          onPress={() => navigation.navigate("ParentCalendar")}
-          style={{ marginBottom: 8 }}
-        />
-        {isAuthenticated ? (
-          <PrimaryButton
-            label={
-              family?.inviteCode
-                ? t("parentDash.shareFamilyCode", { code: family.inviteCode })
-                : t("parentDash.shareFamily")
-            }
-            variant="ghost"
-            onPress={() => navigation.navigate("FamilyShare")}
-            style={{ marginBottom: 8 }}
-          />
+        {visibleStats.length > 0 ? (
+          <View style={styles.statsRow}>
+            {visibleStats.map(({ child, total, done }) => {
+              const isSelected = filterChildId === child.id;
+              return (
+                <Pressable
+                  key={child.id}
+                  onPress={() => setFilterChildId(isSelected ? "all" : child.id)}
+                  style={[
+                    styles.statCard,
+                    { borderColor: child.color },
+                    isSelected && styles.statCardSelected,
+                    filterChildId === "all" && styles.statCardCompact,
+                  ]}
+                >
+                  <Text style={styles.statEmoji}>{child.emoji}</Text>
+                  <Text style={styles.statName} numberOfLines={1}>
+                    {child.name}
+                  </Text>
+                  <Text style={styles.statValue}>
+                    {done}/{total}
+                  </Text>
+                  <Text style={styles.statLabel}>{t("common.done")}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
         ) : null}
-        <PrimaryButton
-          label={t("parentDash.newTask")}
-          onPress={() => navigation.navigate("TaskForm", {})}
-          style={{ marginBottom: 8 }}
-        />
-        <PrimaryButton
-          label={t("parentDash.addChild")}
-          variant="secondary"
-          onPress={() => navigation.navigate("ChildForm", {})}
-          style={{ marginBottom: 12 }}
-        />
 
-        <Text style={styles.section}>{t("parentDash.children")}</Text>
-        <View style={styles.kidsManage}>
-          {childrenProfiles.map((child) => (
+        <View style={styles.compactRow}>
+          <Pressable
+            onPress={() => navigation.navigate("ParentCalendar")}
+            style={({ pressed }) => [styles.compactBtn, { opacity: pressed ? 0.85 : 1 }]}
+          >
+            <Text style={styles.compactEmoji}>📅</Text>
+            <Text style={styles.compactLabel} numberOfLines={1}>
+              {t("parentDash.calendar")}
+            </Text>
+          </Pressable>
+          {isAuthenticated ? (
             <Pressable
-              key={`manage-${child.id}`}
-              onPress={() => navigation.navigate("ChildForm", { childId: child.id })}
-              style={[styles.kidManageCard, { borderColor: child.color }]}
+              onPress={() => navigation.navigate("FamilyShare")}
+              style={({ pressed }) => [styles.compactBtn, { opacity: pressed ? 0.85 : 1 }]}
             >
-              <Text style={styles.statEmoji}>{child.emoji}</Text>
-              <Text style={styles.kidManageName}>{child.name}</Text>
-              <Text style={styles.kidManageEdit}>{t("common.edit")}</Text>
+              <Text style={styles.compactEmoji}>🔗</Text>
+              <Text style={styles.compactLabel} numberOfLines={1}>
+                {shareLabel}
+              </Text>
             </Pressable>
-          ))}
+          ) : (
+            <Pressable
+              onPress={() => navigation.navigate("SignUp")}
+              style={({ pressed }) => [styles.compactBtn, { opacity: pressed ? 0.85 : 1 }]}
+            >
+              <Text style={styles.compactEmoji}>🔗</Text>
+              <Text style={styles.compactLabel} numberOfLines={1}>
+                {t("parentDash.shareFamily")}
+              </Text>
+            </Pressable>
+          )}
         </View>
 
-        <Text style={styles.section}>{t("parentDash.today")}</Text>
+        <Text style={styles.section}>{todayTitle}</Text>
         {todayTasks.length === 0 ? (
-          <Text style={styles.empty}>{t("parentDash.emptyFilter")}</Text>
+          <View style={styles.emptyBox}>
+            <Text style={styles.empty}>{t("parentDash.emptyFilter")}</Text>
+            <PrimaryButton label={t("parentDash.newTask")} onPress={goNewTask} style={{ marginTop: 8 }} />
+          </View>
         ) : (
           todayTasks.map((task) => {
             const child = childrenProfiles.find((c) => c.id === task.childId);
@@ -202,7 +273,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
                       onPress={() => navigation.navigate("TaskForm", { taskId: task.id })}
                       style={styles.editBtn}
                     >
-                      <Text>{t("parentDash.edit")}</Text>
+                      <Text style={styles.editBtnText}>{t("common.edit")}</Text>
                     </Pressable>
                   }
                 />
@@ -214,26 +285,33 @@ export function ParentDashboardScreen({ navigation }: Props) {
           })
         )}
 
-        <PrimaryButton label={t("parentDash.reminders")} variant="secondary" onPress={() => void onReminders()} style={{ marginTop: 8 }} />
-        {calendarSupported() && (
-          <PrimaryButton label={t("parentDash.addCalendar")} variant="ghost" onPress={() => void onCalendar()} style={{ marginTop: 8 }} />
-        )}
-        <PrimaryButton
-          label={t("common.language")}
-          variant="ghost"
-          onPress={() => navigation.navigate("LanguageSettings")}
-          style={{ marginTop: 8 }}
-        />
-        <PrimaryButton
-          label={t("common.changeProfile")}
-          variant="ghost"
-          onPress={() => {
-            setCurrentProfileId(null);
-            navigation.replace("ProfilePicker");
-          }}
-          style={{ marginTop: 8 }}
-        />
+        <View style={styles.childrenHeader}>
+          <Text style={[styles.section, { marginBottom: 0 }]}>{t("parentDash.children")}</Text>
+          <Pressable onPress={() => navigation.navigate("ChildForm", {})}>
+            <Text style={styles.addChildLink}>{t("parentDash.addChild")}</Text>
+          </Pressable>
+        </View>
+        <View style={styles.kidsManage}>
+          {childrenProfiles.map((child) => (
+            <Pressable
+              key={`manage-${child.id}`}
+              onPress={() => navigation.navigate("ChildForm", { childId: child.id })}
+              style={[styles.kidManageCard, { borderColor: child.color }]}
+            >
+              <Text style={styles.statEmoji}>{child.emoji}</Text>
+              <Text style={styles.kidManageName}>{child.name}</Text>
+              <Text style={styles.kidManageEdit}>{t("common.edit")}</Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {/* Spacer for sticky CTA */}
+        <View style={{ height: 72 }} />
       </ScrollView>
+
+      <View style={styles.stickyBar}>
+        <PrimaryButton label={t("parentDash.newTask")} onPress={goNewTask} />
+      </View>
     </View>
   );
 }
@@ -241,9 +319,28 @@ export function ParentDashboardScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.parentBg },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
-  container: { padding: 16, paddingBottom: 48 },
+  container: { padding: 16, paddingBottom: 24 },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  headerText: { flex: 1 },
   title: { fontSize: 26, fontWeight: "800", color: colors.text },
   sub: { color: colors.textMuted, textTransform: "capitalize", marginTop: 2 },
+  menuBtn: {
+    minWidth: 44,
+    minHeight: 44,
+    borderRadius: 12,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  menuDots: { fontSize: 22, fontWeight: "800", color: colors.text, marginTop: -4 },
+  chipsScroll: { marginVertical: 12 },
   chip: {
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -267,11 +364,46 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     alignItems: "center",
   },
+  statCardCompact: { paddingVertical: 10 },
+  statCardSelected: { borderWidth: 3, minWidth: "100%", flexBasis: "100%" },
   statEmoji: { fontSize: 28 },
   statName: { fontWeight: "700", marginTop: 4 },
   statValue: { fontSize: 22, fontWeight: "800", color: colors.primary, marginTop: 4 },
   statLabel: { color: colors.textMuted, fontSize: 12 },
-  kidsManage: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 16 },
+  compactRow: { flexDirection: "row", gap: 10, marginBottom: 14 },
+  compactBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: colors.card,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+  },
+  compactEmoji: { fontSize: 18 },
+  compactLabel: { flex: 1, fontWeight: "700", color: colors.primary, fontSize: 13 },
+  section: { fontWeight: "800", fontSize: 16, marginBottom: 8, color: colors.text },
+  emptyBox: {
+    backgroundColor: colors.card,
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: 12,
+  },
+  empty: { color: colors.textMuted },
+  childrenHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  addChildLink: { color: colors.primary, fontWeight: "700", fontSize: 13 },
+  kidsManage: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 8 },
   kidManageCard: {
     flexDirection: "row",
     alignItems: "center",
@@ -284,8 +416,6 @@ const styles = StyleSheet.create({
   },
   kidManageName: { fontWeight: "700", color: colors.text },
   kidManageEdit: { color: colors.primary, fontWeight: "600", fontSize: 12 },
-  section: { fontWeight: "800", fontSize: 16, marginBottom: 8, color: colors.text },
-  empty: { color: colors.textMuted, marginBottom: 12 },
   editBtn: {
     minWidth: 44,
     height: 40,
@@ -295,11 +425,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 8,
   },
+  editBtnText: { fontWeight: "700", color: colors.text, fontSize: 13 },
   thumb: {
     height: 120,
     borderRadius: 12,
     marginTop: -4,
     marginBottom: 12,
     backgroundColor: colors.border,
+  },
+  stickyBar: {
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: Platform.OS === "ios" ? 20 : 12,
+    backgroundColor: colors.parentBg,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
   },
 });

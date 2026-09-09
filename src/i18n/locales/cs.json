@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Přihlaste se.",
-    "hint": "Místní mateřský účet (prototyp).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "E-mail",
     "password": "Heslo",
     "emailPlaceholder": "rodiče @ example.com",
@@ -113,7 +113,14 @@
     "generate": "Vytvořit nový kód",
     "newCodeTitle": "Nový kód",
     "newCodeMsg": "Rodinný kód: CZK",
-    "generateFailed": "Nelze generovat kód."
+    "generateFailed": "Nelze generovat kód.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Seznamy rodinných úloh",
@@ -182,7 +189,8 @@
     "emptyFilter": "Žádný úkol pro tento filtr.",
     "reminders": "Dnešní připomenutí",
     "addCalendar": "Přidat do kalendáře",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Dnes · {{name}}"
   },
   "calendar": {
     "legend": "Legenda",

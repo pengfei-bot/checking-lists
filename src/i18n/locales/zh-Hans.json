@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "登录",
-    "hint": "本地家长账户（原型）。",
+    "hint": "家长账户通过 Supabase（云端）同步。",
     "email": "邮箱",
     "password": "密码",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "生成新邀请码",
     "newCodeTitle": "新邀请码",
     "newCodeMsg": "家庭邀请码：{{code}}",
-    "generateFailed": "无法生成邀请码。"
+    "generateFailed": "无法生成邀请码。",
+    "copyCode": "复制邀请码",
+    "copiedTitle": "已复制",
+    "copiedMsg": "已复制代码 {{code}}。",
+    "copyFailed": "无法复制代码。",
+    "copyEmpty": "没有可复制的邀请码。",
+    "confirmRegenTitle": "生成新邀请码？",
+    "confirmRegenBody": "旧邀请码将失效。继续吗？"
   },
   "profiles": {
     "subtitleFamily": "家庭任务列表 · {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "此过滤器没有任务 。",
     "reminders": "今天的提醒语",
     "addCalendar": "添加到日历",
-    "edit": "Edit"
+    "edit": "编辑",
+    "todayFor": "今天 · {{name}}"
   },
   "calendar": {
     "legend": "图例",

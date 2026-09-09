@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Sign in",
-    "hint": "Local parent account (prototype).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "Email",
     "password": "Password",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "Generate a new code",
     "newCodeTitle": "New code",
     "newCodeMsg": "Family code: {{code}}",
-    "generateFailed": "Could not generate the code."
+    "generateFailed": "Could not generate the code.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Family task lists · {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "No tasks for this filter.",
     "reminders": "Today's reminders",
     "addCalendar": "Add to calendar",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Այսօր · {{name}}"
   },
   "calendar": {
     "legend": "Լեգենդ",

@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Tanda sa Loob",
-    "hint": "Lokal na salaysay ng magulang (prototype).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "Email",
     "password": "Password",
     "emailPlaceholder": "magulang na si Janexample.com",
@@ -113,7 +113,14 @@
     "generate": "Gumawa ng bagong kodigo",
     "newCodeTitle": "Bagong kodigo",
     "newCodeMsg": "kodigo ng Pamilya: {{code}}",
-    "generateFailed": "Hindi malikha ang kodigo."
+    "generateFailed": "Hindi malikha ang kodigo.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Listahan ng gawaing pampamilya · {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "Walang mga gawain para sa panulaan na ito.",
     "reminders": "Mga paalaala sa Ngayon",
     "addCalendar": "Idagdag sa kalendaryo",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Ngayon · {{name}}"
   },
   "calendar": {
     "legend": "Alamat",

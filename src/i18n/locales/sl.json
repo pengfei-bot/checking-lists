@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Vpišite se",
-    "hint": "Lokalni matični račun (prototip).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "E- pošta",
     "password": "Geslo",
     "emailPlaceholder": "parent@ example. com",
@@ -113,7 +113,14 @@
     "generate": "Ustvari novo kodo",
     "newCodeTitle": "Nova koda",
     "newCodeMsg": "Družinska koda: ",
-    "generateFailed": "Ni moč ustvariti kode."
+    "generateFailed": "Ni moč ustvariti kode.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Družinski seznami opravil · ",
@@ -182,7 +189,8 @@
     "emptyFilter": "Ni nalog za ta filter.",
     "reminders": "Današnji opomini",
     "addCalendar": "Dodaj v koledar",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Danes · {{name}}"
   },
   "calendar": {
     "legend": "Legenda",

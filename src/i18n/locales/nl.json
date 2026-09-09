@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Aanmelden",
-    "hint": "Lokale ouderrekening (prototype).",
+    "hint": "Ouderaccount gesynchroniseerd via Supabase (cloud).",
     "email": "E-mail",
     "password": "Wachtwoord",
     "emailPlaceholder": "ouder@example.com",
@@ -113,7 +113,14 @@
     "generate": "Een nieuwe code aanmaken",
     "newCodeTitle": "Nieuwe code",
     "newCodeMsg": "Familiecode:",
-    "generateFailed": "Kon de code niet aanmaken."
+    "generateFailed": "Kon de code niet aanmaken.",
+    "copyCode": "Code kopiëren",
+    "copiedTitle": "Gekopieerd",
+    "copiedMsg": "Code {{code}} gekopieerd.",
+    "copyFailed": "Code kopiëren mislukt.",
+    "copyEmpty": "Geen code om te kopiëren.",
+    "confirmRegenTitle": "Nieuwe code genereren?",
+    "confirmRegenBody": "De vorige code werkt dan niet meer. Doorgaan?"
   },
   "profiles": {
     "subtitleFamily": "Familietakenlijsten ·",
@@ -182,7 +189,8 @@
     "emptyFilter": "Geen taken voor dit filter.",
     "reminders": "Herinneringen van vandaag",
     "addCalendar": "Toevoegen aan agenda",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Vandaag · {{name}}"
   },
   "calendar": {
     "legend": "Legende",

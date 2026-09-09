@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Sign in",
-    "hint": "Akun induk lokal (prototipe).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "Email",
     "password": "Kata Sandi",
     "emailPlaceholder": "opensource@example.com",
@@ -113,7 +113,14 @@
     "generate": "code",
     "newCodeTitle": "Kode baru",
     "newCodeMsg": "Kode keluarga: {{code}}",
-    "generateFailed": "Tak bisa menghasilkan kodenya."
+    "generateFailed": "Tak bisa menghasilkan kodenya.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Daftar tugas keluarga · {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "Tak ada tugas untuk filter ini.",
     "reminders": "Peringatan Hari Ini",
     "addCalendar": "Kalendar Baru",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Hari Ini · {{name}}"
   },
   "calendar": {
     "legend": "Legend",

@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Paraksts",
-    "hint": "Lokāls mātes konts (prototips).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "E- pasts",
     "password": "Parole",
     "emailPlaceholder": "pressure unit",
@@ -113,7 +113,14 @@
     "generate": "Vispārējs",
     "newCodeTitle": "Jaunais kods",
     "newCodeMsg": "Ģimenes kods: ",
-    "generateFailed": "Neizdevās ģenerēt kodu."
+    "generateFailed": "Neizdevās ģenerēt kodu.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Ģimenes uzdevumu saraksti · ",
@@ -182,7 +189,8 @@
     "emptyFilter": "Šim filtram nav darbu.",
     "reminders": "Šodienas atgādinājumi",
     "addCalendar": "Pievienot kalendāram",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Šodien · {{name}}"
   },
   "calendar": {
     "legend": "Apzīmējumi",

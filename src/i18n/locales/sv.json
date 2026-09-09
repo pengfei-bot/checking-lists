@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Logga in",
-    "hint": "Lokalt föräldrakonto (prototyp).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "E-post",
     "password": "Lösenord",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "Skapa en ny kod",
     "newCodeTitle": "Ny kod",
     "newCodeMsg": "Familjekod: ⟦",
-    "generateFailed": "Kunde inte generera koden."
+    "generateFailed": "Kunde inte generera koden.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Familjeuppgiftslistor · 0",
@@ -182,7 +189,8 @@
     "emptyFilter": "Inga uppgifter för detta filter.",
     "reminders": "Dagens påminnelser",
     "addCalendar": "Lägg till i kalendern",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Idag · {{name}}"
   },
   "calendar": {
     "legend": "Legend",

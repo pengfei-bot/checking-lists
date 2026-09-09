@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Semnează",
-    "hint": "Cont mamă local (prototip).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "Email",
     "password": "Parolă",
     "emailPlaceholder": "part@exemplu.com",
@@ -113,7 +113,14 @@
     "generate": "Generează un nou cod",
     "newCodeTitle": "Cod nou",
     "newCodeMsg": "Codul de familie:",
-    "generateFailed": "Nu am putut genera codul."
+    "generateFailed": "Nu am putut genera codul.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Liste de sarcini familiale ·",
@@ -182,7 +189,8 @@
     "emptyFilter": "Fără sarcini pentru acest filtru.",
     "reminders": "Amintirile de astăzi",
     "addCalendar": "Adaugă în calendar",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Azi · {{name}}"
   },
   "calendar": {
     "legend": "Legendă",

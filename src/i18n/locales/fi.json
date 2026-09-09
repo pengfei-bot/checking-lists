@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Kirjaudu sisään",
-    "hint": "Paikallinen emo toteutuneiden tilien määrä (prototyyppi).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "Sähköposti",
     "password": "Salasana",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "Luo uusi koodi",
     "newCodeTitle": "Uusi koodi",
     "newCodeMsg": "Perhekoodi:",
-    "generateFailed": "Koodia ei voitu luoda."
+    "generateFailed": "Koodia ei voitu luoda.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Perheen tehtäväluettelot · ...",
@@ -182,7 +189,8 @@
     "emptyFilter": "Ei tehtäviä tälle suodattimelle.",
     "reminders": "Tämän päivän muistutukset",
     "addCalendar": "Lisää kalenteriin",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Tänään · {{name}}"
   },
   "calendar": {
     "legend": "Selitys",

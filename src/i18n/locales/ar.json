@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "وقع",
-    "hint": "الحساب المحلي للوالدين (النموذج الأولي).",
+    "hint": "حساب الوالد متزامن مع Supabase (سحابة).",
     "email": "Email",
     "password": "كلمة السر",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "تولد شفرة جديدة",
     "newCodeTitle": "رمز جديد",
     "newCodeMsg": "قانون الأسرة: ⟧0⟧",
-    "generateFailed": "لا يمكن توليد الرمز."
+    "generateFailed": "لا يمكن توليد الرمز.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "قوائم المهام الأسرية",
@@ -182,7 +189,8 @@
     "emptyFilter": "لا مهام لهذا المرشح",
     "reminders": "تذكير اليوم",
     "addCalendar": "إضافة إلى الجدول الزمني",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "اليوم · {{name}}"
   },
   "calendar": {
     "legend": "الأساطير",

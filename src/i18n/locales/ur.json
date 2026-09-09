@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "نشانی",
-    "hint": "مقامی والدین حساب (protope)۔",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "ای میل",
     "password": "پاس ورڈ",
     "emailPlaceholder": "والدین کو چاہئے کہ وہ اپنے بچوں کی پرورش کریں",
@@ -113,7 +113,14 @@
     "generate": "نیا کوڈ",
     "newCodeTitle": "نیا کوڈ",
     "newCodeMsg": "خاندانی کوڈ: {{code}}",
-    "generateFailed": "کوڈ نہیں بنایا جا سکا۔"
+    "generateFailed": "کوڈ نہیں بنایا جا سکا۔",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "خاندانی کام فہرستیں {{date}}",
@@ -182,7 +189,8 @@
     "emptyFilter": "اس فیلڈ کے لئے کوئی کام نہیں.",
     "reminders": "آج کی شہادتیں",
     "addCalendar": "کیلنڈر میں شامل کریں",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "آج · {{name}}"
   },
   "calendar": {
     "legend": "لاگ ان",

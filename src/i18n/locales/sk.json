@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Prihlásiť sa",
-    "hint": "Lokálny materský účet (prototyp).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "E-mail",
     "password": "Heslo",
     "emailPlaceholder": "parent@ example.com",
@@ -113,7 +113,14 @@
     "generate": "Generovať nový kód",
     "newCodeTitle": "Nový kód",
     "newCodeMsg": "Rodinný kód:",
-    "generateFailed": "Nie je možné vytvoriť kód."
+    "generateFailed": "Nie je možné vytvoriť kód.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Rodinné zoznamy úloh",
@@ -182,7 +189,8 @@
     "emptyFilter": "Žiadne úlohy pre tento filter.",
     "reminders": "Dnešné pripomienky",
     "addCalendar": "Pridať do kalendára",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Dnes · {{name}}"
   },
   "calendar": {
     "legend": "Vysvetlivky",

@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Jelentkezz be!",
-    "hint": "Helyi anyaszámla (prototípus).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "E-mail",
     "password": "Jelszó",
     "emailPlaceholder": "szülő @ example.com",
@@ -113,7 +113,14 @@
     "generate": "Új kód létrehozása",
     "newCodeTitle": "Új kód",
     "newCodeMsg": "Családi kód:",
-    "generateFailed": "Nem sikerült létrehozni a kódot."
+    "generateFailed": "Nem sikerült létrehozni a kódot.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Családi feladatok listája",
@@ -182,7 +189,8 @@
     "emptyFilter": "Nincs feladat erre a szűrőre.",
     "reminders": "A mai emlékeztetők",
     "addCalendar": "Hozzáadás a naptárhoz",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Ma · {{name}}"
   },
   "calendar": {
     "legend": "Jelmagyarázat",

@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "साइन इन करें",
-    "hint": "स्थानीय मूल खाता (प्रोटोटाइप)।",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "ईमेल",
     "password": "पासवर्ड",
     "emailPlaceholder": "Parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "एक नया कोड उत्पन्न करें",
     "newCodeTitle": "नया कोड",
     "newCodeMsg": "A type of the grammar.",
-    "generateFailed": "कोड उत्पन्न नहीं कर सका।"
+    "generateFailed": "कोड उत्पन्न नहीं कर सका।",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "A person who has a person who has a person.",
@@ -182,7 +189,8 @@
     "emptyFilter": "इस फिल्टर के लिए कोई कार्य नहीं है।",
     "reminders": "आज के अनुस्मारक",
     "addCalendar": "कैलेंडर में जोड़ें",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "आज · {{name}}"
   },
   "calendar": {
     "legend": "लीजेंड",

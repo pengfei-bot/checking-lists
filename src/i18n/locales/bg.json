@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Подпишете се.",
-    "hint": "Местна сметка майка (прототип).",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "Имейл",
     "password": "Парола",
     "emailPlaceholder": "market@пример. com",
@@ -113,7 +113,14 @@
     "generate": "Генериране на нов код",
     "newCodeTitle": "Нов код",
     "newCodeMsg": "Семеен код:",
-    "generateFailed": "Кодът не е генериран."
+    "generateFailed": "Кодът не е генериран.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Семейни списъци за задачи ·  год.",
@@ -182,7 +189,8 @@
     "emptyFilter": "Няма задачи за този филтър.",
     "reminders": "Днешните напомняния",
     "addCalendar": "Добавяне към календара",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Днес · {{name}}"
   },
   "calendar": {
     "legend": "Легенда",

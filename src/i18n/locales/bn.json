@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "সাইন ইন করুন",
-    "hint": "স্থানীয় ঊর্ধ্বতন অ্যাকাউন্ট (প্রtot)",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "ই-মেইল",
     "password": "পাসওয়ার্ড",
     "emailPlaceholder": "প্যারেন্ট@example.com",
@@ -113,7 +113,14 @@
     "generate": "একটি নতুন কোড তৈরি করুন",
     "newCodeTitle": "নতুন কোড",
     "newCodeMsg": "পারিবারিক কোড:  পারছে না",
-    "generateFailed": "কোড তৈরি করা যায়নি"
+    "generateFailed": "কোড তৈরি করা যায়নি",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "পারিবারিক কাজের তালিকা GenericName",
@@ -182,7 +189,8 @@
     "emptyFilter": "এই ফিল্টারের জন্য কোনো কর্ম উপস্থিত নেই।",
     "reminders": "আজকের অ্যালার্ম",
     "addCalendar": "বর্ষপঞ্জি যোগ করুন",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "আজ · {{name}}"
   },
   "calendar": {
     "legend": "বর্ণনা (legend) প্রদর্শন করুন",

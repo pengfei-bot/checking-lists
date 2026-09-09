@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Zeichen",
-    "hint": "Lokales Mutterkonto (Prototyp).",
+    "hint": "Elternkonto über Supabase (Cloud) synchronisiert.",
     "email": "E-Mail",
     "password": "Passwort",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "Generieren Sie einen neuen Code",
     "newCodeTitle": "Neuer Code",
     "newCodeMsg": "Familiencode: {{code}}",
-    "generateFailed": "Der Code konnte nicht generiert werden."
+    "generateFailed": "Der Code konnte nicht generiert werden.",
+    "copyCode": "Code kopieren",
+    "copiedTitle": "Kopiert",
+    "copiedMsg": "Code {{code}} kopiert.",
+    "copyFailed": "Code konnte nicht kopiert werden.",
+    "copyEmpty": "Kein Code zum Kopieren.",
+    "confirmRegenTitle": "Neuen Code erzeugen?",
+    "confirmRegenBody": "Der alte Code funktioniert dann nicht mehr. Fortfahren?"
   },
   "profiles": {
     "subtitleFamily": "Familienaufgabenlisten · {{date}}�",
@@ -182,7 +189,8 @@
     "emptyFilter": "Keine Aufgaben für diesen Filter.",
     "reminders": "Die heutigen Erinnerungen",
     "addCalendar": "Hinzufügen zum Kalender",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Heute · {{name}}"
   },
   "calendar": {
     "legend": "Legende",

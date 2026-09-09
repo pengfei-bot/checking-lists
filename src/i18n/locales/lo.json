@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "เข้าสู่ระบบ",
-    "hint": "บัญชีผู้ใช้แม่แบบ (พิมพ์เอง)",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "อีเมล",
     "password": "รหัสผ่าน",
     "emailPlaceholder": "ผู้ปกครอง@example.com",
@@ -113,7 +113,14 @@
     "generate": "สร้างรหัสใหม่",
     "newCodeTitle": "สร้างรหัสใหม่",
     "newCodeMsg": "รหัสประจําครอบครัว: ⟦⟧",
-    "generateFailed": "ไม่สามารถสร้างโค้ดได้"
+    "generateFailed": "ไม่สามารถสร้างโค้ดได้",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "งานของครอบครัวมีรายชื่อ",
@@ -182,7 +189,8 @@
     "emptyFilter": "ไม่มีทาสก์สําหรับตัวกรองนี้",
     "reminders": "เตือนความจําวันนี้",
     "addCalendar": "เพิ่มไปยังปฏิทิน",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "ມື້ນີ້ · {{name}}"
   },
   "calendar": {
     "legend": "ตํานาน",

@@ -272,7 +272,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         placeholderTextColor={colors.textMuted}
       />
       {attempted && fieldErrors.title ? (
-        <Text style={styles.fieldError}>{fieldErrors.title}</Text>
+        <Text style={styles.fieldError}>{t(fieldErrors.title)}</Text>
       ) : null}
 
       <Text style={styles.label}>{t("taskForm.children")}</Text>
@@ -306,7 +306,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         )}
       </View>
       {attempted && fieldErrors.childId ? (
-        <Text style={styles.fieldError}>{fieldErrors.childId}</Text>
+        <Text style={styles.fieldError}>{t(fieldErrors.childId)}</Text>
       ) : null}
 
       <Text style={styles.label}>{t("taskForm.time")}</Text>
@@ -335,7 +335,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         <Text style={styles.timeButtonHint}>{t("taskForm.timeHint")}</Text>
       </Pressable>
       {attempted && fieldErrors.time ? (
-        <Text style={styles.fieldError}>{fieldErrors.time}</Text>
+        <Text style={styles.fieldError}>{t(fieldErrors.time)}</Text>
       ) : null}
 
       <View style={styles.rowWrap}>
@@ -377,7 +377,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
             placeholderTextColor={colors.textMuted}
           />
           {attempted && fieldErrors.onceDate ? (
-            <Text style={styles.fieldError}>{fieldErrors.onceDate}</Text>
+            <Text style={styles.fieldError}>{t(fieldErrors.onceDate)}</Text>
           ) : null}
         </>
       )}

@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Ký vào",
-    "hint": "Tài khoản cha mẹ cục bộ (kiểu)",
+    "hint": "Parent account synced with Supabase (cloud).",
     "email": "Email",
     "password": "Mật khẩu",
     "emailPlaceholder": "phụ huynh",
@@ -113,7 +113,14 @@
     "generate": "Tạo ra một mã mới",
     "newCodeTitle": "Mã mới",
     "newCodeMsg": "Mã hóa gia đình:  vội vàng",
-    "generateFailed": "Không thể tạo mã."
+    "generateFailed": "Không thể tạo mã.",
+    "copyCode": "Copy code",
+    "copiedTitle": "Copied",
+    "copiedMsg": "Code {{code}} copied.",
+    "copyFailed": "Could not copy the code.",
+    "copyEmpty": "No invite code to copy.",
+    "confirmRegenTitle": "Generate a new code?",
+    "confirmRegenBody": "The previous code will stop working. Continue?"
   },
   "profiles": {
     "subtitleFamily": "Công việc gia đình liệt kê ·  0",
@@ -182,7 +189,8 @@
     "emptyFilter": "Không có tác vụ cho bộ lọc này.",
     "reminders": "Những lời nhắc nhở ngày hôm nay",
     "addCalendar": "Thêm vào lịch",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Hôm nay · {{name}}"
   },
   "calendar": {
     "legend": "Huyền thoại",

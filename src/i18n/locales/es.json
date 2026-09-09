@@ -61,7 +61,7 @@
   },
   "signIn": {
     "title": "Iniciar sesión",
-    "hint": "Cuenta de padres locales (prototipo).",
+    "hint": "Cuenta de padre sincronizada con Supabase (nube).",
     "email": "Email",
     "password": "Contraseña",
     "emailPlaceholder": "parent@example.com",
@@ -113,7 +113,14 @@
     "generate": "Generar un nuevo código",
     "newCodeTitle": "Nuevo código",
     "newCodeMsg": "Código familiar: ⟦0",
-    "generateFailed": "No podía generar el código."
+    "generateFailed": "No podía generar el código.",
+    "copyCode": "Copiar código",
+    "copiedTitle": "Copiado",
+    "copiedMsg": "Código {{code}} copiado.",
+    "copyFailed": "No se pudo copiar el código.",
+    "copyEmpty": "No hay código para copiar.",
+    "confirmRegenTitle": "¿Generar un código nuevo?",
+    "confirmRegenBody": "El código anterior dejará de funcionar. ¿Continuar?"
   },
   "profiles": {
     "subtitleFamily": "Listas de tareas familiares · ⟦0",
@@ -182,7 +189,8 @@
     "emptyFilter": "No hay tareas para este filtro.",
     "reminders": "Los recordatorios de hoy",
     "addCalendar": "Añadir al calendario",
-    "edit": "Edit"
+    "edit": "Edit",
+    "todayFor": "Hoy · {{name}}"
   },
   "calendar": {
     "legend": "Leyenda",
