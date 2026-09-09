@@ -273,7 +273,14 @@
       "midi": "১২:১৩: ৪৫",
       "apresmidi": "১৪: ০০-১৭: ৪৫",
       "soir": "১৮: ০০-২২০০:"
-    }
+    },
+    "startDate": "Start date (YYYY-MM-DD)",
+    "endDate": "End date (optional, YYYY-MM-DD)",
+    "intervalWeeks": "Every how many weeks",
+    "errStartDate": "Enter a start date as YYYY-MM-DD.",
+    "errEndDate": "Enter an end date as YYYY-MM-DD.",
+    "errEndBeforeStart": "End date must be on or after the start date.",
+    "errInterval": "Choose an interval between 2 and 12 weeks."
   },
   "childForm": {
     "newTitle": "নতুন চাইল্ড",
@@ -301,7 +308,9 @@
   "recurrence": {
     "daily": "প্রতিদিন",
     "weekdays": "সপ্তাহের দিন",
-    "once": "শুধুমাত্র একবার"
+    "once": "শুধুমাত্র একবার",
+    "weekly": "Every week",
+    "everyNWeeks": "Every {{count}} weeks"
   },
   "weekdays": {
     "mon": "মন",

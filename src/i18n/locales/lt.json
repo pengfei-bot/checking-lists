@@ -273,7 +273,14 @@
       "midi": "12: 00-13: 45",
       "apresmidi": "14: 00-17: 45",
       "soir": "18: 00-22: 00"
-    }
+    },
+    "startDate": "Start date (YYYY-MM-DD)",
+    "endDate": "End date (optional, YYYY-MM-DD)",
+    "intervalWeeks": "Every how many weeks",
+    "errStartDate": "Enter a start date as YYYY-MM-DD.",
+    "errEndDate": "Enter an end date as YYYY-MM-DD.",
+    "errEndBeforeStart": "End date must be on or after the start date.",
+    "errInterval": "Choose an interval between 2 and 12 weeks."
   },
   "childForm": {
     "newTitle": "Naujas vaikas",
@@ -301,7 +308,9 @@
   "recurrence": {
     "daily": "Kiekvieną dieną",
     "weekdays": "Savaitės",
-    "once": "Tik vieną kartą"
+    "once": "Tik vieną kartą",
+    "weekly": "Every week",
+    "everyNWeeks": "Every {{count}} weeks"
   },
   "weekdays": {
     "mon": "Kitas mėnuo",

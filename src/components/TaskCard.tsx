@@ -39,7 +39,7 @@ export function TaskCard({ task, done, completedAt, childName, onPress, rightAcc
           <Text style={[styles.title, done && styles.titleDone]}>{task.title}</Text>
           <Text style={styles.meta}>
             {childName ? `${childName} · ` : ""}
-            {recurrenceLabel(task.recurrence)}
+            {recurrenceLabel(task.recurrence, task.intervalWeeks)}
             {task.reminderEnabled ? " · 🔔" : ""}
             {doneLabel ? ` ${doneLabel}` : ""}
           </Text>

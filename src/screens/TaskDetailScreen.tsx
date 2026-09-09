@@ -127,7 +127,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
       <Text style={styles.emoji}>{child?.emoji ?? "✅"}</Text>
       <Text style={styles.title}>{task.title}</Text>
       <Text style={styles.meta}>
-        {child?.name ?? t("taskDetail.childFallback")} · {task.time} · {recurrenceLabel(task.recurrence)}
+        {child?.name ?? t("taskDetail.childFallback")} · {task.time} · {recurrenceLabel(task.recurrence, task.intervalWeeks)}
       </Text>
       <Text style={styles.meta}>
         {t("taskDetail.reminder", { value: task.reminderEnabled ? t("common.yes") : t("common.no"), date: todayISO() })}

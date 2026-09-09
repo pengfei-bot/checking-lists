@@ -273,7 +273,14 @@
       "midi": "12:00～13:45",
       "apresmidi": "14:00～17:45",
       "soir": "18:00～22:00"
-    }
+    },
+    "startDate": "開始日 (YYYY-MM-DD)",
+    "endDate": "終了日（任意、YYYY-MM-DD）",
+    "intervalWeeks": "何週ごと",
+    "errStartDate": "開始日を YYYY-MM-DD で入力してください。",
+    "errEndDate": "終了日を YYYY-MM-DD で入力してください。",
+    "errEndBeforeStart": "終了日は開始日以降である必要があります。",
+    "errInterval": "2〜12週の間隔を選んでください。"
   },
   "childForm": {
     "newTitle": "新しい子供",
@@ -301,7 +308,9 @@
   "recurrence": {
     "daily": "日替わり",
     "weekdays": "土日祝",
-    "once": "一度だけ"
+    "once": "一度だけ",
+    "weekly": "毎週",
+    "everyNWeeks": "{{count}}週間ごと"
   },
   "weekdays": {
     "mon": "モンド",

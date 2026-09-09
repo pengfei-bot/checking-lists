@@ -273,7 +273,14 @@
       "midi": "12:00-13:45",
       "apresmidi": "14:00-17:45",
       "soir": "18:00–22:00"
-    }
+    },
+    "startDate": "Startdatum (JJJJ-MM-TT)",
+    "endDate": "Enddatum (optional, JJJJ-MM-TT)",
+    "intervalWeeks": "Alle wie viele Wochen",
+    "errStartDate": "Startdatum als JJJJ-MM-TT angeben.",
+    "errEndDate": "Enddatum als JJJJ-MM-TT angeben.",
+    "errEndBeforeStart": "Enddatum muss am oder nach dem Startdatum liegen.",
+    "errInterval": "Intervall zwischen 2 und 12 Wochen wählen."
   },
   "childForm": {
     "newTitle": "Neues Kind",
@@ -301,7 +308,9 @@
   "recurrence": {
     "daily": "Jeden Tag",
     "weekdays": "Wochentage",
-    "once": "Nur einmal"
+    "once": "Nur einmal",
+    "weekly": "Jede Woche",
+    "everyNWeeks": "Alle {{count}} Wochen"
   },
   "weekdays": {
     "mon": "Monmon",

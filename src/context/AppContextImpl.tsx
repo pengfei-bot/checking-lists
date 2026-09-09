@@ -131,7 +131,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     // stateRef so sequential creates (multi-child) do not drop prior inserts
     if (familyId) {
       const saved = await cloudUpsertTask(familyId, input);
+      // Ensure client fields survive if select omits nulls oddly
       if (input.onceDate) saved.onceDate = input.onceDate;
+      if (input.startDate !== undefined) saved.startDate = input.startDate;
+      if (input.endDate !== undefined) saved.endDate = input.endDate;
+      if (input.intervalWeeks !== undefined) saved.intervalWeeks = input.intervalWeeks;
       const prev = stateRef.current;
       const tasks = input.id ? prev.tasks.map((t) => (t.id === saved.id ? saved : t)) : [...prev.tasks, saved];
       const next = { ...prev, tasks };
@@ -151,7 +155,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         return saved;
       });
     } else {
-      saved = { id: uid("task"), title: input.title, childId: input.childId, time: input.time, recurrence: input.recurrence, reminderEnabled: input.reminderEnabled, onceDate: input.onceDate, createdAt: now, updatedAt: now };
+      saved = {
+        id: uid("task"),
+        title: input.title,
+        childId: input.childId,
+        time: input.time,
+        recurrence: input.recurrence,
+        reminderEnabled: input.reminderEnabled,
+        onceDate: input.onceDate,
+        startDate: input.startDate,
+        endDate: input.endDate,
+        intervalWeeks: input.intervalWeeks,
+        createdAt: now,
+        updatedAt: now,
+      };
       tasks = [...prev.tasks, saved];
     }
     const next = { ...prev, tasks };

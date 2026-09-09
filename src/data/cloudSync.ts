@@ -32,6 +32,9 @@ export interface DbTask {
   reminder_enabled: boolean;
   active: boolean;
   created_at: string;
+  interval_weeks: number | null;
+  start_date: string | null;
+  end_date: string | null;
 }
 
 export interface DbTaskCompletion {
@@ -81,6 +84,10 @@ function mapChild(row: DbChildProfile): Profile {
 
 function mapTask(row: DbTask): Task {
   const recurrence = (row.recurrence || "daily") as Recurrence;
+  const startDate = row.start_date ?? undefined;
+  const endDate = row.end_date ?? undefined;
+  const intervalWeeks =
+    row.interval_weeks != null && row.interval_weeks >= 1 ? row.interval_weeks : undefined;
   return {
     id: row.id,
     title: row.title,
@@ -88,8 +95,48 @@ function mapTask(row: DbTask): Task {
     time: row.time_of_day || "08:00",
     recurrence,
     reminderEnabled: !!row.reminder_enabled,
+    onceDate: recurrence === "once" ? startDate : undefined,
+    startDate: recurrence === "once" ? undefined : startDate,
+    endDate,
+    intervalWeeks,
     createdAt: row.created_at,
     updatedAt: row.created_at,
+  };
+}
+
+/** Columns for insert/update from app Task fields. */
+function taskDateColumns(input: {
+  recurrence: Recurrence;
+  onceDate?: string;
+  startDate?: string;
+  endDate?: string;
+  intervalWeeks?: number;
+}): {
+  interval_weeks: number | null;
+  start_date: string | null;
+  end_date: string | null;
+} {
+  if (input.recurrence === "once") {
+    return {
+      interval_weeks: null,
+      start_date: input.onceDate ?? null,
+      end_date: null,
+    };
+  }
+  const start = input.startDate ?? null;
+  const end = input.endDate ?? null;
+  const interval =
+    input.recurrence === "every_n_weeks"
+      ? input.intervalWeeks != null && input.intervalWeeks >= 1
+        ? input.intervalWeeks
+        : 2
+      : input.recurrence === "weekly"
+        ? 1
+        : null;
+  return {
+    interval_weeks: interval,
+    start_date: start,
+    end_date: end,
   };
 }
 
@@ -233,6 +280,7 @@ export async function cloudUpsertTask(
 
   const run = async (): Promise<Task> => {
     if (input.id) {
+      const dates = taskDateColumns(input);
       const { data, error } = await supabase
         .from("tasks")
         .update({
@@ -242,6 +290,9 @@ export async function cloudUpsertTask(
           recurrence: input.recurrence,
           reminder_enabled: input.reminderEnabled,
           active: true,
+          interval_weeks: dates.interval_weeks,
+          start_date: dates.start_date,
+          end_date: dates.end_date,
         })
         .eq("id", input.id)
         .select("*")
@@ -250,6 +301,7 @@ export async function cloudUpsertTask(
       return mapTask(data as DbTask);
     }
 
+    const dates = taskDateColumns(input);
     const row = {
       id: newId(),
       family_id: fid,
@@ -259,11 +311,13 @@ export async function cloudUpsertTask(
       recurrence: input.recurrence,
       reminder_enabled: input.reminderEnabled,
       active: true,
+      interval_weeks: dates.interval_weeks,
+      start_date: dates.start_date,
+      end_date: dates.end_date,
     };
     const { data, error } = await supabase.from("tasks").insert(row).select("*").single();
     if (error) throwCloud(error, "Impossible d'enregistrer la tâche.");
     const mapped = mapTask(data as DbTask);
-    if (input.onceDate) mapped.onceDate = input.onceDate;
     return { ...mapped, createdAt: mapped.createdAt || now, updatedAt: now };
   };
 

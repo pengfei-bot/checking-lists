@@ -273,7 +273,14 @@
       "midi": "12 uur 13 uur 45",
       "apresmidi": "14.00 uur 17.45 uur",
       "soir": "18.00 uur 22.00 uur"
-    }
+    },
+    "startDate": "Startdatum (JJJJ-MM-DD)",
+    "endDate": "Einddatum (optioneel, JJJJ-MM-DD)",
+    "intervalWeeks": "Om de hoeveel weken",
+    "errStartDate": "Voer startdatum in als JJJJ-MM-DD.",
+    "errEndDate": "Voer einddatum in als JJJJ-MM-DD.",
+    "errEndBeforeStart": "Einddatum moet op of na startdatum liggen.",
+    "errInterval": "Kies een interval tussen 2 en 12 weken."
   },
   "childForm": {
     "newTitle": "Nieuw kind",
@@ -301,7 +308,9 @@
   "recurrence": {
     "daily": "Elke dag",
     "weekdays": "Weekdagen",
-    "once": "Slechts één keer"
+    "once": "Slechts één keer",
+    "weekly": "Elke week",
+    "everyNWeeks": "Elke {{count}} weken"
   },
   "weekdays": {
     "mon": "Ma",

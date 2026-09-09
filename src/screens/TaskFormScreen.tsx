@@ -24,7 +24,11 @@ import { recurrenceLabel } from "../utils/recurrence";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskForm">;
 
-const RECURRENCES: Recurrence[] = ["daily", "weekdays", "once"];
+const RECURRENCES: Recurrence[] = ["daily", "weekdays", "weekly", "every_n_weeks", "once"];
+
+const INTERVAL_OPTIONS = [2, 3, 4, 5, 6, 8, 10, 12];
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 type PeriodId = "matin" | "midi" | "apresmidi" | "soir";
 
@@ -69,6 +73,9 @@ interface FieldErrors {
   childId?: string;
   time?: string;
   onceDate?: string;
+  startDate?: string;
+  endDate?: string;
+  intervalWeeks?: string;
 }
 
 function validateForm(input: {
@@ -78,6 +85,9 @@ function validateForm(input: {
   time: string;
   recurrence: Recurrence;
   onceDate: string;
+  startDate: string;
+  endDate: string;
+  intervalWeeks: number;
 }): FieldErrors {
   const errors: FieldErrors = {};
   if (!input.title.trim()) errors.title = "taskForm.errTitle";
@@ -85,8 +95,38 @@ function validateForm(input: {
   if (!/^\d{2}:\d{2}$/.test(input.time)) {
     errors.time = "taskForm.errTime";
   }
-  if (input.recurrence === "once" && !/^\d{4}-\d{2}-\d{2}$/.test(input.onceDate)) {
+  if (input.recurrence === "once" && !ISO_DATE.test(input.onceDate)) {
     errors.onceDate = "taskForm.errOnceDate";
+  }
+  const needsStart =
+    input.recurrence === "weekly" || input.recurrence === "every_n_weeks";
+  if (needsStart && !ISO_DATE.test(input.startDate)) {
+    errors.startDate = "taskForm.errStartDate";
+  }
+  if (input.recurrence === "every_n_weeks") {
+    if (input.intervalWeeks < 2 || input.intervalWeeks > 12) {
+      errors.intervalWeeks = "taskForm.errInterval";
+    }
+  }
+  const isRecurring =
+    input.recurrence === "daily" ||
+    input.recurrence === "weekdays" ||
+    input.recurrence === "weekly" ||
+    input.recurrence === "every_n_weeks";
+  if (isRecurring && input.endDate.trim()) {
+    if (!ISO_DATE.test(input.endDate)) {
+      errors.endDate = "taskForm.errEndDate";
+    } else {
+      const anchor =
+        input.recurrence === "weekly" || input.recurrence === "every_n_weeks"
+          ? input.startDate
+          : input.startDate && ISO_DATE.test(input.startDate)
+            ? input.startDate
+            : undefined;
+      if (anchor && ISO_DATE.test(anchor) && input.endDate < anchor) {
+        errors.endDate = "taskForm.errEndBeforeStart";
+      }
+    }
   }
   return errors;
 }
@@ -114,6 +154,11 @@ export function TaskFormScreen({ navigation, route }: Props) {
   const [recurrence, setRecurrence] = useState<Recurrence>(existing?.recurrence ?? "daily");
   const [reminderEnabled, setReminderEnabled] = useState(existing?.reminderEnabled ?? true);
   const [onceDate, setOnceDate] = useState(existing?.onceDate ?? todayISO());
+  const [startDate, setStartDate] = useState(existing?.startDate ?? todayISO());
+  const [endDate, setEndDate] = useState(existing?.endDate ?? "");
+  const [intervalWeeks, setIntervalWeeks] = useState(
+    existing?.intervalWeeks && existing.intervalWeeks >= 2 ? existing.intervalWeeks : 2
+  );
   const [saving, setSaving] = useState(false);
   const [attempted, setAttempted] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -121,8 +166,18 @@ export function TaskFormScreen({ navigation, route }: Props) {
   const isEdit = !!existing;
 
   const fieldErrors = useMemo(
-    () => validateForm({ title, childIds, time, recurrence, onceDate }),
-    [title, childIds, time, recurrence, onceDate]
+    () =>
+      validateForm({
+        title,
+        childIds,
+        time,
+        recurrence,
+        onceDate,
+        startDate,
+        endDate,
+        intervalWeeks,
+      }),
+    [title, childIds, time, recurrence, onceDate, startDate, endDate, intervalWeeks]
   );
   const errorList = Object.values(fieldErrors).filter(Boolean) as string[];
   const isValid = errorList.length === 0;
@@ -154,12 +209,25 @@ export function TaskFormScreen({ navigation, route }: Props) {
     if (!isValid) return;
     setSaving(true);
     try {
+      const isRecurring =
+        recurrence === "daily" ||
+        recurrence === "weekdays" ||
+        recurrence === "weekly" ||
+        recurrence === "every_n_weeks";
       const payload = {
         title: title.trim(),
         time,
         recurrence,
         reminderEnabled,
         onceDate: recurrence === "once" ? onceDate : undefined,
+        startDate:
+          recurrence === "weekly" || recurrence === "every_n_weeks"
+            ? startDate
+            : isRecurring && startDate && ISO_DATE.test(startDate)
+              ? startDate
+              : undefined,
+        endDate: isRecurring && endDate.trim() ? endDate.trim() : undefined,
+        intervalWeeks: recurrence === "every_n_weeks" ? intervalWeeks : recurrence === "weekly" ? 1 : undefined,
       };
       const selectedIds = childIds;
 
@@ -359,7 +427,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
             style={[styles.chip, recurrence === r && styles.chipActive]}
           >
             <Text style={[styles.chipText, recurrence === r && styles.chipTextActive]}>
-              {recurrenceLabel(r)}
+              {recurrenceLabel(r, r === "every_n_weeks" ? intervalWeeks : undefined)}
             </Text>
           </Pressable>
         ))}
@@ -378,6 +446,65 @@ export function TaskFormScreen({ navigation, route }: Props) {
           />
           {attempted && fieldErrors.onceDate ? (
             <Text style={styles.fieldError}>{t(fieldErrors.onceDate)}</Text>
+          ) : null}
+        </>
+      )}
+
+      {(recurrence === "weekly" || recurrence === "every_n_weeks") && (
+        <>
+          <Text style={styles.label}>{t("taskForm.startDate")}</Text>
+          <TextInput
+            value={startDate}
+            onChangeText={setStartDate}
+            placeholder={todayISO()}
+            style={[styles.input, attempted && fieldErrors.startDate ? styles.inputError : null]}
+            autoCapitalize="none"
+            placeholderTextColor={colors.textMuted}
+          />
+          {attempted && fieldErrors.startDate ? (
+            <Text style={styles.fieldError}>{t(fieldErrors.startDate)}</Text>
+          ) : null}
+        </>
+      )}
+
+      {recurrence === "every_n_weeks" && (
+        <>
+          <Text style={styles.label}>{t("taskForm.intervalWeeks")}</Text>
+          <View style={styles.rowWrap}>
+            {INTERVAL_OPTIONS.map((n) => (
+              <Pressable
+                key={n}
+                onPress={() => setIntervalWeeks(n)}
+                style={[styles.chip, intervalWeeks === n && styles.chipActive]}
+              >
+                <Text style={[styles.chipText, intervalWeeks === n && styles.chipTextActive]}>
+                  {n}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+          {attempted && fieldErrors.intervalWeeks ? (
+            <Text style={styles.fieldError}>{t(fieldErrors.intervalWeeks)}</Text>
+          ) : null}
+        </>
+      )}
+
+      {(recurrence === "daily" ||
+        recurrence === "weekdays" ||
+        recurrence === "weekly" ||
+        recurrence === "every_n_weeks") && (
+        <>
+          <Text style={styles.label}>{t("taskForm.endDate")}</Text>
+          <TextInput
+            value={endDate}
+            onChangeText={setEndDate}
+            placeholder={t("taskForm.endDate")}
+            style={[styles.input, attempted && fieldErrors.endDate ? styles.inputError : null]}
+            autoCapitalize="none"
+            placeholderTextColor={colors.textMuted}
+          />
+          {attempted && fieldErrors.endDate ? (
+            <Text style={styles.fieldError}>{t(fieldErrors.endDate)}</Text>
           ) : null}
         </>
       )}
