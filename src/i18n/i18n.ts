@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Localization from "expo-localization";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import { Platform } from "react-native";
 import {
   AppLocale,
   LOCALE_RESOURCE_ALIASES,
@@ -14,7 +15,15 @@ import { resources } from "./resources";
 
 let initPromise: Promise<typeof i18n> | null = null;
 
+/**
+ * Sync default before AsyncStorage resolves.
+ * Web (GitHub Pages / store shots): prefer French so browser EN does not flash.
+ * Native: detect device locale.
+ */
 export function getStoredOrDeviceLocaleSync(): AppLocale {
+  if (Platform.OS === "web") {
+    return "fr";
+  }
   const locales = Localization.getLocales?.() ?? [];
   const tag =
     locales[0]?.languageTag ??
@@ -32,6 +41,10 @@ export async function loadSavedLocale(): Promise<AppLocale> {
     }
   } catch {
     /* ignore */
+  }
+  // No saved preference: web → fr; native → device locale.
+  if (Platform.OS === "web") {
+    return "fr";
   }
   return getStoredOrDeviceLocaleSync();
 }

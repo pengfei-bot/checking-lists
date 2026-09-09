@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import {
   Alert,
   Image,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -38,6 +39,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
   } = useApp();
   const { isAuthenticated, family } = useAuth();
   const [filterChildId, setFilterChildId] = useState<string | "all">("all");
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const todayTasks = useMemo(() => {
     return state.tasks
@@ -100,42 +102,9 @@ export function ParentDashboardScreen({ navigation }: Props) {
     Alert.alert(t("notifications.remindersTitle"), t("notifications.remindersScheduledShort", { count: n }));
   };
 
-  const openMoreMenu = () => {
-    const buttons: {
-      text: string;
-      style?: "cancel" | "destructive" | "default";
-      onPress?: () => void;
-    }[] = [
-      {
-        text: t("common.language"),
-        onPress: () => navigation.navigate("LanguageSettings"),
-      },
-      {
-        text: t("common.changeProfile"),
-        onPress: () => {
-          setCurrentProfileId(null);
-          navigation.replace("ProfilePicker");
-        },
-      },
-      {
-        text: t("parentDash.reminders"),
-        onPress: () => void onReminders(),
-      },
-    ];
-    if (calendarSupported()) {
-      buttons.push({
-        text: t("parentDash.addCalendar"),
-        onPress: () => void onCalendar(),
-      });
-    }
-    buttons.push({ text: t("common.cancel"), style: "cancel" });
-
-    if (Platform.OS === "ios") {
-      Alert.alert(t("common.settings"), undefined, buttons);
-    } else {
-      // Android / web: Alert supports buttons; same path.
-      Alert.alert(t("common.settings"), undefined, buttons);
-    }
+  const closeAnd = (fn: () => void) => {
+    setMoreOpen(false);
+    fn();
   };
 
   const goNewTask = () => navigation.navigate("TaskForm", {});
@@ -153,7 +122,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
             <Text style={styles.sub}>{formatLocalizedDate(todayISO(), i18n.language)}</Text>
           </View>
           <Pressable
-            onPress={openMoreMenu}
+            onPress={() => setMoreOpen(true)}
             accessibilityRole="button"
             accessibilityLabel={t("common.settings")}
             style={({ pressed }) => [styles.menuBtn, { opacity: pressed ? 0.7 : 1 }]}
@@ -312,6 +281,62 @@ export function ParentDashboardScreen({ navigation }: Props) {
       <View style={styles.stickyBar}>
         <PrimaryButton label={t("parentDash.newTask")} onPress={goNewTask} />
       </View>
+
+      <Modal
+        visible={moreOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setMoreOpen(false)}
+      >
+        <Pressable style={styles.menuBackdrop} onPress={() => setMoreOpen(false)}>
+          <View style={styles.menuSheet}>
+            <Text style={styles.menuTitle}>{t("common.settings")}</Text>
+            <PrimaryButton
+              label={t("common.language")}
+              variant="secondary"
+              onPress={() => closeAnd(() => navigation.navigate("LanguageSettings"))}
+              style={{ marginTop: 8 }}
+            />
+            <PrimaryButton
+              label={t("common.changeProfile")}
+              variant="ghost"
+              onPress={() =>
+                closeAnd(() => {
+                  setCurrentProfileId(null);
+                  navigation.replace("ProfilePicker");
+                })
+              }
+              style={{ marginTop: 8 }}
+            />
+            <PrimaryButton
+              label={t("parentDash.reminders")}
+              variant="ghost"
+              onPress={() => {
+                setMoreOpen(false);
+                void onReminders();
+              }}
+              style={{ marginTop: 8 }}
+            />
+            {calendarSupported() ? (
+              <PrimaryButton
+                label={t("parentDash.addCalendar")}
+                variant="ghost"
+                onPress={() => {
+                  setMoreOpen(false);
+                  void onCalendar();
+                }}
+                style={{ marginTop: 8 }}
+              />
+            ) : null}
+            <PrimaryButton
+              label={t("common.cancel")}
+              variant="ghost"
+              onPress={() => setMoreOpen(false)}
+              style={{ marginTop: 12 }}
+            />
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 }
@@ -440,5 +465,23 @@ const styles = StyleSheet.create({
     backgroundColor: colors.parentBg,
     borderTopWidth: 1,
     borderTopColor: colors.border,
+  },
+  menuBackdrop: {
+    flex: 1,
+    backgroundColor: "#00000066",
+    justifyContent: "flex-end",
+  },
+  menuSheet: {
+    backgroundColor: colors.card,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    paddingBottom: 32,
+  },
+  menuTitle: {
+    fontSize: 18,
+    fontWeight: "800",
+    color: colors.text,
+    marginBottom: 4,
   },
 });
