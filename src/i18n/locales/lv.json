@@ -232,7 +232,10 @@
     "donePhotoWeb": "Pabeigts + fotoattēls (fails)",
     "unmark": "Atsaukt pabeigšanu",
     "edit": "Edit",
-    "doneAt": "Izpildīts plkst. {{time}}"
+    "doneAt": "Izpildīts plkst. {{time}}",
+    "childMarkDone": "Gatavs!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Nosaukums",

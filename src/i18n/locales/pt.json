@@ -232,7 +232,10 @@
     "donePhotoWeb": "Feito + foto (ficheiro)",
     "unmark": "Desfazer a completação",
     "edit": "Edit",
-    "doneAt": "Feito às {{time}}"
+    "doneAt": "Feito às {{time}}",
+    "childMarkDone": "Feito!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ops ↩️"
   },
   "taskForm": {
     "titleLabel": "Título",

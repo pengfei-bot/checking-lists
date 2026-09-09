@@ -232,7 +232,10 @@
     "donePhotoWeb": "Kész + fénykép (fájl)",
     "unmark": "A befejezés visszavonása",
     "edit": "Edit",
-    "doneAt": "Kész {{time}}-kor"
+    "doneAt": "Kész {{time}}-kor",
+    "childMarkDone": "Kész!",
+    "childDonePhoto": "Fotó 📷",
+    "childUnmark": "Hoppá ↩️"
   },
   "taskForm": {
     "titleLabel": "Cím",

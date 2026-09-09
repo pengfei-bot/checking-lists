@@ -232,7 +232,10 @@
     "donePhotoWeb": "Done + 사진 (파일)",
     "unmark": "취소 완료",
     "edit": "Edit",
-    "doneAt": "{{time}}에 완료"
+    "doneAt": "{{time}}에 완료",
+    "childMarkDone": "했어요!",
+    "childDonePhoto": "사진 📷",
+    "childUnmark": "앗 ↩️"
   },
   "taskForm": {
     "titleLabel": "이름 *",

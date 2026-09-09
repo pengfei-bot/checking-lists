@@ -232,7 +232,10 @@
     "donePhotoWeb": "Έγινε + φωτογραφία (αρχείο)",
     "unmark": "Αναίρεση ολοκλήρωσης",
     "edit": "Edit",
-    "doneAt": "Ολοκληρώθηκε στις {{time}}"
+    "doneAt": "Ολοκληρώθηκε στις {{time}}",
+    "childMarkDone": "Έτοιμο!",
+    "childDonePhoto": "Φωτο 📷",
+    "childUnmark": "Ωχ ↩️"
   },
   "taskForm": {
     "titleLabel": "Τίτλος",

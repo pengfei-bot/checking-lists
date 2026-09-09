@@ -232,7 +232,10 @@
     "donePhotoWeb": "Opravljeno + fotografija (file)",
     "unmark": "Razveljavi dokončanje",
     "edit": "Edit",
-    "doneAt": "Gotovo u {{time}}"
+    "doneAt": "Gotovo u {{time}}",
+    "childMarkDone": "Gotovo!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Naslov",

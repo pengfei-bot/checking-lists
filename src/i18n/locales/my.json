@@ -232,7 +232,10 @@
     "donePhotoWeb": "完成 + 照片 (文件)",
     "unmark": "撤消补全",
     "edit": "Edit",
-    "doneAt": "{{time}} တွင် ပြီးပါပြီ"
+    "doneAt": "{{time}} တွင် ပြီးပါပြီ",
+    "childMarkDone": "ပြီးပြီ!",
+    "childDonePhoto": "ဓာတ်ပုံ 📷",
+    "childUnmark": "အိုး ↩️"
   },
   "taskForm": {
     "titleLabel": "标题",

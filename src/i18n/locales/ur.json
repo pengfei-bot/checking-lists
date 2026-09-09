@@ -232,7 +232,10 @@
     "donePhotoWeb": "+ تصویر (File)",
     "unmark": "غیر متصل",
     "edit": "Edit",
-    "doneAt": "{{time}} پر مکمل"
+    "doneAt": "{{time}} پر مکمل",
+    "childMarkDone": "ہو گیا!",
+    "childDonePhoto": "تصویر 📷",
+    "childUnmark": "اوہ ↩️"
   },
   "taskForm": {
     "titleLabel": "فائلز",

@@ -24,6 +24,7 @@ import {
   DayAggregateStatus,
   buildDayOverview,
   statusColor,
+  statusEmoji,
 } from "../utils/calendarStatus";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChildHistory">;
@@ -203,9 +204,7 @@ export function ChildHistoryScreen({ navigation }: Props) {
                 accessibilityLabel={`${cell.day}, ${statusLabel(cell.status)}`}
               >
                 <Text style={[styles.dayNum, { color: fg }]}>{cell.day}</Text>
-                {cell.status !== "empty" ? (
-                  <View style={[styles.dot, { backgroundColor: "#fff" }]} />
-                ) : null}
+                <Text style={styles.statusEmoji}>{statusEmoji(cell.status)}</Text>
               </Pressable>
             );
           })}
@@ -233,8 +232,12 @@ export function ChildHistoryScreen({ navigation }: Props) {
                     borderColor: colors.border,
                   },
                 ]}
-              />
-              <Text style={styles.legendLabel}>{t(key)}</Text>
+              >
+                <Text style={styles.legendEmoji}>{statusEmoji(status)}</Text>
+              </View>
+              <Text style={styles.legendLabel}>
+                {statusEmoji(status)} {t(key)}
+              </Text>
             </View>
           ))}
         </View>
@@ -314,12 +317,10 @@ const styles = StyleSheet.create({
   cell: { borderRadius: 12 },
   cellFilled: { alignItems: "center", justifyContent: "center" },
   dayNum: { fontWeight: "800", fontSize: 14 },
-  dot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    marginTop: 2,
-    opacity: 0.85,
+  statusEmoji: {
+    fontSize: 11,
+    marginTop: 1,
+    lineHeight: 14,
   },
   legend: {
     alignSelf: "stretch",
@@ -333,7 +334,15 @@ const styles = StyleSheet.create({
   },
   legendTitle: { fontWeight: "800", marginBottom: 8, color: colors.text },
   legendRow: { flexDirection: "row", alignItems: "center", marginBottom: 6 },
-  legendSwatch: { width: 18, height: 18, borderRadius: 6, marginRight: 10 },
+  legendSwatch: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    marginRight: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  legendEmoji: { fontSize: 14 },
   legendLabel: { color: colors.text, fontSize: 14 },
   hint: {
     marginTop: 16,

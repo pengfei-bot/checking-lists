@@ -232,7 +232,10 @@
     "donePhotoWeb": "Selesai Selesai + foto (berkas)",
     "unmark": "Buat asal penyempurnaan",
     "edit": "Edit",
-    "doneAt": "Selesai pada {{time}}"
+    "doneAt": "Selesai pada {{time}}",
+    "childMarkDone": "Siap!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Alamak ↩️"
   },
   "taskForm": {
     "titleLabel": "Gelaran",

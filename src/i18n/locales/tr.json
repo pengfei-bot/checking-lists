@@ -232,7 +232,10 @@
     "donePhotoWeb": "Done + fotoğraf (file)",
     "unmark": "Undo tamamlanma",
     "edit": "Edit",
-    "doneAt": "{{time}} tarihinde tamamlandı"
+    "doneAt": "{{time}} tarihinde tamamlandı",
+    "childMarkDone": "Bitti!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Başlık:",

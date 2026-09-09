@@ -232,7 +232,10 @@
     "donePhotoWeb": "Hotovo + foto (soubor)",
     "unmark": "Zrušit dokončení",
     "edit": "Edit",
-    "doneAt": "Hotovo v {{time}}"
+    "doneAt": "Hotovo v {{time}}",
+    "childMarkDone": "Hotovo!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Název",

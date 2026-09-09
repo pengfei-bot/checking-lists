@@ -232,7 +232,10 @@
     "donePhotoWeb": "Hoàn thành + ảnh (tập tin)",
     "unmark": "Hoàn tất hoàn tất",
     "edit": "Edit",
-    "doneAt": "Xong lúc {{time}}"
+    "doneAt": "Xong lúc {{time}}",
+    "childMarkDone": "Xong rồi!",
+    "childDonePhoto": "Ảnh 📷",
+    "childUnmark": "Úi ↩️"
   },
   "taskForm": {
     "titleLabel": "Tựa",

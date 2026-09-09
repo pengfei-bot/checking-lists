@@ -232,7 +232,10 @@
     "donePhotoWeb": "+ ছবি সম্পন্ন হয়েছে (ফাইল)",
     "unmark": "বাতিল করা সম্পন্ন",
     "edit": "Edit",
-    "doneAt": "{{time}}-এ সম্পন্ন"
+    "doneAt": "{{time}}-এ সম্পন্ন",
+    "childMarkDone": "হয়ে গেছে!",
+    "childDonePhoto": "ছবি 📷",
+    "childUnmark": "উফস ↩️"
   },
   "taskForm": {
     "titleLabel": "শিরোনাম",

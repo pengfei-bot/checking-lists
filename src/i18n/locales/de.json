@@ -232,7 +232,10 @@
     "donePhotoWeb": "Erledigt + Foto (Datei)",
     "unmark": "Rückgängiger Abschluss",
     "edit": "Edit",
-    "doneAt": "Erledigt um {{time}}"
+    "doneAt": "Erledigt um {{time}}",
+    "childMarkDone": "Fertig!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Titel",

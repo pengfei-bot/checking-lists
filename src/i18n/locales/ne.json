@@ -232,7 +232,10 @@
     "donePhotoWeb": "Done + photo (file)",
     "unmark": "पूरा करना",
     "edit": "Edit",
-    "doneAt": "{{time}} मा सकियो"
+    "doneAt": "{{time}} मा सकियो",
+    "childMarkDone": "भयो!",
+    "childDonePhoto": "फोटो 📷",
+    "childUnmark": "उफ् ↩️"
   },
   "taskForm": {
     "titleLabel": "शीर्षक",

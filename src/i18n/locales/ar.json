@@ -232,7 +232,10 @@
     "donePhotoWeb": "حرر + صورة (صفر)",
     "unmark": "إنجاز غير مكتمل",
     "edit": "Edit",
-    "doneAt": "تم في {{time}}"
+    "doneAt": "تم في {{time}}",
+    "childMarkDone": "تم!",
+    "childDonePhoto": "صورة 📷",
+    "childUnmark": "أوبس ↩️"
   },
   "taskForm": {
     "titleLabel": "العنوان",

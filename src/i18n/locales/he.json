@@ -232,7 +232,10 @@
     "donePhotoWeb": "תמונה + (file)",
     "unmark": "סיום",
     "edit": "Edit",
-    "doneAt": "בוצע ב-{{time}}"
+    "doneAt": "בוצע ב-{{time}}",
+    "childMarkDone": "בוצע!",
+    "childDonePhoto": "תמונה 📷",
+    "childUnmark": "אופס ↩️"
   },
   "taskForm": {
     "titleLabel": "Title",

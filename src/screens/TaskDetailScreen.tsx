@@ -71,6 +71,57 @@ export function TaskDetailScreen({ navigation, route }: Props) {
     }
   };
 
+  if (isChild) {
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.statusEmoji}>{done ? "⭐" : "○"}</Text>
+        <Text style={styles.childEmoji}>{child?.emoji ?? "✅"}</Text>
+        <Text style={styles.childTitle}>{task.title}</Text>
+        <Text style={styles.childTime}>{task.time}</Text>
+
+        {doneAtTime ? (
+          <Text style={styles.meta}>{t("taskDetail.doneAt", { time: doneAtTime })}</Text>
+        ) : null}
+
+        {done?.photoUri ? (
+          <View style={styles.photoBox}>
+            <Text style={styles.label}>{t("taskDetail.photoProof")}</Text>
+            <Image source={{ uri: done.photoUri }} style={styles.photo} resizeMode="cover" />
+          </View>
+        ) : null}
+
+        {!done ? (
+          <>
+            <PrimaryButton
+              label={t("taskDetail.childMarkDone")}
+              onPress={() => void markDone(false)}
+              loading={busy}
+              large
+              style={{ marginTop: 24 }}
+            />
+            <PrimaryButton
+              label={t("taskDetail.childDonePhoto")}
+              variant="secondary"
+              onPress={() => void markDone(true)}
+              loading={busy}
+              large
+              style={{ marginTop: 12 }}
+            />
+          </>
+        ) : (
+          <PrimaryButton
+            label={t("taskDetail.childUnmark")}
+            variant="ghost"
+            onPress={() => void unmarkTaskDone(task.id)}
+            style={{ marginTop: 24 }}
+          />
+        )}
+
+        <PrimaryButton label={t("common.back")} variant="ghost" onPress={() => navigation.goBack()} style={{ marginTop: 8 }} />
+      </ScrollView>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.emoji}>{child?.emoji ?? "✅"}</Text>
@@ -105,19 +156,6 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         </View>
       )}
 
-      {isChild && !done && (
-        <>
-          <PrimaryButton label={t("taskDetail.markDone")} onPress={() => void markDone(false)} loading={busy} style={{ marginTop: 8 }} />
-          <PrimaryButton
-            label={Platform.OS === "web" ? t("taskDetail.donePhotoWeb") : t("taskDetail.donePhoto")}
-            variant="secondary"
-            onPress={() => void markDone(true)}
-            loading={busy}
-            style={{ marginTop: 8 }}
-          />
-        </>
-      )}
-
       {done && (
         <PrimaryButton
           label={t("taskDetail.unmark")}
@@ -144,8 +182,12 @@ export function TaskDetailScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
   container: { padding: 16, paddingBottom: 40, backgroundColor: colors.bg, flexGrow: 1 },
+  statusEmoji: { fontSize: 72, textAlign: "center", marginTop: 8 },
   emoji: { fontSize: 40 },
+  childEmoji: { fontSize: 40, textAlign: "center" },
   title: { fontSize: 24, fontWeight: "800", color: colors.text, marginTop: 8 },
+  childTitle: { fontSize: 28, fontWeight: "800", color: colors.text, marginTop: 8, textAlign: "center" },
+  childTime: { fontSize: 20, fontWeight: "700", color: colors.textMuted, marginTop: 8, textAlign: "center" },
   meta: { color: colors.textMuted, marginTop: 4 },
   badge: { alignSelf: "flex-start", marginTop: 14, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999 },
   badgeDone: { backgroundColor: colors.successSoft },

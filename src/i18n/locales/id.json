@@ -232,7 +232,10 @@
     "donePhotoWeb": "Selesai + foto (berkas)",
     "unmark": "Melengkapi ulang",
     "edit": "Edit",
-    "doneAt": "Selesai pukul {{time}}"
+    "doneAt": "Selesai pukul {{time}}",
+    "childMarkDone": "Selesai!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Judul",

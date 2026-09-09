@@ -232,7 +232,10 @@
     "donePhotoWeb": "Gawin + Larawan (file)",
     "unmark": "Hindi tapos",
     "edit": "Edit",
-    "doneAt": "Tapos nang {{time}}"
+    "doneAt": "Tapos nang {{time}}",
+    "childMarkDone": "Tapos na!",
+    "childDonePhoto": "Larawan 📷",
+    "childUnmark": "Oops ↩️"
   },
   "taskForm": {
     "titleLabel": "Titulo",

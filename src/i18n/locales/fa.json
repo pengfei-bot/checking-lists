@@ -232,7 +232,10 @@
     "donePhotoWeb": "انجام + عکس (فایل)",
     "unmark": "تکمیل Undo",
     "edit": "Edit",
-    "doneAt": "انجام‌شده در {{time}}"
+    "doneAt": "انجام‌شده در {{time}}",
+    "childMarkDone": "انجام شد!",
+    "childDonePhoto": "عکس 📷",
+    "childUnmark": "اوه ↩️"
   },
   "taskForm": {
     "titleLabel": "عنوان",

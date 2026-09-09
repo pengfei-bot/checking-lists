@@ -232,7 +232,10 @@
     "donePhotoWeb": "Arna dhéanamh in Strasbourg",
     "unmark": "chríochnaigh sé",
     "edit": "Edit",
-    "doneAt": "Déanta ag {{time}}"
+    "doneAt": "Déanta ag {{time}}",
+    "childMarkDone": "Déanta!",
+    "childDonePhoto": "Grianghraf 📷",
+    "childUnmark": "Úps ↩️"
   },
   "taskForm": {
     "titleLabel": "Teideal",

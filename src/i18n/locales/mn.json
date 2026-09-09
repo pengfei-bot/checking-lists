@@ -232,7 +232,10 @@
     "donePhotoWeb": "Сделано + фото (файл)",
     "unmark": "Завершение",
     "edit": "Edit",
-    "doneAt": "{{time}}-д дууссан"
+    "doneAt": "{{time}}-д дууссан",
+    "childMarkDone": "Боллоо!",
+    "childDonePhoto": "Зураг 📷",
+    "childUnmark": "Өө ↩️"
   },
   "taskForm": {
     "titleLabel": "Название",

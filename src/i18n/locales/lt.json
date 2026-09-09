@@ -232,7 +232,10 @@
     "donePhotoWeb": "Atlikta + nuotrauka (failas)",
     "unmark": "Atšaukti užbaigimą",
     "edit": "Edit",
-    "doneAt": "Atlikta {{time}}"
+    "doneAt": "Atlikta {{time}}",
+    "childMarkDone": "Padaryta!",
+    "childDonePhoto": "Nuotrauka 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Pavadinimas",

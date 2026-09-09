@@ -232,7 +232,10 @@
     "donePhotoWeb": "ドン + 写真 (ファイル)",
     "unmark": "Undo 完了",
     "edit": "Edit",
-    "doneAt": "{{time}} に完了"
+    "doneAt": "{{time}} に完了",
+    "childMarkDone": "できた！",
+    "childDonePhoto": "写真 📷",
+    "childUnmark": "おっと ↩️"
   },
   "taskForm": {
     "titleLabel": "タイトル",

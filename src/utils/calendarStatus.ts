@@ -108,6 +108,23 @@ export function statusColor(status: DayAggregateStatus): string {
   }
 }
 
+
+export function statusEmoji(status: DayAggregateStatus): string {
+  switch (status) {
+    case "all_done":
+      return "⭐";
+    case "partial":
+      return "✨";
+    case "missed":
+      return "🌱";
+    case "pending":
+      return "🎯";
+    case "empty":
+    default:
+      return "·";
+  }
+}
+
 export function statusLabelFr(status: DayAggregateStatus): string {
   return i18n.t(`calendar.status.${status}`);
 }

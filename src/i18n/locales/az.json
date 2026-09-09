@@ -232,7 +232,10 @@
     "donePhotoWeb": "Done + foto (file)",
     "unmark": "Domen qeydiyyatı",
     "edit": "Edit",
-    "doneAt": "{{time}}-da bitdi"
+    "doneAt": "{{time}}-da bitdi",
+    "childMarkDone": "Hazırdır!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Ümumi",

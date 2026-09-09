@@ -232,7 +232,10 @@
     "donePhotoWeb": "Done + photo (file)",
     "unmark": "Undo completion",
     "edit": "Edit",
-    "doneAt": "Արված է {{time}}-ին"
+    "doneAt": "Արված է {{time}}-ին",
+    "childMarkDone": "Պատրաստ է!",
+    "childDonePhoto": "Լուսանկար 📷",
+    "childUnmark": "Ուփս ↩️"
   },
   "taskForm": {
     "titleLabel": "Title",

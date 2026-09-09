@@ -232,7 +232,10 @@
     "donePhotoWeb": "ลบทั้งเธรด",
     "unmark": "เลิกทําการเติมให้สมบูรณ์",
     "edit": "Edit",
-    "doneAt": "ສຳເລັດເວລາ {{time}}"
+    "doneAt": "ສຳເລັດເວລາ {{time}}",
+    "childMarkDone": "ແລ້ວ!",
+    "childDonePhoto": "ຮູບ 📷",
+    "childUnmark": "ອ้ຸย ↩️"
   },
   "taskForm": {
     "titleLabel": "ชื่อ",

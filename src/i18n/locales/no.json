@@ -232,7 +232,10 @@
     "donePhotoWeb": "Ferdig + bilde (fil)",
     "unmark": "Angre fullført",
     "edit": "Edit",
-    "doneAt": "Ferdig kl. {{time}}"
+    "doneAt": "Ferdig kl. {{time}}",
+    "childMarkDone": "Ferdig!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ops ↩️"
   },
   "taskForm": {
     "titleLabel": "Tittel",

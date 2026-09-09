@@ -232,7 +232,10 @@
     "donePhotoWeb": "Fait + photo (fichier)",
     "unmark": "Annuler la validation",
     "edit": "Modifier",
-    "doneAt": "Fait à {{time}}"
+    "doneAt": "Fait à {{time}}",
+    "childMarkDone": "C’est fait !",
+    "childDonePhoto": "Photo 📷",
+    "childUnmark": "Oups ↩️"
   },
   "taskForm": {
     "titleLabel": "Titre",

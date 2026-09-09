@@ -8,6 +8,7 @@ interface Props {
   variant?: "primary" | "secondary" | "danger" | "ghost";
   disabled?: boolean;
   loading?: boolean;
+  large?: boolean;
   style?: ViewStyle;
 }
 
@@ -17,6 +18,7 @@ export function PrimaryButton({
   variant = "primary",
   disabled,
   loading,
+  large,
   style,
 }: Props) {
   const bg =
@@ -40,6 +42,7 @@ export function PrimaryButton({
       disabled={disabled || loading}
       style={({ pressed }) => [
         styles.btn,
+        large && styles.btnLarge,
         { backgroundColor: bg, opacity: disabled ? 0.5 : pressed ? 0.85 : 1 },
         variant === "ghost" && styles.ghost,
         style,
@@ -48,7 +51,7 @@ export function PrimaryButton({
       {loading ? (
         <ActivityIndicator color={color} />
       ) : (
-        <Text style={[styles.label, { color }]}>{label}</Text>
+        <Text style={[styles.label, large && styles.labelLarge, { color }]}>{label}</Text>
       )}
     </Pressable>
   );
@@ -62,6 +65,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  btnLarge: {
+    borderRadius: 18,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+  },
   ghost: { borderWidth: 1, borderColor: colors.border },
   label: { fontSize: 15, fontWeight: "700" },
+  labelLarge: { fontSize: 20, fontWeight: "800" },
 });

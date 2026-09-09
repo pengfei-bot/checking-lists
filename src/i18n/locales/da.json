@@ -232,7 +232,10 @@
     "donePhotoWeb": "Færdig + foto (fil)",
     "unmark": "Fortryd afslutning",
     "edit": "Edit",
-    "doneAt": "Færdig kl. {{time}}"
+    "doneAt": "Færdig kl. {{time}}",
+    "childMarkDone": "Færdig!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Titel",

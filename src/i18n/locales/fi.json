@@ -232,7 +232,10 @@
     "donePhotoWeb": "Valmis + valokuva (tiedosto)",
     "unmark": "Peru valmistuminen",
     "edit": "Edit",
-    "doneAt": "Valmis klo {{time}}"
+    "doneAt": "Valmis klo {{time}}",
+    "childMarkDone": "Valmis!",
+    "childDonePhoto": "Kuva 📷",
+    "childUnmark": "Hups ↩️"
   },
   "taskForm": {
     "titleLabel": "Osasto",

@@ -232,7 +232,10 @@
     "donePhotoWeb": "Adoptat + fotografie (dosar)",
     "unmark": "Desfă completarea",
     "edit": "Edit",
-    "doneAt": "Gata la {{time}}"
+    "doneAt": "Gata la {{time}}",
+    "childMarkDone": "Gata!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Titlu",

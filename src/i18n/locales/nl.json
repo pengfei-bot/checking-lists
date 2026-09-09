@@ -232,7 +232,10 @@
     "donePhotoWeb": "Klaar + foto (bestand)",
     "unmark": "Voltooien ongedaan maken",
     "edit": "Edit",
-    "doneAt": "Klaar om {{time}}"
+    "doneAt": "Klaar om {{time}}",
+    "childMarkDone": "Klaar!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Oeps ↩️"
   },
   "taskForm": {
     "titleLabel": "Titel",

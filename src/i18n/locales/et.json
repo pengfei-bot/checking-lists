@@ -232,7 +232,10 @@
     "donePhotoWeb": "Koostatud + foto (toimik)",
     "unmark": "Lõpetamine võetakse tagasi",
     "edit": "Edit",
-    "doneAt": "Tehtud kell {{time}}"
+    "doneAt": "Tehtud kell {{time}}",
+    "childMarkDone": "Valmis!",
+    "childDonePhoto": "Foto 📷",
+    "childUnmark": "Ups ↩️"
   },
   "taskForm": {
     "titleLabel": "Pealkiri",
