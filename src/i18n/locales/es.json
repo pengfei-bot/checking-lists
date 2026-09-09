@@ -275,6 +275,7 @@
       "soir": "18:00 a 22:00"
     },
     "startDate": "Fecha de inicio (AAAA-MM-DD)",
+    "startDateHint": "La tarea solo aparece a partir de esta fecha",
     "endDate": "Fecha de fin (opcional, AAAA-MM-DD)",
     "intervalWeeks": "Cada cuántas semanas",
     "errStartDate": "Indica una fecha de inicio AAAA-MM-DD.",

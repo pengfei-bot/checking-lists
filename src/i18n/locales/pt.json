@@ -275,6 +275,7 @@
       "soir": "18:00–22:00"
     },
     "startDate": "Data de início (AAAA-MM-DD)",
+    "startDateHint": "A tarefa só aparece a partir desta data",
     "endDate": "Data de fim (opcional, AAAA-MM-DD)",
     "intervalWeeks": "A cada quantas semanas",
     "errStartDate": "Indique a data de início AAAA-MM-DD.",

@@ -275,6 +275,7 @@
       "soir": "18:00–22:00"
     },
     "startDate": "Startdatum (JJJJ-MM-TT)",
+    "startDateHint": "Die Aufgabe erscheint erst ab diesem Datum",
     "endDate": "Enddatum (optional, JJJJ-MM-TT)",
     "intervalWeeks": "Alle wie viele Wochen",
     "errStartDate": "Startdatum als JJJJ-MM-TT angeben.",

@@ -98,9 +98,12 @@ function validateForm(input: {
   if (input.recurrence === "once" && !ISO_DATE.test(input.onceDate)) {
     errors.onceDate = "taskForm.errOnceDate";
   }
-  const needsStart =
-    input.recurrence === "weekly" || input.recurrence === "every_n_weeks";
-  if (needsStart && !ISO_DATE.test(input.startDate)) {
+  const isRecurring =
+    input.recurrence === "daily" ||
+    input.recurrence === "weekdays" ||
+    input.recurrence === "weekly" ||
+    input.recurrence === "every_n_weeks";
+  if (isRecurring && !ISO_DATE.test(input.startDate)) {
     errors.startDate = "taskForm.errStartDate";
   }
   if (input.recurrence === "every_n_weeks") {
@@ -108,24 +111,11 @@ function validateForm(input: {
       errors.intervalWeeks = "taskForm.errInterval";
     }
   }
-  const isRecurring =
-    input.recurrence === "daily" ||
-    input.recurrence === "weekdays" ||
-    input.recurrence === "weekly" ||
-    input.recurrence === "every_n_weeks";
   if (isRecurring && input.endDate.trim()) {
     if (!ISO_DATE.test(input.endDate)) {
       errors.endDate = "taskForm.errEndDate";
-    } else {
-      const anchor =
-        input.recurrence === "weekly" || input.recurrence === "every_n_weeks"
-          ? input.startDate
-          : input.startDate && ISO_DATE.test(input.startDate)
-            ? input.startDate
-            : undefined;
-      if (anchor && ISO_DATE.test(anchor) && input.endDate < anchor) {
-        errors.endDate = "taskForm.errEndBeforeStart";
-      }
+    } else if (ISO_DATE.test(input.startDate) && input.endDate < input.startDate) {
+      errors.endDate = "taskForm.errEndBeforeStart";
     }
   }
   return errors;
@@ -220,12 +210,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         recurrence,
         reminderEnabled,
         onceDate: recurrence === "once" ? onceDate : undefined,
-        startDate:
-          recurrence === "weekly" || recurrence === "every_n_weeks"
-            ? startDate
-            : isRecurring && startDate && ISO_DATE.test(startDate)
-              ? startDate
-              : undefined,
+        startDate: isRecurring ? startDate : undefined,
         endDate: isRecurring && endDate.trim() ? endDate.trim() : undefined,
         intervalWeeks: recurrence === "every_n_weeks" ? intervalWeeks : recurrence === "weekly" ? 1 : undefined,
       };
@@ -450,7 +435,10 @@ export function TaskFormScreen({ navigation, route }: Props) {
         </>
       )}
 
-      {(recurrence === "weekly" || recurrence === "every_n_weeks") && (
+      {(recurrence === "daily" ||
+        recurrence === "weekdays" ||
+        recurrence === "weekly" ||
+        recurrence === "every_n_weeks") && (
         <>
           <Text style={styles.label}>{t("taskForm.startDate")}</Text>
           <TextInput
@@ -461,6 +449,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
             autoCapitalize="none"
             placeholderTextColor={colors.textMuted}
           />
+          <Text style={styles.help}>{t("taskForm.startDateHint")}</Text>
           {attempted && fieldErrors.startDate ? (
             <Text style={styles.fieldError}>{t(fieldErrors.startDate)}</Text>
           ) : null}

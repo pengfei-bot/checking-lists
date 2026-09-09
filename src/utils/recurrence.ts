@@ -32,12 +32,12 @@ export function isTaskForDate(task: Task, date = new Date()): boolean {
 
   const start = task.startDate && ISO_DATE.test(task.startDate) ? task.startDate : undefined;
   if (start && iso < start) {
-    // Apply start bound for weekly/every_n_weeks always; also for daily/weekdays when present
+    // Recurring tasks must not appear before startDate (once uses onceDate only).
     if (
-      task.recurrence === "weekly" ||
-      task.recurrence === "every_n_weeks" ||
       task.recurrence === "daily" ||
-      task.recurrence === "weekdays"
+      task.recurrence === "weekdays" ||
+      task.recurrence === "weekly" ||
+      task.recurrence === "every_n_weeks"
     ) {
       return false;
     }

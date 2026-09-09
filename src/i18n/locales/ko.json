@@ -275,6 +275,7 @@
       "soir": "18:00～22:00"
     },
     "startDate": "시작일 (YYYY-MM-DD)",
+    "startDateHint": "이 날짜부터 할 일이 표시됩니다",
     "endDate": "종료일 (선택, YYYY-MM-DD)",
     "intervalWeeks": "몇 주마다",
     "errStartDate": "시작일을 YYYY-MM-DD로 입력하세요.",

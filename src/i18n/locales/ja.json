@@ -275,6 +275,7 @@
       "soir": "18:00～22:00"
     },
     "startDate": "開始日 (YYYY-MM-DD)",
+    "startDateHint": "この日付以降にのみタスクが表示されます",
     "endDate": "終了日（任意、YYYY-MM-DD）",
     "intervalWeeks": "何週ごと",
     "errStartDate": "開始日を YYYY-MM-DD で入力してください。",

@@ -275,6 +275,7 @@
       "soir": "下午6:00-22:00"
     },
     "startDate": "开始日期 (YYYY-MM-DD)",
+    "startDateHint": "任务仅从此日期起显示",
     "endDate": "结束日期（可选，YYYY-MM-DD）",
     "intervalWeeks": "每隔几周",
     "errStartDate": "请输入开始日期 YYYY-MM-DD。",

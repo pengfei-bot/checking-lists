@@ -275,6 +275,7 @@
       "soir": "18.00 uur 22.00 uur"
     },
     "startDate": "Startdatum (JJJJ-MM-DD)",
+    "startDateHint": "De taak verschijnt pas vanaf deze datum",
     "endDate": "Einddatum (optioneel, JJJJ-MM-DD)",
     "intervalWeeks": "Om de hoeveel weken",
     "errStartDate": "Voer startdatum in als JJJJ-MM-DD.",

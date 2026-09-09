@@ -275,6 +275,7 @@
       "soir": "18:00–22:00"
     },
     "startDate": "Data di inizio (AAAA-MM-GG)",
+    "startDateHint": "L’attività appare solo a partire da questa data",
     "endDate": "Data di fine (opzionale, AAAA-MM-GG)",
     "intervalWeeks": "Ogni quante settimane",
     "errStartDate": "Inserisci la data di inizio AAAA-MM-GG.",

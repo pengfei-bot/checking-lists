@@ -275,6 +275,7 @@
       "soir": "18:00, 22:00."
     },
     "startDate": "Start date (YYYY-MM-DD)",
+    "startDateHint": "",
     "endDate": "End date (optional, YYYY-MM-DD)",
     "intervalWeeks": "Every how many weeks",
     "errStartDate": "Enter a start date as YYYY-MM-DD.",

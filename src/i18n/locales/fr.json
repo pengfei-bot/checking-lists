@@ -275,6 +275,7 @@
       "soir": "18:00–22:00"
     },
     "startDate": "Date de début (AAAA-MM-JJ)",
+    "startDateHint": "La tâche n’apparaît qu’à partir de cette date",
     "endDate": "Date de fin (optionnelle, AAAA-MM-JJ)",
     "intervalWeeks": "Toutes les combien de semaines",
     "errStartDate": "Indiquez une date de début au format AAAA-MM-JJ.",

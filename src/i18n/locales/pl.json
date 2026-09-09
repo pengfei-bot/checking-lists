@@ -275,6 +275,7 @@
       "soir": "18: 00-22: 00"
     },
     "startDate": "Data rozpoczęcia (RRRR-MM-DD)",
+    "startDateHint": "Zadanie pojawia się dopiero od tej daty",
     "endDate": "Data zakończenia (opcjonalna, RRRR-MM-DD)",
     "intervalWeeks": "Co ile tygodni",
     "errStartDate": "Podaj datę rozpoczęcia RRRR-MM-DD.",
