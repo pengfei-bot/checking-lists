@@ -158,7 +158,9 @@
     "history": "Historia",
     "reminders": "Włącz / odśwież przypomnienia",
     "addToCalendar": "Dodaj moje zadania do kalendarza",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Oznacz jako zrobione",
+    "unmarkA11y": "Cofnij"
   },
   "childHistory": {
     "title": "Historia",

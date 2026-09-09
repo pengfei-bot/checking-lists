@@ -158,7 +158,9 @@
     "history": "Istorija",
     "reminders": "Įjungti / atnaujinti priminimus",
     "addToCalendar": "Pridėti mano užduotis į kalendorių",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "Istorija",

@@ -158,7 +158,9 @@
     "history": "Historia",
     "reminders": "Habilitar / renovar recordatorios",
     "addToCalendar": "Añadir mis tareas al calendario",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Marcar como hecho",
+    "unmarkA11y": "Deshacer"
   },
   "childHistory": {
     "title": "Historia",

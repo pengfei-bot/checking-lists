@@ -158,7 +158,9 @@
     "history": "Lịch sử",
     "reminders": "Bật/ tắt bộ nhắc lại",
     "addToCalendar": "Thêm công việc của tôi vào lịch",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Đánh dấu đã xong",
+    "unmarkA11y": "Hoàn tác"
   },
   "childHistory": {
     "title": "Lịch sử",

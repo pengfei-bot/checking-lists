@@ -158,7 +158,9 @@
     "history": "プロフィール",
     "reminders": "有効/リフレッシュ リマインダー",
     "addToCalendar": "カレンダーにタスクを追加",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "完了にする",
+    "unmarkA11y": "元に戻す"
   },
   "childHistory": {
     "title": "プロフィール",

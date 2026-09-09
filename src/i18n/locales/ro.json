@@ -158,7 +158,9 @@
     "history": "Istoric",
     "reminders": "Activează/reîmprospătează amintirile",
     "addToCalendar": "Adăugați sarcinile mele la calendar",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Marchează ca făcut",
+    "unmarkA11y": "Anulează"
   },
   "childHistory": {
     "title": "Istoric",

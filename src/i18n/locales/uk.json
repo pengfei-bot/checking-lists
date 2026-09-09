@@ -158,7 +158,9 @@
     "history": "Історія",
     "reminders": "Увімкнути / оновити нагадування",
     "addToCalendar": "Додати завдання до календаря",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Позначити як виконане",
+    "unmarkA11y": "Скасувати"
   },
   "childHistory": {
     "title": "Історія",

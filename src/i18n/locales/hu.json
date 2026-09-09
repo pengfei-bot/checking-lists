@@ -158,7 +158,9 @@
     "history": "Történelem",
     "reminders": "Emlékeztető engedélyezése / frissítése",
     "addToCalendar": "Feladataim hozzáadása a naptárhoz",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Megjelölés készként",
+    "unmarkA11y": "Visszavonás"
   },
   "childHistory": {
     "title": "Történelem",

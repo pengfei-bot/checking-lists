@@ -158,7 +158,9 @@
     "history": "Stair na Staire",
     "reminders": "Cumasaigh / meabhrúcháin athnuachana",
     "addToCalendar": "Cuir mo chuid cúraimí leis an bhféilire",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "Stair na Staire",

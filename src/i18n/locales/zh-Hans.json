@@ -158,7 +158,9 @@
     "history": "历史记录",
     "reminders": "启用 / 刷新提醒",
     "addToCalendar": "将我的任务加入日历",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "标记为完成",
+    "unmarkA11y": "撤销"
   },
   "childHistory": {
     "title": "历史",

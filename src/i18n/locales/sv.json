@@ -158,7 +158,9 @@
     "history": "Historia historia",
     "reminders": "Aktivera / uppdatera påminnelser",
     "addToCalendar": "Lägg till mina uppgifter i kalendern",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Markera som klar",
+    "unmarkA11y": "Ångra"
   },
   "childHistory": {
     "title": "Historia historia",

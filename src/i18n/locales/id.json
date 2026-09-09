@@ -158,7 +158,9 @@
     "history": "Riwayat",
     "reminders": "Aktifkan / segarkan pengingat",
     "addToCalendar": "Tambahkan tugas saya ke kalender",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Tandai selesai",
+    "unmarkA11y": "Batalkan"
   },
   "childHistory": {
     "title": "Riwayat",

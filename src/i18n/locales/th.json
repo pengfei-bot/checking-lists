@@ -158,7 +158,9 @@
     "history": "ประวัติ",
     "reminders": "เปิดใช้งาน/ ปรับปรุงเตือนความจํา",
     "addToCalendar": "เพิ่มงานเข้าปฏิทิน",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "ทำเครื่องหมายว่าเสร็จแล้ว",
+    "unmarkA11y": "เลิกทำ"
   },
   "childHistory": {
     "title": "ประวัติ",

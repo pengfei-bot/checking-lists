@@ -158,7 +158,9 @@
     "history": "Geschichte",
     "reminders": "Ermöglichen / Erfrischen von Erinnerungen",
     "addToCalendar": "Hinzufügen meiner Aufgaben zum Kalender",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Als erledigt markieren",
+    "unmarkA11y": "Rückgängig"
   },
   "childHistory": {
     "title": "Geschichte",

@@ -158,7 +158,9 @@
     "history": "Histórico",
     "reminders": "Activar/ actualizar os lembretes",
     "addToCalendar": "Adicionar as minhas tarefas ao calendário",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Marcar como concluído",
+    "unmarkA11y": "Anular"
   },
   "childHistory": {
     "title": "Histórico",

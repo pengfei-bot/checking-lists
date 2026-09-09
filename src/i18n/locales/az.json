@@ -158,7 +158,9 @@
     "history": "Tarix",
     "reminders": "Ətraflı / yeniləmə resursları",
     "addToCalendar": "Müəlliflik hüquququ",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "Tarix",

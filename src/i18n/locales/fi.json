@@ -158,7 +158,9 @@
     "history": "Historia",
     "reminders": "Ota käyttöön / virkistää muistutuksia",
     "addToCalendar": "Lisää tehtäväni kalenteriin",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Merkitse tehdyksi",
+    "unmarkA11y": "Kumoa"
   },
   "childHistory": {
     "title": "Historia",

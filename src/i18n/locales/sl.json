@@ -158,7 +158,9 @@
     "history": "Zgodovina",
     "reminders": "Omogoči / osveži opomnike",
     "addToCalendar": "Dodaj moje naloge v koledar",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "Zgodovina",

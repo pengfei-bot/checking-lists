@@ -158,7 +158,9 @@
     "history": "历史",
     "reminders": "启用/ 刷新提醒",
     "addToCalendar": "将我的任务添加到日历",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "မှတ်တမ်း",

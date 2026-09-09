@@ -158,7 +158,9 @@
     "history": "Ajalugu",
     "reminders": "Meeldetuletuste / värskendamise lubamine",
     "addToCalendar": "Lisa minu ülesanded kalendrisse",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "Ajalugu",

@@ -146,8 +146,12 @@ export function ChildHomeScreen({ navigation }: Props) {
                 onPress={() => navigation.navigate("TaskDetail", { taskId: task.id })}
                 rightAccessory={
                   <View style={styles.actions}>
-                    <Pressable style={styles.miniBtn} onPress={() => void quickDone(task.id)}>
-                      <Text style={styles.miniText}>{done ? "↩️" : "✅"}</Text>
+                    <Pressable
+                      style={styles.miniBtn}
+                      onPress={() => void quickDone(task.id)}
+                      accessibilityLabel={done ? t("childHome.unmarkA11y") : t("childHome.markDoneA11y")}
+                    >
+                      <Text style={styles.miniText}>{done ? "↩️" : "○"}</Text>
                     </Pressable>
                     {!done && (
                       <Pressable style={styles.miniBtn} onPress={() => void doneWithPhoto(task.id)}>

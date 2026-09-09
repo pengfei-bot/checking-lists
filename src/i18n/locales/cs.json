@@ -158,7 +158,9 @@
     "history": "Historie",
     "reminders": "Povolit / obnovit upomínky",
     "addToCalendar": "Přidat mé úkoly do kalendáře",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Označit jako hotové",
+    "unmarkA11y": "Vrátit"
   },
   "childHistory": {
     "title": "Historie",

@@ -158,7 +158,9 @@
     "history": "Dejiny",
     "reminders": "Povoliť / obnoviť pripomienky",
     "addToCalendar": "Pridajte moje úlohy do kalendára",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Označiť ako hotové",
+    "unmarkA11y": "Vrátiť späť"
   },
   "childHistory": {
     "title": "Dejiny",

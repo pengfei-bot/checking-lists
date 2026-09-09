@@ -158,7 +158,9 @@
     "history": "Historie",
     "reminders": "Aktivér / opdatér påmindelser",
     "addToCalendar": "Tilføj mine opgaver til kalenderen",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Marker som færdig",
+    "unmarkA11y": "Fortryd"
   },
   "childHistory": {
     "title": "Historie",

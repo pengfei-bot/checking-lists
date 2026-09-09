@@ -158,7 +158,9 @@
     "history": "Kasaysayan",
     "reminders": "Malugod / Nakapagpapaginhawang mga paalaala",
     "addToCalendar": "Idagdag ang aking mga atas sa kalendaryo",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "Kasaysayan",

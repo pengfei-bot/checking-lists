@@ -158,7 +158,9 @@
     "history": "היסטוריה",
     "reminders": "תזכורות רעננות",
     "addToCalendar": "הוסף את המשימות שלי ללוח השנה",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "סמן כבוצע",
+    "unmarkA11y": "בטל"
   },
   "childHistory": {
     "title": "היסטוריה",

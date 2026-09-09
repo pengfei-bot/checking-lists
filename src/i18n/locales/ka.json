@@ -158,7 +158,9 @@
     "history": "ისტორია",
     "reminders": "Enable / refresh reminders",
     "addToCalendar": "Add my tasks to the calendar",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "ისტორია",

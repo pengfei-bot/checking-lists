@@ -158,7 +158,9 @@
     "history": "Storia",
     "reminders": "Attivare / aggiornare i promemoria",
     "addToCalendar": "Aggiungi i miei compiti al calendario",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Segna come fatto",
+    "unmarkA11y": "Annulla"
   },
   "childHistory": {
     "title": "Storia",

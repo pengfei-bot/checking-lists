@@ -158,7 +158,9 @@
     "history": "इतिहास",
     "reminders": "सक्षम / ताज़ा अनुस्मारक",
     "addToCalendar": "मेरे कार्यों को कैलेंडर में जोड़ें",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "ඉතිහාසය",

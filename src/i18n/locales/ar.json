@@ -158,7 +158,9 @@
     "history": "التاريخ",
     "reminders": "رسائل تذكيرية تمكينية/جديدة",
     "addToCalendar": "أضف مهمتي إلى التقويم",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "وضع علامة مكتمل",
+    "unmarkA11y": "تراجع"
   },
   "childHistory": {
     "title": "التاريخ",

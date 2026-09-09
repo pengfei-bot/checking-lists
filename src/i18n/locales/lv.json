@@ -158,7 +158,9 @@
     "history": "Vēsture",
     "reminders": "Ieslēgt/ atsvaidzināt atgādinājumus",
     "addToCalendar": "Pievienot kalendāru maniem uzdevumiem",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "Vēsture",

@@ -158,7 +158,9 @@
     "history": "Voorgeschiedenis",
     "reminders": "Herinneringen inschakelen/verversen",
     "addToCalendar": "Mijn taken aan de agenda toevoegen",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Markeren als gedaan",
+    "unmarkA11y": "Ongedaan maken"
   },
   "childHistory": {
     "title": "Voorgeschiedenis",

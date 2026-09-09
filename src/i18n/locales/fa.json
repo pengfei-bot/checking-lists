@@ -158,7 +158,9 @@
     "history": "تاریخ تاریخ تاریخ",
     "reminders": "قابلیت / یادآوری های تازه",
     "addToCalendar": "اضافه کردن وظایف من به تقویم",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "تاریخ تاریخ تاریخ",

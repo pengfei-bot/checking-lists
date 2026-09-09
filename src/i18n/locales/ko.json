@@ -158,7 +158,9 @@
     "history": "- 연혁",
     "reminders": "/ 새로 고침 알림",
     "addToCalendar": "내 작업을 캘린더에 추가",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "완료로 표시",
+    "unmarkA11y": "실행 취소"
   },
   "childHistory": {
     "title": "- 연혁",

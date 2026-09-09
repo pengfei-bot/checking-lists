@@ -158,7 +158,9 @@
     "history": "Tarih Tarihi",
     "reminders": "Enable / yeni hatırlatmalar",
     "addToCalendar": "Görevlerimi takvime ekleyin",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Tamamlandı olarak işaretle",
+    "unmarkA11y": "Geri al"
   },
   "childHistory": {
     "title": "Tarih Tarihi",

@@ -158,7 +158,9 @@
     "history": "تاریخ",
     "reminders": "تازگی‌بخش یاددہانیاں / تازگی‌بخش",
     "addToCalendar": "کیلنڈر میں میرے کام شامل",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Mark as done",
+    "unmarkA11y": "Undo"
   },
   "childHistory": {
     "title": "تاریخ",

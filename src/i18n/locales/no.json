@@ -158,7 +158,9 @@
     "history": "Historie",
     "reminders": "Aktiver / oppdater påminnelser",
     "addToCalendar": "Legg til oppgavene mine i kalenderen",
-    "more": "More"
+    "more": "More",
+    "markDoneA11y": "Merk som ferdig",
+    "unmarkA11y": "Angre"
   },
   "childHistory": {
     "title": "Historie",
