@@ -27,13 +27,17 @@
       "android": {
         "buildType": "app-bundle"
       },
-      "ios": {}
+      "ios": {},
+      "autoIncrement": true
     }
   },
   "submit": {
     "production": {
       "android": {
         "track": "internal"
+      },
+      "ios": {
+        "ascAppId": "6809737677"
       }
     }
   }
