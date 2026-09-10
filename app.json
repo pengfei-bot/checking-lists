@@ -1,0 +1,78 @@
+{
+  "expo": {
+    "name": "Famlist",
+    "slug": "checking-lists",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "checkinglists",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Pour joindre une photo preuve quand une tache est terminee.",
+        "NSPhotoLibraryUsageDescription": "Pour choisir une photo preuve depuis la galerie.",
+        "NSCalendarsUsageDescription": "Pour ajouter les taches du jour au calendrier (sync unidirectionnelle).",
+        "NSRemindersUsageDescription": "Pour planifier des rappels locaux de taches.",
+        "NSPhotoLibraryAddUsageDescription": "Pour enregistrer une photo preuve dans la galerie.",
+        "NSCalendarsFullAccessUsageDescription": "Pour ajouter les taches du jour au calendrier (sync unidirectionnelle).",
+        "NSRemindersFullAccessUsageDescription": "Pour planifier des rappels locaux de taches.",
+        "UIBackgroundModes": [
+          "remote-notification",
+          "remote-notification"
+        ],
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.pengfeibot.famlist"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1E6FE8",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.VIBRATE",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.READ_CALENDAR",
+        "android.permission.WRITE_CALENDAR"
+      ],
+      "predictiveBackGestureEnabled": false,
+      "package": "com.pengfeibot.famlist"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Autoriser l acces aux photos pour les preuves.",
+          "cameraPermission": "Autoriser la camera pour les preuves."
+        }
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Autoriser l acces au calendrier pour y ajouter les taches du jour."
+        }
+      ],
+      "expo-notifications",
+      "expo-secure-store"
+    ],
+    "extra": {
+      "supabaseProject": "Checking lists",
+      "eas": {
+        "projectId": "20cc9485-84d3-4253-9790-3b61c7a7ce3b"
+      }
+    }
+  }
+}
