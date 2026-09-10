@@ -326,7 +326,10 @@
     "title": "تصویر",
     "canceled": "اِس میں کوئی نئی تصویر شامل نہیں کی گئی ۔",
     "demoUsed": "{{message}} A جمہوریہ فوٹو استعمال کیا گیا۔",
-    "saved": "تصویر محفوظ ہوئی۔"
+    "saved": "تصویر محفوظ ہوئی۔",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "غیر متصل",

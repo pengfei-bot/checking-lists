@@ -326,7 +326,10 @@
     "title": "照片",
     "canceled": "選擇已取消 —— 沒有新增照片 。",
     "demoUsed": "使用演示照片。",
-    "saved": "照片證明已保存 。"
+    "saved": "照片證明已保存 。",
+    "viewFull": "查看大圖",
+    "tapToEnlarge": "點一下放大",
+    "close": "關閉"
   },
   "notifications": {
     "title": "通知",

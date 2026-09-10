@@ -326,7 +326,10 @@
     "title": "Foto",
     "canceled": "Urvalet avbryts – inget foto läggs till.",
     "demoUsed": "En demo foto användes.",
-    "saved": "Fotobevis sparade."
+    "saved": "Fotobevis sparade.",
+    "viewFull": "Visa i full storlek",
+    "tapToEnlarge": "Tryck för att förstora",
+    "close": "Stäng"
   },
   "notifications": {
     "title": "Meddelanden",

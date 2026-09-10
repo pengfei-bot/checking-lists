@@ -326,7 +326,10 @@
     "title": "Foto",
     "canceled": "Auswahl abgesagt - kein Foto hinzugefügt.",
     "demoUsed": "{{message}} Ein Demofoto wurde verwendet.",
-    "saved": "Foto gesichert."
+    "saved": "Foto gesichert.",
+    "viewFull": "In voller Größe anzeigen",
+    "tapToEnlarge": "Tippen zum Vergrößern",
+    "close": "Schließen"
   },
   "notifications": {
     "title": "Benachrichtigungen",

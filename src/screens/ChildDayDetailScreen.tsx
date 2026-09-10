@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
@@ -7,6 +7,7 @@ import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
+import { PhotoLightbox } from "../components/PhotoLightbox";
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { openPhotoReportMail } from "../utils/reportPhoto";
 import { dateLocaleTag } from "../i18n";
@@ -25,6 +26,7 @@ export function ChildDayDetailScreen({ navigation, route }: Props) {
   const { currentProfile, state, getTask, setCurrentProfileId, clearCompletionPhoto } = useApp();
   const { family } = useAuth();
   const [reportingId, setReportingId] = useState<string | null>(null);
+  const [lightboxUri, setLightboxUri] = useState<string | null>(null);
 
   const children = useMemo(
     () => (currentProfile?.role === "child" ? [currentProfile] : []),
@@ -130,11 +132,18 @@ export function ChildDayDetailScreen({ navigation, route }: Props) {
             return (
               <View key={c.id} style={styles.row}>
                 {c.photoUri ? (
-                  <Image
-                    source={{ uri: c.photoUri }}
-                    style={styles.thumb}
-                    resizeMode="cover"
-                  />
+                  <Pressable
+                    onPress={() => setLightboxUri(c.photoUri!)}
+                    accessibilityRole="imagebutton"
+                    accessibilityLabel={t("photo.viewFull")}
+                    accessibilityHint={t("photo.tapToEnlarge")}
+                  >
+                    <Image
+                      source={{ uri: c.photoUri }}
+                      style={styles.thumb}
+                      resizeMode="cover"
+                    />
+                  </Pressable>
                 ) : (
                   <View style={[styles.thumb, styles.thumbPlaceholder]}>
                     <Text style={styles.thumbEmoji}>✅</Text>
@@ -192,6 +201,11 @@ export function ChildDayDetailScreen({ navigation, route }: Props) {
           style={{ marginTop: 16 }}
         />
       </ScrollView>
+      <PhotoLightbox
+        uri={lightboxUri}
+        visible={!!lightboxUri}
+        onClose={() => setLightboxUri(null)}
+      />
     </View>
   );
 }

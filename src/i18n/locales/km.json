@@ -326,7 +326,10 @@
     "title": "รูปภาพ",
     "canceled": "ยกเลิกการเลือก — ไม่มีการเพิ่มภาพ",
     "demoUsed": "○ ○ มี การ ใช้ รูป เดโม.",
-    "saved": "การพิสูจน์ภาพถ่ายบันทึกไว้"
+    "saved": "การพิสูจน์ภาพถ่ายบันทึกไว้",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "การแจ้งให้ทราบComment",

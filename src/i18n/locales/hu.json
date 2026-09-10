@@ -326,7 +326,10 @@
     "title": "Fotó",
     "canceled": "Kiválasztás törölve - nincs fénykép hozzáadva.",
     "demoUsed": "Egy demo fotót használtak.",
-    "saved": "Fotóbiztos."
+    "saved": "Fotóbiztos.",
+    "viewFull": "Megnyitás teljes méretben",
+    "tapToEnlarge": "Érintsd meg a nagyításhoz",
+    "close": "Bezárás"
   },
   "notifications": {
     "title": "Értesítések",

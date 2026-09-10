@@ -326,7 +326,10 @@
     "title": "ছবি",
     "canceled": "নির্বাচন বাতিল automatically করা হয়েছে — কোনো ছবি যোগ করা হয়নি ।",
     "demoUsed": "ছবিটি ব্যবহার করা হয়েছে।",
-    "saved": "ছবি প্রমাণ সংরক্ষিত।"
+    "saved": "ছবি প্রমাণ সংরক্ষিত।",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "সূচনাবার্তা",

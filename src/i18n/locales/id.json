@@ -326,7 +326,10 @@
     "title": "Foto",
     "canceled": "Pilihan dibatalkan - tidak ada foto ditambahkan.",
     "demoUsed": "Foto demo:",
-    "saved": "Foto bukti disimpan."
+    "saved": "Foto bukti disimpan.",
+    "viewFull": "Lihat ukuran penuh",
+    "tapToEnlarge": "Ketuk untuk memperbesar",
+    "close": "Tutup"
   },
   "notifications": {
     "title": "Pemberitahuan",

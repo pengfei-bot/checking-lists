@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Image,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,6 +15,7 @@ import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
+import { PhotoLightbox } from "../components/PhotoLightbox";
 import { recurrenceLabel } from "../utils/recurrence";
 import { formatCompletionTime, todayISO } from "../utils/dates";
 import { confirmUser, notifyUser } from "../utils/feedback";
@@ -36,6 +38,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
   const { family } = useAuth();
   const task = getTask(route.params.taskId);
   const [busy, setBusy] = useState(false);
+  const [lightboxUri, setLightboxUri] = useState<string | null>(null);
 
   if (!task) {
     return (
@@ -108,6 +111,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
 
   if (isChild) {
     return (
+      <>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.statusEmoji}>{done ? "⭐" : "○"}</Text>
         <Text style={styles.childEmoji}>{child?.emoji ?? "✅"}</Text>
@@ -121,7 +125,15 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         {done?.photoUri ? (
           <View style={styles.photoBox}>
             <Text style={styles.label}>{t("taskDetail.photoProof")}</Text>
-            <Image source={{ uri: done.photoUri }} style={styles.photo} resizeMode="cover" />
+            <Pressable
+              onPress={() => setLightboxUri(done.photoUri!)}
+              accessibilityRole="imagebutton"
+              accessibilityLabel={t("photo.viewFull")}
+              accessibilityHint={t("photo.tapToEnlarge")}
+            >
+              <Image source={{ uri: done.photoUri }} style={styles.photo} resizeMode="cover" />
+            </Pressable>
+            <Text style={styles.photoHint}>{t("photo.tapToEnlarge")}</Text>
             <PrimaryButton
               label={t("photoReport.button")}
               variant="ghost"
@@ -161,10 +173,17 @@ export function TaskDetailScreen({ navigation, route }: Props) {
 
         <PrimaryButton label={t("common.back")} variant="ghost" onPress={() => navigation.goBack()} style={{ marginTop: 8 }} />
       </ScrollView>
+      <PhotoLightbox
+        uri={lightboxUri}
+        visible={!!lightboxUri}
+        onClose={() => setLightboxUri(null)}
+      />
+      </>
     );
   }
 
   return (
+    <>
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.emoji}>{child?.emoji ?? "✅"}</Text>
       <Text style={styles.title}>{task.title}</Text>
@@ -186,7 +205,15 @@ export function TaskDetailScreen({ navigation, route }: Props) {
       {done?.photoUri ? (
         <View style={styles.photoBox}>
           <Text style={styles.label}>{t("taskDetail.photoProof")}</Text>
-          <Image source={{ uri: done.photoUri }} style={styles.photo} resizeMode="cover" />
+          <Pressable
+            onPress={() => setLightboxUri(done.photoUri!)}
+            accessibilityRole="imagebutton"
+            accessibilityLabel={t("photo.viewFull")}
+            accessibilityHint={t("photo.tapToEnlarge")}
+          >
+            <Image source={{ uri: done.photoUri }} style={styles.photo} resizeMode="cover" />
+          </Pressable>
+          <Text style={styles.photoHint}>{t("photo.tapToEnlarge")}</Text>
           <PrimaryButton
             label={t("photoReport.button")}
             variant="ghost"
@@ -225,6 +252,12 @@ export function TaskDetailScreen({ navigation, route }: Props) {
 
       <PrimaryButton label={t("common.back")} variant="ghost" onPress={() => navigation.goBack()} style={{ marginTop: 8 }} />
     </ScrollView>
+    <PhotoLightbox
+      uri={lightboxUri}
+      visible={!!lightboxUri}
+      onClose={() => setLightboxUri(null)}
+    />
+    </>
   );
 }
 
@@ -245,6 +278,7 @@ const styles = StyleSheet.create({
   photoBox: { marginTop: 16 },
   label: { fontWeight: "700", marginBottom: 8, color: colors.text },
   photo: { width: "100%", height: 220, borderRadius: 16, backgroundColor: colors.border },
+  photoHint: { marginTop: 6, color: colors.textMuted, fontSize: 12 },
   help: { marginTop: 16, color: colors.textMuted },
   webNote: {
     marginTop: 16,

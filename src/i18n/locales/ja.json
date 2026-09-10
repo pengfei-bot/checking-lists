@@ -326,7 +326,10 @@
     "title": "プロフィール",
     "canceled": "選択解除 — 写真は追加されません。",
     "demoUsed": "⟦00 デモ写真が使われていました。",
-    "saved": "保存された写真の証拠。"
+    "saved": "保存された写真の証拠。",
+    "viewFull": "フルサイズで表示",
+    "tapToEnlarge": "タップして拡大",
+    "close": "閉じる"
   },
   "notifications": {
     "title": "お知らせ",

@@ -326,7 +326,10 @@
     "title": "Foto",
     "canceled": "Valget kansellert - intet bilde lagt til.",
     "demoUsed": "Et demobilde ble brukt.",
-    "saved": "Foto bevis lagret."
+    "saved": "Foto bevis lagret.",
+    "viewFull": "Vis i full størrelse",
+    "tapToEnlarge": "Trykk for å forstørre",
+    "close": "Lukk"
   },
   "notifications": {
     "title": "Varsler",

@@ -326,7 +326,10 @@
     "title": "Снимка",
     "canceled": "Селекцията е отменена, не се добавя снимка.",
     "demoUsed": "Използвана е демо снимка.",
-    "saved": "Снимките са записани."
+    "saved": "Снимките са записани.",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "Нотификации",

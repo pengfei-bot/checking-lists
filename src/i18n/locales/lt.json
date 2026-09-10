@@ -326,7 +326,10 @@
     "title": "Nuotrauka",
     "canceled": "Pažymėjimas atšauktas - nuotrauka nepridėta.",
     "demoUsed": "Buvo panaudota demo nuotrauka.",
-    "saved": "Foto įrodymas išsaugotas."
+    "saved": "Foto įrodymas išsaugotas.",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "Pranešimai",

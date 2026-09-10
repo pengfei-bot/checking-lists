@@ -326,7 +326,10 @@
     "title": "Foto",
     "canceled": "Markering annulleret - ingen foto tilføjet.",
     "demoUsed": "Der blev brugt et demofoto.",
-    "saved": "Fotobevis gemt."
+    "saved": "Fotobevis gemt.",
+    "viewFull": "Vis i fuld størrelse",
+    "tapToEnlarge": "Tryk for at forstørre",
+    "close": "Luk"
   },
   "notifications": {
     "title": "Meddelelser",

@@ -326,7 +326,10 @@
     "title": "Larawan",
     "canceled": "Ang pagpili ay kinansela — walang larawan na idinagdag.",
     "demoUsed": "{{message}} Isang demo photo ang ginamit.",
-    "saved": "Naligtas ang patotoo ng larawan."
+    "saved": "Naligtas ang patotoo ng larawan.",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "Mga Kapansin - pansin",

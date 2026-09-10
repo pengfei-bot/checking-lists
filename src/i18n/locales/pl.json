@@ -326,7 +326,10 @@
     "title": "Zdjęcie",
     "canceled": "Wybór anulowany - nie dodano zdjęcia.",
     "demoUsed": "Użyto demo demo demo 0.",
-    "saved": "Zdjęcie zapisane."
+    "saved": "Zdjęcie zapisane.",
+    "viewFull": "Zobacz w pełnym rozmiarze",
+    "tapToEnlarge": "Dotknij, aby powiększyć",
+    "close": "Zamknij"
   },
   "notifications": {
     "title": "Powiadomienia",

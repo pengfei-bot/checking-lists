@@ -326,7 +326,10 @@
     "title": "عکس عکس",
     "canceled": "انتخاب لغو شد – هیچ عکسی اضافه نشد.",
     "demoUsed": "⟦ یک عکس دموی استفاده شد.",
-    "saved": "اثبات عکس نجات یافت."
+    "saved": "اثبات عکس نجات یافت.",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "اعلان ها",

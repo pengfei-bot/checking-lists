@@ -326,7 +326,10 @@
     "title": "- 사진",
     "canceled": "선택 취소 — 사진이 추가되지 않았습니다.",
     "demoUsed": "0 A 데모 사진이 사용되었습니다.",
-    "saved": "저장된 사진 증거."
+    "saved": "저장된 사진 증거.",
+    "viewFull": "전체 크기로 보기",
+    "tapToEnlarge": "탭하여 확대",
+    "close": "닫기"
   },
   "notifications": {
     "title": "공지사항",

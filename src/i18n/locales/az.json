@@ -326,7 +326,10 @@
     "title": "Photo",
     "canceled": "Seçilmiş seçki — heç bir foto əlavə.",
     "demoUsed": "{{message}} Bir demo foto istifadə edildi.",
-    "saved": "Foto göstərici qeyd."
+    "saved": "Foto göstərici qeyd.",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "İnformasiya",

@@ -326,7 +326,10 @@
     "title": "फोटो",
     "canceled": "चयन रद्द - कोई फोटो जोड़ा गया।",
     "demoUsed": "To use a demo photo.",
-    "saved": "फोटो सबूत बचाया।"
+    "saved": "फोटो सबूत बचाया।",
+    "viewFull": "पूर्ण आकार में देखें",
+    "tapToEnlarge": "बड़ा करने के लिए टैप करें",
+    "close": "बंद करें"
   },
   "notifications": {
     "title": "अधिसूचनाएं",

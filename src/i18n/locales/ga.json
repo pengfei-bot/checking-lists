@@ -326,7 +326,10 @@
     "title": "Grianghraf",
     "canceled": "Chuir Roghnú a cuireadh ar ceal — níor chuir aon ghrianghraf leis.",
     "demoUsed": "Baineadh úsáid as grianghraf taispeána ▪.",
-    "saved": "Grianghraf cruthúnas a shábháil."
+    "saved": "Grianghraf cruthúnas a shábháil.",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "Fógraí",

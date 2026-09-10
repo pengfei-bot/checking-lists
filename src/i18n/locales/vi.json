@@ -326,7 +326,10 @@
     "title": "Ảnh chụp",
     "canceled": "Đã bỏ chọn — không thêm ảnh.",
     "demoUsed": "MỘT bức ảnh thử nghiệm đã được sử dụng.",
-    "saved": "Đã lưu bằng chứng bằng hình ảnh."
+    "saved": "Đã lưu bằng chứng bằng hình ảnh.",
+    "viewFull": "Xem toàn màn hình",
+    "tapToEnlarge": "Chạm để phóng to",
+    "close": "Đóng"
   },
   "notifications": {
     "title": "Thông báo Hệ thốngComment",

@@ -326,7 +326,10 @@
     "title": "Fotografija",
     "canceled": "Izbor je preklican – brez dodane fotografije.",
     "demoUsed": "Uporabljena je bila demo fotografija.",
-    "saved": "Fotografski dokaz je shranjen."
+    "saved": "Fotografski dokaz je shranjen.",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "Obvestila",

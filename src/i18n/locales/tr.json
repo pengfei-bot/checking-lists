@@ -326,7 +326,10 @@
     "title": "Fotoğraflar",
     "canceled": "Seçim iptal edildi - fotoğraf eklendi.",
     "demoUsed": ".0. Bir demo fotoğrafı kullanılmıştır.",
-    "saved": "Fotoğraf kanıtı kurtarıldı."
+    "saved": "Fotoğraf kanıtı kurtarıldı.",
+    "viewFull": "Tam boyutta görüntüle",
+    "tapToEnlarge": "Büyütmek için dokunun",
+    "close": "Kapat"
   },
   "notifications": {
     "title": "Bildirimler",

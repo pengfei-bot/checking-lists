@@ -326,7 +326,10 @@
     "title": "Foto",
     "canceled": "Selectie geannuleerd Geen foto toegevoegd.",
     "demoUsed": "Er werd een demofoto gebruikt.",
-    "saved": "Fotobewijs opgeslagen."
+    "saved": "Fotobewijs opgeslagen.",
+    "viewFull": "Volledig weergeven",
+    "tapToEnlarge": "Tik om te vergroten",
+    "close": "Sluiten"
   },
   "notifications": {
     "title": "Kennisgevingen",

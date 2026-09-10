@@ -326,7 +326,10 @@
     "title": "Foto",
     "canceled": "Seleção cancelada — nenhuma foto adicionada.",
     "demoUsed": "Uma foto demo foi usada.",
-    "saved": "Prova de fotografia salva."
+    "saved": "Prova de fotografia salva.",
+    "viewFull": "Ver em ecrã inteiro",
+    "tapToEnlarge": "Toque para ampliar",
+    "close": "Fechar"
   },
   "notifications": {
     "title": "Notificação",

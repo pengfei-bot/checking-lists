@@ -19,6 +19,7 @@ import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { TaskCard } from "../components/TaskCard";
 import { PrimaryButton } from "../components/PrimaryButton";
+import { PhotoLightbox } from "../components/PhotoLightbox";
 import { formatLocalizedDate, todayISO } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
 import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
@@ -42,6 +43,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [filterChildId, setFilterChildId] = useState<string | "all">("all");
   const [moreOpen, setMoreOpen] = useState(false);
+  const [lightboxUri, setLightboxUri] = useState<string | null>(null);
 
   const todayTasks = useMemo(() => {
     return state.tasks
@@ -280,7 +282,14 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   }
                 />
                 {done?.photoUri ? (
-                  <Image source={{ uri: done.photoUri }} style={styles.thumb} />
+                  <Pressable
+                    onPress={() => setLightboxUri(done.photoUri!)}
+                    accessibilityRole="imagebutton"
+                    accessibilityLabel={t("photo.viewFull")}
+                    accessibilityHint={t("photo.tapToEnlarge")}
+                  >
+                    <Image source={{ uri: done.photoUri }} style={styles.thumb} resizeMode="cover" />
+                  </Pressable>
                 ) : null}
               </View>
             );
@@ -379,6 +388,11 @@ export function ParentDashboardScreen({ navigation }: Props) {
           </View>
         </Pressable>
       </Modal>
+      <PhotoLightbox
+        uri={lightboxUri}
+        visible={!!lightboxUri}
+        onClose={() => setLightboxUri(null)}
+      />
     </View>
   );
 }

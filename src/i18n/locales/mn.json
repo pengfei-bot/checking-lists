@@ -326,7 +326,10 @@
     "title": "Фото",
     "canceled": "Выбор отменен — фото не добавлено.",
     "demoUsed": "Использовалась демо-фотография.",
-    "saved": "Фотография сохранена."
+    "saved": "Фотография сохранена.",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "Уведомления",

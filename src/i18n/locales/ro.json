@@ -326,7 +326,10 @@
     "title": "Fotografie",
     "canceled": "Selecţia anulată ",
     "demoUsed": "A fost folosită o fotografie demo.",
-    "saved": "Dovada foto salvat."
+    "saved": "Dovada foto salvat.",
+    "viewFull": "Vezi pe ecran complet",
+    "tapToEnlarge": "Atinge pentru a mări",
+    "close": "Închide"
   },
   "notifications": {
     "title": "Notificări",

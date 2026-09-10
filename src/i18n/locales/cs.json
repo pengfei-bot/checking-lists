@@ -326,7 +326,10 @@
     "title": "Fotografie",
     "canceled": "Výběr zrušen - nepřidána žádná fotografie.",
     "demoUsed": "Byla použita demo fotka.",
-    "saved": "Fotodůkaz uložen."
+    "saved": "Fotodůkaz uložen.",
+    "viewFull": "Zobrazit v plné velikosti",
+    "tapToEnlarge": "Klepnutím zvětšíte",
+    "close": "Zavřít"
   },
   "notifications": {
     "title": "Oznámení",

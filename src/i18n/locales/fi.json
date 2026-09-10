@@ -326,7 +326,10 @@
     "title": "Valokuva",
     "canceled": "Valikoiminen peruttu ei valokuvaa lisätty.",
     "demoUsed": "Käytetty demokuva.",
-    "saved": "Kuvat on tallennettu."
+    "saved": "Kuvat on tallennettu.",
+    "viewFull": "Näytä täysikokoisena",
+    "tapToEnlarge": "Napauta suurentaa",
+    "close": "Sulje"
   },
   "notifications": {
     "title": "Ilmoitukset",

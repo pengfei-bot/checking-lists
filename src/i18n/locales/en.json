@@ -326,7 +326,10 @@
     "title": "Photo",
     "canceled": "Selection canceled — no photo added.",
     "demoUsed": "{{message}} A demo photo was used.",
-    "saved": "Photo proof saved."
+    "saved": "Photo proof saved.",
+    "viewFull": "View full size",
+    "tapToEnlarge": "Tap to enlarge",
+    "close": "Close"
   },
   "notifications": {
     "title": "Notifications",
