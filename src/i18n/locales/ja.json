@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "キャンセル",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "アカウントを削除",
+    "deleteTitle": "アカウントを削除しますか？",
+    "deleteBody": "家族データ（子ども、タスク、履歴、写真メタデータ）が完全に削除されます。元に戻せません。",
+    "deleteConfirm": "続行",
+    "deleteFinalTitle": "最終確認",
+    "deleteFinalBody": "保護者アカウントと家族データを本当に削除しますか？ログアウトされ、復元できません。",
+    "deleteFinalConfirm": "完全に削除",
+    "deleteFailed": "アカウントを削除できませんでした。もう一度お試しください。"
+  },
+  "photoReport": {
+    "button": "この写真を報告",
+    "title": "この写真を報告しますか？",
+    "body": "開発者（dongpf@hotmail.com）へのメールが開き、タスク詳細が送られます。写真はこのタスクから削除され、アプリに表示されなくなります。",
+    "confirm": "報告して削除",
+    "doneTitle": "写真を報告しました",
+    "doneBody": "ありがとうございます。写真は削除されました。メールアプリが開いた場合は送信を完了してください。",
+    "failed": "写真を報告または削除できませんでした。"
   }
 }

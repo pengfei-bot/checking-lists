@@ -116,6 +116,20 @@ export class SupabaseAuthBackend implements AuthBackend {
     await getSupabase().auth.signOut();
   }
 
+  async deleteAccount(): Promise<void> {
+    const supabase = getSupabase();
+    const { error } = await supabase.rpc("delete_own_account");
+    if (error) throw new Error(authErrorMessage(error, "Impossible de supprimer le compte."));
+    await clearDemo();
+    await saveMeta(null);
+    await secureDelete(CHILD_CREDS_KEY);
+    try {
+      await supabase.auth.signOut();
+    } catch {
+      /* user row already deleted by RPC */
+    }
+  }
+
   async enterDemo(): Promise<AuthResult> {
     try { await getSupabase().auth.signOut(); } catch { /* ignore */ }
     await saveMeta(null);

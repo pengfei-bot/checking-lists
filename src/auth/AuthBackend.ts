@@ -27,6 +27,9 @@ export interface AuthBackend {
   signIn(input: SignInInput): Promise<AuthResult>;
   signOut(): Promise<void>;
 
+  /** Parent-only: permanently delete account + family data (App Store 5.1.1v) */
+  deleteAccount(): Promise<void>;
+
   /** Skip auth; use existing demo seed profiles (local only) */
   enterDemo(): Promise<AuthResult>;
 

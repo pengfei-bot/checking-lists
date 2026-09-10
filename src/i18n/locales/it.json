@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "Annulla",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "Elimina il mio account",
+    "deleteTitle": "Eliminare l’account?",
+    "deleteBody": "Questo elimina definitivamente i dati della famiglia: figli, attività, cronologia e metadati delle foto. Non si può annullare.",
+    "deleteConfirm": "Continua",
+    "deleteFinalTitle": "Conferma finale",
+    "deleteFinalBody": "Eliminare davvero l’account genitore e tutti i dati familiari? Verrai disconnesso e non potrai recuperarli.",
+    "deleteFinalConfirm": "Elimina definitivamente",
+    "deleteFailed": "Impossibile eliminare l’account. Riprova."
+  },
+  "photoReport": {
+    "button": "Segnala questa foto",
+    "title": "Segnalare questa foto?",
+    "body": "Si apre un’email allo sviluppatore (dongpf@hotmail.com) con i dettagli dell’attività. La foto verrà anche rimossa da questa attività e non sarà più mostrata nell’app.",
+    "confirm": "Segnala e rimuovi",
+    "doneTitle": "Foto segnalata",
+    "doneBody": "Grazie. La foto è stata rimossa. Completa l’invio dell’email se si è aperta l’app di posta.",
+    "failed": "Impossibile segnalare o rimuovere la foto."
   }
 }

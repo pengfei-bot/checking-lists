@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "Stornierung",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "Mein Konto löschen",
+    "deleteTitle": "Konto löschen?",
+    "deleteBody": "Dadurch werden Ihre Familiendaten dauerhaft gelöscht: Kinder, Aufgaben, Verlauf und Foto-Metadaten. Dies kann nicht rückgängig gemacht werden.",
+    "deleteConfirm": "Weiter",
+    "deleteFinalTitle": "Letzte Bestätigung",
+    "deleteFinalBody": "Elternkonto und alle Familiendaten wirklich löschen? Sie werden abgemeldet und können die Daten nicht wiederherstellen.",
+    "deleteFinalConfirm": "Endgültig löschen",
+    "deleteFailed": "Konto konnte nicht gelöscht werden. Bitte erneut versuchen."
+  },
+  "photoReport": {
+    "button": "Dieses Foto melden",
+    "title": "Dieses Foto melden?",
+    "body": "Es öffnet eine E-Mail an den Entwickler (dongpf@hotmail.com) mit Aufgabendetails. Das Foto wird auch von dieser Aufgabe entfernt und nicht mehr in der App angezeigt.",
+    "confirm": "Melden und entfernen",
+    "doneTitle": "Foto gemeldet",
+    "doneBody": "Danke. Das Foto wurde entfernt. Senden Sie die E-Mail ab, falls Ihre Mail-App geöffnet wurde.",
+    "failed": "Foto konnte nicht gemeldet oder entfernt werden."
   }
 }

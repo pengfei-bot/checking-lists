@@ -1,11 +1,14 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useAuth } from "../auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
+import { confirmUser, notifyUser } from "../utils/feedback";
+import { openPhotoReportMail } from "../utils/reportPhoto";
 import { dateLocaleTag } from "../i18n";
 import { formatCompletionTime, parseISODate } from "../utils/dates";
 import {
@@ -19,7 +22,9 @@ type Props = NativeStackScreenProps<RootStackParamList, "ChildDayDetail">;
 export function ChildDayDetailScreen({ navigation, route }: Props) {
   const { date } = route.params;
   const { t, i18n } = useTranslation();
-  const { currentProfile, state, getTask, setCurrentProfileId } = useApp();
+  const { currentProfile, state, getTask, setCurrentProfileId, clearCompletionPhoto } = useApp();
+  const { family } = useAuth();
+  const [reportingId, setReportingId] = useState<string | null>(null);
 
   const children = useMemo(
     () => (currentProfile?.role === "child" ? [currentProfile] : []),
@@ -67,6 +72,37 @@ export function ChildDayDetailScreen({ navigation, route }: Props) {
   const childDay = overview.children[0];
   const statusKey = overview.status;
 
+  const reportPhoto = (c: TaskCompletion) => {
+    if (!c.photoUri) return;
+    void (async () => {
+      const ok = await confirmUser(
+        t("photoReport.title"),
+        t("photoReport.body"),
+        t("photoReport.confirm")
+      );
+      if (!ok) return;
+      setReportingId(c.id);
+      try {
+        await openPhotoReportMail({
+          taskId: c.taskId,
+          date: c.date,
+          familyId: family?.id,
+          completionId: c.id,
+        });
+        await clearCompletionPhoto(c.id);
+        notifyUser(t("photoReport.doneTitle"), t("photoReport.doneBody"));
+      } catch (e) {
+        notifyUser(
+          t("common.error"),
+          e instanceof Error ? e.message : t("photoReport.failed")
+        );
+      } finally {
+        setReportingId(null);
+      }
+    })();
+  };
+
+
   return (
     <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -112,6 +148,15 @@ export function ChildDayDetailScreen({ navigation, route }: Props) {
                     {time ?? task?.time ?? ""}
                     {c.photoUri ? ` · 📷` : ""}
                   </Text>
+                  {c.photoUri ? (
+                    <PrimaryButton
+                      label={t("photoReport.button")}
+                      variant="ghost"
+                      loading={reportingId === c.id}
+                      onPress={() => reportPhoto(c)}
+                      style={{ marginTop: 8 }}
+                    />
+                  ) : null}
                 </View>
               </View>
             );

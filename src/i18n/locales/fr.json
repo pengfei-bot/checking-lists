@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "Annuler",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "Supprimer mon compte",
+    "deleteTitle": "Supprimer votre compte ?",
+    "deleteBody": "Cela efface définitivement les données de votre famille : enfants, tâches, historique et métadonnées de photos. Action irréversible.",
+    "deleteConfirm": "Continuer",
+    "deleteFinalTitle": "Confirmation finale",
+    "deleteFinalBody": "Supprimer vraiment votre compte parent et toutes les données famille ? Vous serez déconnecté et ne pourrez pas récupérer ces données.",
+    "deleteFinalConfirm": "Supprimer définitivement",
+    "deleteFailed": "Impossible de supprimer le compte. Réessayez ou contactez le support."
+  },
+  "photoReport": {
+    "button": "Signaler cette photo",
+    "title": "Signaler cette photo ?",
+    "body": "Cela ouvre un e-mail au développeur (dongpf@hotmail.com) avec les détails de la tâche. La photo sera aussi retirée de cette tâche et ne s’affichera plus dans l’app.",
+    "confirm": "Signaler et retirer",
+    "doneTitle": "Photo signalée",
+    "doneBody": "Merci. La photo a été retirée de cette tâche. Terminez l’envoi de l’e-mail si votre messagerie s’est ouverte.",
+    "failed": "Impossible de signaler ou de retirer la photo."
   }
 }

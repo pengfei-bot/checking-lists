@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "Cancelar",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "Eliminar a minha conta",
+    "deleteTitle": "Eliminar a sua conta?",
+    "deleteBody": "Isto apaga permanentemente os dados da família: crianças, tarefas, histórico e metadados de fotos. Não pode ser anulado.",
+    "deleteConfirm": "Continuar",
+    "deleteFinalTitle": "Confirmação final",
+    "deleteFinalBody": "Eliminar mesmo a conta de pai/mãe e todos os dados da família? Vai sair da sessão e não poderá recuperá-los.",
+    "deleteFinalConfirm": "Eliminar definitivamente",
+    "deleteFailed": "Não foi possível eliminar a conta. Tente novamente."
+  },
+  "photoReport": {
+    "button": "Denunciar esta foto",
+    "title": "Denunciar esta foto?",
+    "body": "Isto abre um e-mail ao programador (dongpf@hotmail.com) com os detalhes da tarefa. A foto também será removida desta tarefa e deixará de aparecer na app.",
+    "confirm": "Denunciar e remover",
+    "doneTitle": "Foto denunciada",
+    "doneBody": "Obrigado. A foto foi removida desta tarefa. Conclua o envio do e-mail se a app de correio abriu.",
+    "failed": "Não foi possível denunciar ou remover a foto."
   }
 }

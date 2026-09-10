@@ -33,6 +33,7 @@ interface AuthContextValue {
   signUp: (input: SignUpInput) => Promise<void>;
   signIn: (input: SignInInput) => Promise<void>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
   continueAsDemo: () => Promise<void>;
   createInvite: () => Promise<FamilyInvite>;
   redeemInvite: (code: string, displayName?: string) => Promise<void>;
@@ -95,6 +96,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setParent(null);
   }, []);
 
+  const deleteAccount = useCallback(async () => {
+    await backend.deleteAccount();
+    setSession(null);
+    setFamily(null);
+    setParent(null);
+  }, []);
+
   const continueAsDemo = useCallback(async () => {
     apply(await backend.enterDemo());
   }, [apply]);
@@ -139,6 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signUp,
       signIn,
       signOut,
+      deleteAccount,
       continueAsDemo,
       createInvite,
       redeemInvite,
@@ -154,6 +163,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signUp,
       signIn,
       signOut,
+      deleteAccount,
       continueAsDemo,
       createInvite,
       redeemInvite,

@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "Annuleren",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "Mijn account verwijderen",
+    "deleteTitle": "Account verwijderen?",
+    "deleteBody": "Dit verwijdert permanent je gezinsgegevens: kinderen, taken, geschiedenis en fotometadata. Dit kan niet ongedaan worden gemaakt.",
+    "deleteConfirm": "Doorgaan",
+    "deleteFinalTitle": "Laatste bevestiging",
+    "deleteFinalBody": "Ouderaccount en alle gezinsgegevens echt verwijderen? Je wordt uitgelogd en kunt de gegevens niet herstellen.",
+    "deleteFinalConfirm": "Definitief verwijderen",
+    "deleteFailed": "Account kon niet worden verwijderd. Probeer opnieuw."
+  },
+  "photoReport": {
+    "button": "Deze foto melden",
+    "title": "Deze foto melden?",
+    "body": "Dit opent een e-mail naar de ontwikkelaar (dongpf@hotmail.com) met taakdetails. De foto wordt ook van deze taak verwijderd en niet meer in de app getoond.",
+    "confirm": "Melden en verwijderen",
+    "doneTitle": "Foto gemeld",
+    "doneBody": "Bedankt. De foto is verwijderd. Verstuur de e-mail als je mail-app is geopend.",
+    "failed": "Foto kon niet worden gemeld of verwijderd."
   }
 }

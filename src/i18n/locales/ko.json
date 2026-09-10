@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "이름 *",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "계정 삭제",
+    "deleteTitle": "계정을 삭제할까요?",
+    "deleteBody": "자녀, 할 일, 기록, 사진 메타데이터를 포함한 가족 데이터가 영구 삭제됩니다. 되돌릴 수 없습니다.",
+    "deleteConfirm": "계속",
+    "deleteFinalTitle": "최종 확인",
+    "deleteFinalBody": "부모 계정과 모든 가족 데이터를 정말 삭제할까요? 로그아웃되며 복구할 수 없습니다.",
+    "deleteFinalConfirm": "영구 삭제",
+    "deleteFailed": "계정을 삭제할 수 없습니다. 다시 시도하세요."
+  },
+  "photoReport": {
+    "button": "이 사진 신고",
+    "title": "이 사진을 신고할까요?",
+    "body": "개발자(dongpf@hotmail.com)에게 할 일 세부정보가 담긴 메일이 열립니다. 사진도 이 할 일에서 제거되어 앱에 더 이상 표시되지 않습니다.",
+    "confirm": "신고하고 제거",
+    "doneTitle": "사진이 신고됨",
+    "doneBody": "감사합니다. 사진이 제거되었습니다. 메일 앱이 열렸다면 전송을 완료하세요.",
+    "failed": "사진을 신고하거나 제거할 수 없습니다."
   }
 }

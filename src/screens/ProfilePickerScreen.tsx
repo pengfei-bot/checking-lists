@@ -23,7 +23,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "ProfilePicker">;
 export function ProfilePickerScreen({ navigation }: Props) {
   const { t, i18n } = useTranslation();
   const { ready, state, setCurrentProfileId, resetDemo } = useApp();
-  const { session, isDemo, isAuthenticated, isChildDevice, family, signOut } = useAuth();
+  const { session, isDemo, isAuthenticated, isChildDevice, family, signOut, deleteAccount } = useAuth();
 
   const parents = state.profiles.filter((p) => p.role === "parent");
   const kids = state.profiles.filter((p) => p.role === "child");
@@ -90,6 +90,32 @@ export function ProfilePickerScreen({ navigation }: Props) {
       if (!ok) return;
       await resetDemo();
       notifyUser(t("profiles.resetDoneTitle"), t("profiles.resetDoneBody"));
+    })();
+  };
+
+  const onDeleteAccount = () => {
+    void (async () => {
+      const step1 = await confirmUser(
+        t("account.deleteTitle"),
+        t("account.deleteBody"),
+        t("account.deleteConfirm")
+      );
+      if (!step1) return;
+      const step2 = await confirmUser(
+        t("account.deleteFinalTitle"),
+        t("account.deleteFinalBody"),
+        t("account.deleteFinalConfirm")
+      );
+      if (!step2) return;
+      try {
+        await deleteAccount();
+        navigation.replace("Welcome");
+      } catch (e) {
+        notifyUser(
+          t("common.error"),
+          e instanceof Error ? e.message : t("account.deleteFailed")
+        );
+      }
     })();
   };
 

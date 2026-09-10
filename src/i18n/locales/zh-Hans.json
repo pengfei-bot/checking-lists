@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "取消",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "删除我的账户",
+    "deleteTitle": "删除账户？",
+    "deleteBody": "将永久删除家庭数据：孩子、任务、完成记录和照片元数据。此操作无法撤销。",
+    "deleteConfirm": "继续",
+    "deleteFinalTitle": "最终确认",
+    "deleteFinalBody": "确定删除家长账户及全部家庭数据吗？您将退出登录且无法恢复。",
+    "deleteFinalConfirm": "永久删除",
+    "deleteFailed": "无法删除账户，请重试。"
+  },
+  "photoReport": {
+    "button": "举报此照片",
+    "title": "举报此照片？",
+    "body": "将向开发者（dongpf@hotmail.com）发送包含任务详情的邮件。照片也会从此任务中移除，不再在应用中显示。",
+    "confirm": "举报并移除",
+    "doneTitle": "已举报照片",
+    "doneBody": "谢谢。照片已从此任务移除。如已打开邮件应用，请完成发送。",
+    "failed": "无法举报或移除照片。"
   }
 }

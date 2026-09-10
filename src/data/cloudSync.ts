@@ -416,3 +416,19 @@ export async function cloudUnmarkDone(taskId: string, date: string): Promise<voi
     throwCloud(e, "Impossible d'annuler la complétion.");
   }
 }
+
+export async function cloudClearCompletionPhoto(completionId: string): Promise<void> {
+  const supabase = getSupabase();
+  const run = async (): Promise<void> => {
+    const { error } = await supabase
+      .from("task_completions")
+      .update({ photo_url: null })
+      .eq("id", completionId);
+    if (error) throwCloud(error, "Impossible de retirer la photo.");
+  };
+  try {
+    await withCloudTimeout(run(), 15_000, "Retrait de la photo");
+  } catch (e) {
+    throwCloud(e, "Impossible de retirer la photo.");
+  }
+}

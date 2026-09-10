@@ -22,6 +22,7 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { formatLocalizedDate, todayISO } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
 import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
+import { confirmUser, notifyUser } from "../utils/feedback";
 import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParentDashboard">;
@@ -37,7 +38,8 @@ export function ParentDashboardScreen({ navigation }: Props) {
     setCurrentProfileId,
     refreshReminders,
   } = useApp();
-  const { isAuthenticated, family } = useAuth();
+  const { isAuthenticated, family, deleteAccount } = useAuth();
+  const [deletingAccount, setDeletingAccount] = useState(false);
   const [filterChildId, setFilterChildId] = useState<string | "all">("all");
   const [moreOpen, setMoreOpen] = useState(false);
 
@@ -108,6 +110,37 @@ export function ParentDashboardScreen({ navigation }: Props) {
   };
 
   const goNewTask = () => navigation.navigate("TaskForm", {});
+
+
+  const onDeleteAccount = () => {
+    void (async () => {
+      const step1 = await confirmUser(
+        t("account.deleteTitle"),
+        t("account.deleteBody"),
+        t("account.deleteConfirm")
+      );
+      if (!step1) return;
+      const step2 = await confirmUser(
+        t("account.deleteFinalTitle"),
+        t("account.deleteFinalBody"),
+        t("account.deleteFinalConfirm")
+      );
+      if (!step2) return;
+      setDeletingAccount(true);
+      setMoreOpen(false);
+      try {
+        await deleteAccount();
+        navigation.reset({ index: 0, routes: [{ name: "Welcome" }] });
+      } catch (e) {
+        notifyUser(
+          t("common.error"),
+          e instanceof Error ? e.message : t("account.deleteFailed")
+        );
+      } finally {
+        setDeletingAccount(false);
+      }
+    })();
+  };
 
   const shareLabel = family?.inviteCode
     ? t("parentDash.shareFamilyCode", { code: family.inviteCode })
@@ -325,6 +358,15 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   setMoreOpen(false);
                   void onCalendar();
                 }}
+                style={{ marginTop: 8 }}
+              />
+            ) : null}
+            {isAuthenticated ? (
+              <PrimaryButton
+                label={t("account.delete")}
+                variant="ghost"
+                loading={deletingAccount}
+                onPress={onDeleteAccount}
                 style={{ marginTop: 8 }}
               />
             ) : null}

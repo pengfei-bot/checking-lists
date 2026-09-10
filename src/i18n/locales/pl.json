@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "Anuluj",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "Usuń moje konto",
+    "deleteTitle": "Usunąć konto?",
+    "deleteBody": "To trwale usuwa dane rodziny: dzieci, zadania, historię i metadane zdjęć. Tej operacji nie można cofnąć.",
+    "deleteConfirm": "Kontynuuj",
+    "deleteFinalTitle": "Ostateczne potwierdzenie",
+    "deleteFinalBody": "Naprawdę usunąć konto rodzica i wszystkie dane rodziny? Nastąpi wylogowanie i nie będzie można ich odzyskać.",
+    "deleteFinalConfirm": "Usuń trwale",
+    "deleteFailed": "Nie udało się usunąć konta. Spróbuj ponownie."
+  },
+  "photoReport": {
+    "button": "Zgłoś to zdjęcie",
+    "title": "Zgłosić to zdjęcie?",
+    "body": "Otworzy się e-mail do dewelopera (dongpf@hotmail.com) ze szczegółami zadania. Zdjęcie zostanie też usunięte z tego zadania i nie będzie widoczne w aplikacji.",
+    "confirm": "Zgłoś i usuń",
+    "doneTitle": "Zdjęcie zgłoszone",
+    "doneBody": "Dziękujemy. Zdjęcie usunięto z zadania. Dokończ wysyłkę e-maila, jeśli otworzyła się aplikacja poczty.",
+    "failed": "Nie udało się zgłosić ani usunąć zdjęcia."
   }
 }

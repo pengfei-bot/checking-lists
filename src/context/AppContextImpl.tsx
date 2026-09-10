@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../auth";
 import {
-  cloudDeleteChild, cloudDeleteTask, cloudInsertChild, cloudMarkDone, cloudUnmarkDone,
+  cloudClearCompletionPhoto, cloudDeleteChild, cloudDeleteTask, cloudInsertChild, cloudMarkDone, cloudUnmarkDone,
   cloudUpdateChild, cloudUpsertTask, loadCloudAppState,
 } from "../data/cloudSync";
 import { loadAppState, resetDemoData, saveAppState } from "../data/storage";
@@ -24,6 +24,8 @@ interface AppContextValue {
   completionFor: (taskId: string, date?: string) => TaskCompletion | undefined;
   markTaskDone: (taskId: string, childId: string, photoUri?: string) => Promise<void>;
   unmarkTaskDone: (taskId: string, date?: string) => Promise<void>;
+  /** Remove photo proof from a completion (UGC report / moderation). */
+  clearCompletionPhoto: (completionId: string) => Promise<void>;
   upsertTask: (input: Omit<Task, "id" | "createdAt" | "updatedAt"> & { id?: string }) => Promise<Task>;
   deleteTask: (taskId: string) => Promise<void>;
   addChild: (input: { name: string; emoji?: string; color?: string }) => Promise<Profile>;
@@ -125,6 +127,25 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     await persistLocal({ ...state, completions: state.completions.filter((c) => !(c.taskId === taskId && c.date === date)) });
+  }, [familyId, persistLocal, state]);
+
+  const clearCompletionPhoto = useCallback(async (completionId: string) => {
+    if (familyId) {
+      await cloudClearCompletionPhoto(completionId);
+      setState({
+        ...state,
+        completions: state.completions.map((c) =>
+          c.id === completionId ? { ...c, photoUri: undefined } : c
+        ),
+      });
+      return;
+    }
+    await persistLocal({
+      ...state,
+      completions: state.completions.map((c) =>
+        c.id === completionId ? { ...c, photoUri: undefined } : c
+      ),
+    });
   }, [familyId, persistLocal, state]);
 
   const upsertTask = useCallback(async (input: Omit<Task, "id" | "createdAt" | "updatedAt"> & { id?: string }): Promise<Task> => {
@@ -259,7 +280,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const value: AppContextValue = {
     ready, state, currentProfile, childrenProfiles, parentProfile, cloudSync, setCurrentProfileId,
-    tasksForChildToday, completionFor, markTaskDone, unmarkTaskDone, upsertTask, deleteTask,
+    tasksForChildToday, completionFor, markTaskDone, unmarkTaskDone, clearCompletionPhoto, upsertTask, deleteTask,
     addChild, updateChild, deleteChild, getTask, getProfile, resetDemo, refreshReminders, reloadFromCloud,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

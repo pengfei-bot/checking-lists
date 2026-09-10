@@ -171,6 +171,10 @@ export class LocalAuthBackend implements AuthBackend {
     await writeStore(store);
   }
 
+  async deleteAccount(): Promise<void> {
+    await writeStore(emptyStore());
+  }
+
   async enterDemo(): Promise<AuthResult> {
     const store = await readStore();
     const session: Session = {

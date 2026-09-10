@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "取消",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "刪除我的帳戶",
+    "deleteTitle": "刪除帳戶？",
+    "deleteBody": "將永久刪除家庭資料：孩子、任務、完成紀錄與照片中繼資料。此操作無法復原。",
+    "deleteConfirm": "繼續",
+    "deleteFinalTitle": "最終確認",
+    "deleteFinalBody": "確定刪除家長帳戶及全部家庭資料嗎？您將登出且無法復原。",
+    "deleteFinalConfirm": "永久刪除",
+    "deleteFailed": "無法刪除帳戶，請重試。"
+  },
+  "photoReport": {
+    "button": "檢舉此照片",
+    "title": "檢舉此照片？",
+    "body": "將開啟給開發者（dongpf@hotmail.com）的郵件並附上任務詳情。照片也會自此任務移除，不再顯示於 App。",
+    "confirm": "檢舉並移除",
+    "doneTitle": "已檢舉照片",
+    "doneBody": "謝謝。照片已自此任務移除。若郵件 App 已開啟，請完成寄送。",
+    "failed": "無法檢舉或移除照片。"
   }
 }

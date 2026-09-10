@@ -379,5 +379,24 @@
   "confirm": {
     "cancel": "Batal",
     "confirm": "OK"
+  },
+  "account": {
+    "delete": "Delete my account",
+    "deleteTitle": "Delete your account?",
+    "deleteBody": "This permanently deletes your family data: children, tasks, completion history, and photo metadata. This cannot be undone.",
+    "deleteConfirm": "Continue",
+    "deleteFinalTitle": "Final confirmation",
+    "deleteFinalBody": "Really delete your parent account and all family data? You will be signed out and cannot recover this data.",
+    "deleteFinalConfirm": "Delete permanently",
+    "deleteFailed": "Could not delete the account. Try again or contact support."
+  },
+  "photoReport": {
+    "button": "Report this photo",
+    "title": "Report this photo?",
+    "body": "This opens an email to the developer (dongpf@hotmail.com) with task details. The photo will also be removed from this task so it is no longer shown in the app.",
+    "confirm": "Report and remove",
+    "doneTitle": "Photo reported",
+    "doneBody": "Thanks. The photo was removed from this task. Finish sending the email if your mail app opened.",
+    "failed": "Could not report or remove the photo."
   }
 }

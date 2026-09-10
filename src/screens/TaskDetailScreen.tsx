@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useAuth } from "../auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
@@ -15,7 +16,8 @@ import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { recurrenceLabel } from "../utils/recurrence";
 import { formatCompletionTime, todayISO } from "../utils/dates";
-import { notifyUser } from "../utils/feedback";
+import { confirmUser, notifyUser } from "../utils/feedback";
+import { openPhotoReportMail } from "../utils/reportPhoto";
 import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskDetail">;
@@ -28,8 +30,10 @@ export function TaskDetailScreen({ navigation, route }: Props) {
     completionFor,
     markTaskDone,
     unmarkTaskDone,
+    clearCompletionPhoto,
     currentProfile,
   } = useApp();
+  const { family } = useAuth();
   const task = getTask(route.params.taskId);
   const [busy, setBusy] = useState(false);
 
@@ -71,6 +75,37 @@ export function TaskDetailScreen({ navigation, route }: Props) {
     }
   };
 
+
+  const reportPhoto = () => {
+    if (!done?.photoUri || !done.id) return;
+    void (async () => {
+      const ok = await confirmUser(
+        t("photoReport.title"),
+        t("photoReport.body"),
+        t("photoReport.confirm")
+      );
+      if (!ok) return;
+      setBusy(true);
+      try {
+        await openPhotoReportMail({
+          taskId: task.id,
+          date: done.date,
+          familyId: family?.id,
+          completionId: done.id,
+        });
+        await clearCompletionPhoto(done.id);
+        notifyUser(t("photoReport.doneTitle"), t("photoReport.doneBody"));
+      } catch (e) {
+        notifyUser(
+          t("common.error"),
+          e instanceof Error ? e.message : t("photoReport.failed")
+        );
+      } finally {
+        setBusy(false);
+      }
+    })();
+  };
+
   if (isChild) {
     return (
       <ScrollView contentContainerStyle={styles.container}>
@@ -87,6 +122,13 @@ export function TaskDetailScreen({ navigation, route }: Props) {
           <View style={styles.photoBox}>
             <Text style={styles.label}>{t("taskDetail.photoProof")}</Text>
             <Image source={{ uri: done.photoUri }} style={styles.photo} resizeMode="cover" />
+            <PrimaryButton
+              label={t("photoReport.button")}
+              variant="ghost"
+              onPress={reportPhoto}
+              loading={busy}
+              style={{ marginTop: 8 }}
+            />
           </View>
         ) : null}
 
@@ -145,6 +187,13 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         <View style={styles.photoBox}>
           <Text style={styles.label}>{t("taskDetail.photoProof")}</Text>
           <Image source={{ uri: done.photoUri }} style={styles.photo} resizeMode="cover" />
+          <PrimaryButton
+            label={t("photoReport.button")}
+            variant="ghost"
+            onPress={reportPhoto}
+            loading={busy}
+            style={{ marginTop: 8 }}
+          />
         </View>
       ) : (
         <Text style={styles.help}>{t("taskDetail.noPhoto")}</Text>
