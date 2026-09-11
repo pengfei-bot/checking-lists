@@ -401,5 +401,14 @@
     "doneTitle": "Photo signalée",
     "doneBody": "Merci. La photo a été retirée de cette tâche. Terminez l’envoi de l’e-mail si votre messagerie s’est ouverte.",
     "failed": "Impossible de signaler ou de retirer la photo."
+  },
+  "offline": {
+    "banner": "Hors ligne — affichage des données en cache",
+    "bannerCached": "Hors ligne — dernière sync : {{time}}",
+    "bannerSyncing": "Synchronisation…",
+    "noCacheTitle": "Pas de connexion",
+    "noCacheBody": "Impossible de charger vos listes sans réseau, et aucune donnée n’est encore en cache sur cet appareil. Réessayez une fois connecté.",
+    "retry": "Réessayer",
+    "mutationsNeedNetwork": "Cette action nécessite une connexion Internet."
   }
 }

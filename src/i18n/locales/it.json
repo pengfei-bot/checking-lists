@@ -401,5 +401,14 @@
     "doneTitle": "Foto segnalata",
     "doneBody": "Grazie. La foto è stata rimossa. Completa l’invio dell’email se si è aperta l’app di posta.",
     "failed": "Impossibile segnalare o rimuovere la foto."
+  },
+  "offline": {
+    "banner": "Offline — showing cached data",
+    "bannerCached": "Offline — last sync: {{time}}",
+    "bannerSyncing": "Syncing…",
+    "noCacheTitle": "No connection",
+    "noCacheBody": "Your lists can’t load without a network, and nothing is cached on this device yet. Try again once you’re online.",
+    "retry": "Retry",
+    "mutationsNeedNetwork": "This action needs an Internet connection."
   }
 }

@@ -1,5 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { AppState as RnAppState, AppStateStatus } from "react-native";
 import { useAuth } from "../auth";
+import { loadCloudStateCache, saveCloudStateCache } from "../data/cloudCache";
 import {
   cloudClearCompletionPhoto, cloudDeleteChild, cloudDeleteTask, cloudInsertChild, cloudMarkDone, cloudUnmarkDone,
   cloudUpdateChild, cloudUpsertTask, loadCloudAppState,
@@ -9,6 +11,8 @@ import { loadLastProfileId, saveLastProfileId } from "../data/lastProfile";
 import { rescheduleTodayReminders } from "../services/notifications";
 import { childColors } from "../theme/colors";
 import { AppState, Profile, Task, TaskCompletion } from "../types";
+import { frenchCloudError } from "../utils/cloudTimeout";
+import { probeOnline } from "../utils/connectivity";
 import { todayISO, uid } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
 
@@ -19,6 +23,11 @@ interface AppContextValue {
   childrenProfiles: Profile[];
   parentProfile: Profile | null;
   cloudSync: boolean;
+  /** True when UI is serving cached cloud data (offline or before refresh). */
+  usingCache: boolean;
+  isSyncing: boolean;
+  syncError: string | null;
+  cacheSavedAt: string | null;
   setCurrentProfileId: (id: string | null) => void;
   tasksForChildToday: (childId: string) => Task[];
   completionFor: (taskId: string, date?: string) => TaskCompletion | undefined;
@@ -49,24 +58,93 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const { ready: authReady, session, isDemo, isCloud } = useAuth();
   const [ready, setReady] = useState(false);
   const [state, setState] = useState<AppState>(emptyState);
+  const [usingCache, setUsingCache] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const [cacheSavedAt, setCacheSavedAt] = useState<string | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
   const familyId = isCloud ? session?.familyId ?? null : null;
   const cloudSync = !!familyId;
+  const syncingRef = useRef(false);
+
+  const applyRememberedProfile = useCallback(async (loaded: AppState) => {
+    const remembered = await loadLastProfileId();
+    const currentProfileId =
+      remembered && loaded.profiles.some((p) => p.id === remembered) ? remembered : null;
+    return { ...loaded, currentProfileId };
+  }, []);
+
+  const pullCloud = useCallback(async (fid: string, opts?: { background?: boolean }) => {
+    const background = !!opts?.background;
+    if (syncingRef.current) return;
+    syncingRef.current = true;
+    setIsSyncing(true);
+    if (!background) setSyncError(null);
+    try {
+      const loaded = await loadCloudAppState(
+        fid,
+        session?.displayName || session?.email || "Parent"
+      );
+      const next = await applyRememberedProfile(loaded);
+      setState(next);
+      stateRef.current = next;
+      await saveCloudStateCache(fid, next);
+      setCacheSavedAt(new Date().toISOString());
+      setUsingCache(false);
+      setSyncError(null);
+      await safeReminders(next.tasks, next.profiles);
+    } catch (e) {
+      const msg = frenchCloudError(e, "Chargement cloud impossible.");
+      setSyncError(msg);
+      throw e;
+    } finally {
+      syncingRef.current = false;
+      setIsSyncing(false);
+    }
+  }, [applyRememberedProfile, session?.displayName, session?.email]);
 
   const load = useCallback(async () => {
     if (!authReady) return;
     setReady(false);
+    setSyncError(null);
     try {
-      const remembered = await loadLastProfileId();
       if (familyId) {
-        const loaded = await loadCloudAppState(familyId, session?.displayName || session?.email || "Parent");
-        const currentProfileId =
-          remembered && loaded.profiles.some((p) => p.id === remembered) ? remembered : null;
-        const next = { ...loaded, currentProfileId };
-        setState(next);
-        await safeReminders(next.tasks, next.profiles);
+        const cached = await loadCloudStateCache(familyId);
+        if (cached) {
+          const next = await applyRememberedProfile(cached.state);
+          setState(next);
+          stateRef.current = next;
+          setCacheSavedAt(cached.savedAt);
+          setUsingCache(true);
+          setReady(true);
+          await safeReminders(next.tasks, next.profiles);
+        }
+
+        const online = await probeOnline(2_500);
+        if (!online) {
+          setSyncError("offline");
+          if (!cached) {
+            setState(emptyState);
+            setUsingCache(false);
+            setCacheSavedAt(null);
+          }
+          return;
+        }
+
+        try {
+          await pullCloud(familyId, { background: !!cached });
+        } catch {
+          if (!cached) {
+            setState(emptyState);
+            setUsingCache(false);
+            setCacheSavedAt(null);
+          }
+        }
       } else {
+        setUsingCache(false);
+        setCacheSavedAt(null);
+        const remembered = await loadLastProfileId();
         const loaded = await loadAppState();
         const currentProfileId =
           (remembered && loaded.profiles.some((p) => p.id === remembered)
@@ -87,14 +165,40 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setReady(true);
     }
-  }, [authReady, familyId, session?.displayName, session?.email]);
+  }, [authReady, familyId, applyRememberedProfile, pullCloud]);
 
   useEffect(() => { void load(); }, [load]);
+
+  // Re-sync when app returns to foreground (network may be back).
+  useEffect(() => {
+    if (!familyId || !authReady) return;
+    const onChange = (next: AppStateStatus) => {
+      if (next !== "active") return;
+      void (async () => {
+        const online = await probeOnline(2_000);
+        if (!online) return;
+        try {
+          await pullCloud(familyId, { background: true });
+        } catch {
+          /* keep cache; banner shows syncError */
+        }
+      })();
+    };
+    const sub = RnAppState.addEventListener("change", onChange);
+    return () => sub.remove();
+  }, [familyId, authReady, pullCloud]);
 
   const persistLocal = useCallback(async (next: AppState) => {
     setState(next);
     if (!familyId) await saveAppState(next);
   }, [familyId]);
+
+  const cacheCloudSnapshot = useCallback(async (next: AppState) => {
+    if (!familyId) return;
+    await saveCloudStateCache(familyId, next);
+    setCacheSavedAt(new Date().toISOString());
+  }, [familyId]);
+
 
   const currentProfile = useMemo(() => state.profiles.find((p) => p.id === state.currentProfileId) ?? null, [state.profiles, state.currentProfileId]);
   const childrenProfiles = useMemo(() => state.profiles.filter((p) => p.role === "child"), [state.profiles]);
@@ -110,7 +214,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const date = todayISO();
     if (familyId) {
       const saved = await cloudMarkDone(familyId, taskId, childId, date, photoUri);
-      setState({ ...state, completions: [...state.completions.filter((c) => !(c.taskId === taskId && c.date === date)), saved] });
+      const next = { ...state, completions: [...state.completions.filter((c) => !(c.taskId === taskId && c.date === date)), saved] };
+      setState(next);
+      void cacheCloudSnapshot(next);
       return;
     }
     const existing = state.completions.find((c) => c.taskId === taskId && c.date === date);
@@ -118,26 +224,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       ? state.completions.map((c) => c.id === existing.id ? { ...c, completedAt: new Date().toISOString(), photoUri: photoUri ?? c.photoUri } : c)
       : [...state.completions, { id: uid("done"), taskId, childId, date, completedAt: new Date().toISOString(), photoUri }];
     await persistLocal({ ...state, completions });
-  }, [familyId, persistLocal, state]);
+  }, [familyId, persistLocal, state, cacheCloudSnapshot]);
 
   const unmarkTaskDone = useCallback(async (taskId: string, date = todayISO()) => {
     if (familyId) {
       await cloudUnmarkDone(taskId, date);
-      setState({ ...state, completions: state.completions.filter((c) => !(c.taskId === taskId && c.date === date)) });
+      const next = { ...state, completions: state.completions.filter((c) => !(c.taskId === taskId && c.date === date)) };
+      setState(next);
+      void cacheCloudSnapshot(next);
       return;
     }
     await persistLocal({ ...state, completions: state.completions.filter((c) => !(c.taskId === taskId && c.date === date)) });
-  }, [familyId, persistLocal, state]);
+  }, [familyId, persistLocal, state, cacheCloudSnapshot]);
 
   const clearCompletionPhoto = useCallback(async (completionId: string) => {
     if (familyId) {
       await cloudClearCompletionPhoto(completionId);
-      setState({
+      const next = {
         ...state,
         completions: state.completions.map((c) =>
           c.id === completionId ? { ...c, photoUri: undefined } : c
         ),
-      });
+      };
+      setState(next);
+      void cacheCloudSnapshot(next);
       return;
     }
     await persistLocal({
@@ -146,7 +256,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         c.id === completionId ? { ...c, photoUri: undefined } : c
       ),
     });
-  }, [familyId, persistLocal, state]);
+  }, [familyId, persistLocal, state, cacheCloudSnapshot]);
 
   const upsertTask = useCallback(async (input: Omit<Task, "id" | "createdAt" | "updatedAt"> & { id?: string }): Promise<Task> => {
     // stateRef so sequential creates (multi-child) do not drop prior inserts
@@ -162,6 +272,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const next = { ...prev, tasks };
       stateRef.current = next;
       setState(next);
+      void cacheCloudSnapshot(next);
       await safeReminders(next.tasks, next.profiles);
       return saved;
     }
@@ -197,7 +308,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     await persistLocal(next);
     await safeReminders(next.tasks, next.profiles);
     return saved;
-  }, [familyId, persistLocal]);
+  }, [familyId, persistLocal, cacheCloudSnapshot]);
 
   const deleteTask = useCallback(async (taskId: string) => {
     if (familyId) await cloudDeleteTask(taskId);
@@ -208,9 +319,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       completions: prev.completions.filter((c) => c.taskId !== taskId),
     };
     stateRef.current = next;
-    if (familyId) setState(next); else await persistLocal(next);
+    if (familyId) {
+      setState(next);
+      void cacheCloudSnapshot(next);
+    } else {
+      await persistLocal(next);
+    }
     await safeReminders(next.tasks, next.profiles);
-  }, [familyId, persistLocal]);
+  }, [familyId, persistLocal, cacheCloudSnapshot]);
 
   const addChild = useCallback(async (input: { name: string; emoji?: string; color?: string }): Promise<Profile> => {
     const kids = state.profiles.filter((p) => p.role === "child");
@@ -220,13 +336,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     if (familyId) {
       const profile = await cloudInsertChild(familyId, { name: input.name, emoji: input.emoji, color });
-      setState((prev) => ({ ...prev, profiles: [...prev.profiles, profile] }));
+      setState((prev) => {
+        const next = { ...prev, profiles: [...prev.profiles, profile] };
+        void cacheCloudSnapshot(next);
+        return next;
+      });
       return profile;
     }
     const profile: Profile = { id: uid("profile_child"), name: input.name.trim(), role: "child", emoji: input.emoji?.trim() || "🌟", color };
     await persistLocal({ ...state, profiles: [...state.profiles, profile] });
     return profile;
-  }, [familyId, isCloud, persistLocal, state]);
+  }, [familyId, isCloud, persistLocal, state, cacheCloudSnapshot]);
 
   const updateChild = useCallback(async (id: string, input: { name: string; emoji?: string; color?: string }): Promise<Profile | undefined> => {
     if (familyId) await cloudUpdateChild(id, input);
@@ -239,10 +359,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       color: input.color?.trim() || existing.color,
     };
     if (familyId) {
-      setState((prev) => ({
-        ...prev,
-        profiles: prev.profiles.map((p) => (p.id === id && p.role === "child" ? saved : p)),
-      }));
+      setState((prev) => {
+        const next = {
+          ...prev,
+          profiles: prev.profiles.map((p) => (p.id === id && p.role === "child" ? saved : p)),
+        };
+        void cacheCloudSnapshot(next);
+        return next;
+      });
       return saved;
     }
     await persistLocal({
@@ -250,7 +374,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       profiles: state.profiles.map((p) => (p.id === id && p.role === "child" ? saved : p)),
     });
     return saved;
-  }, [familyId, persistLocal, state]);
+  }, [familyId, persistLocal, state, cacheCloudSnapshot]);
 
   const deleteChild = useCallback(async (id: string) => {
     if (familyId) await cloudDeleteChild(id);
@@ -261,9 +385,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       completions: state.completions.filter((c) => c.childId !== id),
       currentProfileId: state.currentProfileId === id ? null : state.currentProfileId,
     };
-    if (familyId) setState(next); else await persistLocal(next);
+    if (familyId) {
+      setState(next);
+      void cacheCloudSnapshot(next);
+    } else {
+      await persistLocal(next);
+    }
     await safeReminders(next.tasks, next.profiles);
-  }, [familyId, persistLocal, state]);
+  }, [familyId, persistLocal, state, cacheCloudSnapshot]);
 
   const getTask = useCallback((taskId: string) => state.tasks.find((t) => t.id === taskId), [state.tasks]);
   const getProfile = useCallback((id: string) => state.profiles.find((p) => p.id === id), [state.profiles]);
@@ -276,10 +405,34 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [familyId, isDemo, load]);
 
   const refreshReminders = useCallback(async () => rescheduleTodayReminders(state.tasks, state.profiles), [state.tasks, state.profiles]);
-  const reloadFromCloud = useCallback(async () => { if (familyId) await load(); }, [familyId, load]);
+  const reloadFromCloud = useCallback(async () => {
+    if (!familyId) {
+      await load();
+      return;
+    }
+    setReady(true);
+    setSyncError(null);
+    const online = await probeOnline(2_500);
+    if (!online) {
+      const cached = await loadCloudStateCache(familyId);
+      if (cached) {
+        setUsingCache(true);
+        setSyncError("offline");
+      } else {
+        setSyncError("offline");
+      }
+      return;
+    }
+    try {
+      await pullCloud(familyId, { background: false });
+    } catch {
+      /* syncError already set */
+    }
+  }, [familyId, load, pullCloud]);
 
   const value: AppContextValue = {
-    ready, state, currentProfile, childrenProfiles, parentProfile, cloudSync, setCurrentProfileId,
+    ready, state, currentProfile, childrenProfiles, parentProfile, cloudSync,
+    usingCache, isSyncing, syncError, cacheSavedAt, setCurrentProfileId,
     tasksForChildToday, completionFor, markTaskDone, unmarkTaskDone, clearCompletionPhoto, upsertTask, deleteTask,
     addChild, updateChild, deleteChild, getTask, getProfile, resetDemo, refreshReminders, reloadFromCloud,
   };

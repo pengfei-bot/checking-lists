@@ -401,5 +401,14 @@
     "doneTitle": "写真を報告しました",
     "doneBody": "ありがとうございます。写真は削除されました。メールアプリが開いた場合は送信を完了してください。",
     "failed": "写真を報告または削除できませんでした。"
+  },
+  "offline": {
+    "banner": "Offline — showing cached data",
+    "bannerCached": "Offline — last sync: {{time}}",
+    "bannerSyncing": "Syncing…",
+    "noCacheTitle": "No connection",
+    "noCacheBody": "Your lists can’t load without a network, and nothing is cached on this device yet. Try again once you’re online.",
+    "retry": "Retry",
+    "mutationsNeedNetwork": "This action needs an Internet connection."
   }
 }

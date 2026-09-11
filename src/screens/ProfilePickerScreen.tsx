@@ -14,6 +14,7 @@ import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
+import { OfflineBanner } from "../components/OfflineBanner";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { formatLocalizedDate, todayISO } from "../utils/dates";
 import { confirmUser, notifyUser } from "../utils/feedback";
@@ -22,7 +23,18 @@ type Props = NativeStackScreenProps<RootStackParamList, "ProfilePicker">;
 
 export function ProfilePickerScreen({ navigation }: Props) {
   const { t, i18n } = useTranslation();
-  const { ready, state, setCurrentProfileId, resetDemo } = useApp();
+  const {
+    ready,
+    state,
+    setCurrentProfileId,
+    resetDemo,
+    cloudSync,
+    usingCache,
+    isSyncing,
+    syncError,
+    cacheSavedAt,
+    reloadFromCloud,
+  } = useApp();
   const { session, isDemo, isAuthenticated, isChildDevice, family, signOut, deleteAccount } = useAuth();
 
   const parents = state.profiles.filter((p) => p.role === "parent");
@@ -61,6 +73,12 @@ export function ProfilePickerScreen({ navigation }: Props) {
       </View>
     );
   }
+
+  const showNoCacheOffline =
+    cloudSync &&
+    !isSyncing &&
+    state.profiles.length === 0 &&
+    (syncError === "offline" || !!syncError);
 
   const demoRoster = [
     ...parents.map((p) => p.name.replace(/\s*\(Demo\)\s*/i, "").trim() || p.name),
@@ -136,6 +154,12 @@ export function ProfilePickerScreen({ navigation }: Props) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <OfflineBanner
+        visible={cloudSync && (usingCache || syncError === "offline")}
+        syncing={isSyncing}
+        cachedAt={cacheSavedAt}
+        onRetry={() => { void reloadFromCloud(); }}
+      />
       <Image source={require("../../assets/icon.png")} style={styles.logo} accessibilityLabel={t("common.appName")} />
       <Text style={styles.title}>{t("common.appName")}</Text>
       <Text style={styles.subtitle}>
@@ -144,6 +168,18 @@ export function ProfilePickerScreen({ navigation }: Props) {
           : t("profiles.subtitleFamily", { date: formatLocalizedDate(todayISO(), i18n.language) })}
       </Text>
       <Text style={styles.hint}>{hint}</Text>
+
+      {showNoCacheOffline ? (
+        <View style={styles.offlineBox}>
+          <Text style={styles.offlineTitle}>{t("offline.noCacheTitle")}</Text>
+          <Text style={styles.offlineBody}>{t("offline.noCacheBody")}</Text>
+          <PrimaryButton
+            label={t("offline.retry")}
+            onPress={() => { void reloadFromCloud(); }}
+            style={{ marginTop: 12 }}
+          />
+        </View>
+      ) : null}
 
       {!isChildDevice ? (
         <>
@@ -278,4 +314,12 @@ const styles = StyleSheet.create({
   cardEmoji: { fontSize: 32 },
   cardTitle: { fontSize: 17, fontWeight: "800", color: colors.text },
   cardMeta: { color: colors.textMuted, marginTop: 2, fontSize: 13 },
+  offlineBox: {
+    marginTop: 20,
+    backgroundColor: "#FFF4E5",
+    borderRadius: 14,
+    padding: 16,
+  },
+  offlineTitle: { fontSize: 17, fontWeight: "800", color: colors.text, marginBottom: 6 },
+  offlineBody: { color: colors.textMuted, lineHeight: 20 },
 });

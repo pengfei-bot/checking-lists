@@ -401,5 +401,14 @@
     "doneTitle": "已檢舉照片",
     "doneBody": "謝謝。照片已自此任務移除。若郵件 App 已開啟，請完成寄送。",
     "failed": "無法檢舉或移除照片。"
+  },
+  "offline": {
+    "banner": "Offline — showing cached data",
+    "bannerCached": "Offline — last sync: {{time}}",
+    "bannerSyncing": "Syncing…",
+    "noCacheTitle": "No connection",
+    "noCacheBody": "Your lists can’t load without a network, and nothing is cached on this device yet. Try again once you’re online.",
+    "retry": "Retry",
+    "mutationsNeedNetwork": "This action needs an Internet connection."
   }
 }

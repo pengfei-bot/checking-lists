@@ -60,6 +60,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setFamily(restored.family);
           setParent(restored.parent);
         }
+      } catch {
+        /* bootstrap failed — leave unauthenticated rather than spin forever */
       } finally {
         setReady(true);
       }

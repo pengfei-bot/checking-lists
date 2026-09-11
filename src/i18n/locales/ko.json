@@ -401,5 +401,14 @@
     "doneTitle": "사진이 신고됨",
     "doneBody": "감사합니다. 사진이 제거되었습니다. 메일 앱이 열렸다면 전송을 완료하세요.",
     "failed": "사진을 신고하거나 제거할 수 없습니다."
+  },
+  "offline": {
+    "banner": "Offline — showing cached data",
+    "bannerCached": "Offline — last sync: {{time}}",
+    "bannerSyncing": "Syncing…",
+    "noCacheTitle": "No connection",
+    "noCacheBody": "Your lists can’t load without a network, and nothing is cached on this device yet. Try again once you’re online.",
+    "retry": "Retry",
+    "mutationsNeedNetwork": "This action needs an Internet connection."
   }
 }

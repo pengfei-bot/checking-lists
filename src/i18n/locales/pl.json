@@ -401,5 +401,14 @@
     "doneTitle": "Zdjęcie zgłoszone",
     "doneBody": "Dziękujemy. Zdjęcie usunięto z zadania. Dokończ wysyłkę e-maila, jeśli otworzyła się aplikacja poczty.",
     "failed": "Nie udało się zgłosić ani usunąć zdjęcia."
+  },
+  "offline": {
+    "banner": "Offline — showing cached data",
+    "bannerCached": "Offline — last sync: {{time}}",
+    "bannerSyncing": "Syncing…",
+    "noCacheTitle": "No connection",
+    "noCacheBody": "Your lists can’t load without a network, and nothing is cached on this device yet. Try again once you’re online.",
+    "retry": "Retry",
+    "mutationsNeedNetwork": "This action needs an Internet connection."
   }
 }

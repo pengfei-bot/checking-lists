@@ -401,5 +401,14 @@
     "doneTitle": "Foto denunciada",
     "doneBody": "Obrigado. A foto foi removida desta tarefa. Conclua o envio do e-mail se a app de correio abriu.",
     "failed": "Não foi possível denunciar ou remover a foto."
+  },
+  "offline": {
+    "banner": "Offline — showing cached data",
+    "bannerCached": "Offline — last sync: {{time}}",
+    "bannerSyncing": "Syncing…",
+    "noCacheTitle": "No connection",
+    "noCacheBody": "Your lists can’t load without a network, and nothing is cached on this device yet. Try again once you’re online.",
+    "retry": "Retry",
+    "mutationsNeedNetwork": "This action needs an Internet connection."
   }
 }

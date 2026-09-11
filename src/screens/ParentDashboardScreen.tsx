@@ -18,6 +18,7 @@ import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { TaskCard } from "../components/TaskCard";
+import { OfflineBanner } from "../components/OfflineBanner";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { PhotoLightbox } from "../components/PhotoLightbox";
 import { formatLocalizedDate, todayISO } from "../utils/dates";
@@ -38,6 +39,12 @@ export function ParentDashboardScreen({ navigation }: Props) {
     completionFor,
     setCurrentProfileId,
     refreshReminders,
+    cloudSync,
+    usingCache,
+    isSyncing,
+    syncError,
+    cacheSavedAt,
+    reloadFromCloud,
   } = useApp();
   const { isAuthenticated, family, deleteAccount } = useAuth();
   const [deletingAccount, setDeletingAccount] = useState(false);
@@ -150,6 +157,12 @@ export function ParentDashboardScreen({ navigation }: Props) {
 
   return (
     <View style={styles.root}>
+      <OfflineBanner
+        visible={cloudSync && (usingCache || syncError === "offline")}
+        syncing={isSyncing}
+        cachedAt={cacheSavedAt}
+        onRetry={() => { void reloadFromCloud(); }}
+      />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <View style={styles.headerRow}>
           <View style={styles.headerText}>
