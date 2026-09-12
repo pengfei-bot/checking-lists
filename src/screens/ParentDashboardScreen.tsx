@@ -21,7 +21,7 @@ import { TaskCard } from "../components/TaskCard";
 import { OfflineBanner } from "../components/OfflineBanner";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { PhotoLightbox } from "../components/PhotoLightbox";
-import { formatLocalizedDate, todayISO } from "../utils/dates";
+import { formatCompletionTime, formatLocalizedDate, todayISO } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
 import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
 import { confirmUser, notifyUser } from "../utils/feedback";
@@ -50,7 +50,11 @@ export function ParentDashboardScreen({ navigation }: Props) {
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [filterChildId, setFilterChildId] = useState<string | "all">("all");
   const [moreOpen, setMoreOpen] = useState(false);
-  const [lightboxUri, setLightboxUri] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<{
+    uri: string;
+    title?: string;
+    subtitle?: string;
+  } | null>(null);
 
   const todayTasks = useMemo(() => {
     return state.tasks
@@ -284,7 +288,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   done={!!done}
                   completedAt={done?.completedAt}
                   childName={child?.name}
-                  onPress={() => navigation.navigate("TaskDetail", { taskId: task.id })}
+                  onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                   rightAccessory={
                     <Pressable
                       onPress={() => navigation.navigate("TaskForm", { taskId: task.id })}
@@ -296,7 +300,19 @@ export function ParentDashboardScreen({ navigation }: Props) {
                 />
                 {done?.photoUri ? (
                   <Pressable
-                    onPress={() => setLightboxUri(done.photoUri!)}
+                    onPress={() => {
+                      const time = done.completedAt
+                        ? formatCompletionTime(done.completedAt, i18n.language)
+                        : null;
+                      const parts = [todayTitle];
+                      if (time) parts.push(t("common.doneAt", { time }));
+                      if (child?.name) parts.push(child.name);
+                      setLightbox({
+                        uri: done.photoUri!,
+                        title: task.title,
+                        subtitle: parts.join(" · "),
+                      });
+                    }}
                     accessibilityRole="imagebutton"
                     accessibilityLabel={t("photo.viewFull")}
                     accessibilityHint={t("photo.tapToEnlarge")}
@@ -402,9 +418,11 @@ export function ParentDashboardScreen({ navigation }: Props) {
         </Pressable>
       </Modal>
       <PhotoLightbox
-        uri={lightboxUri}
-        visible={!!lightboxUri}
-        onClose={() => setLightboxUri(null)}
+        uri={lightbox?.uri ?? null}
+        visible={!!lightbox}
+        title={lightbox?.title}
+        subtitle={lightbox?.subtitle}
+        onClose={() => setLightbox(null)}
       />
     </View>
   );

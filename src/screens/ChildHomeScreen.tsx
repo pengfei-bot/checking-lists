@@ -156,7 +156,7 @@ export function ChildHomeScreen({ navigation }: Props) {
                 key={task.id}
                 task={task}
                 done={done}
-                onPress={() => navigation.navigate("TaskDetail", { taskId: task.id })}
+                onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                 rightAccessory={
                   <View style={styles.actions}>
                     <Pressable

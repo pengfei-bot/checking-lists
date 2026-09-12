@@ -26,7 +26,11 @@ export function ChildDayDetailScreen({ navigation, route }: Props) {
   const { currentProfile, state, getTask, setCurrentProfileId, clearCompletionPhoto } = useApp();
   const { family } = useAuth();
   const [reportingId, setReportingId] = useState<string | null>(null);
-  const [lightboxUri, setLightboxUri] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<{
+    uri: string;
+    title?: string;
+    subtitle?: string;
+  } | null>(null);
 
   const children = useMemo(
     () => (currentProfile?.role === "child" ? [currentProfile] : []),
@@ -133,7 +137,15 @@ export function ChildDayDetailScreen({ navigation, route }: Props) {
               <View key={c.id} style={styles.row}>
                 {c.photoUri ? (
                   <Pressable
-                    onPress={() => setLightboxUri(c.photoUri!)}
+                    onPress={() => {
+                      const parts = [dateTitle];
+                      if (time) parts.push(t("common.doneAt", { time }));
+                      setLightbox({
+                        uri: c.photoUri!,
+                        title,
+                        subtitle: parts.join(" · "),
+                      });
+                    }}
                     accessibilityRole="imagebutton"
                     accessibilityLabel={t("photo.viewFull")}
                     accessibilityHint={t("photo.tapToEnlarge")}
@@ -154,7 +166,7 @@ export function ChildDayDetailScreen({ navigation, route }: Props) {
                     {title}
                   </Text>
                   <Text style={styles.rowMeta}>
-                    {time ?? task?.time ?? ""}
+                    {time ? t("common.doneAt", { time }) : (task?.time ?? "")}
                     {c.photoUri ? ` · 📷` : ""}
                   </Text>
                   {c.photoUri ? (
@@ -202,9 +214,11 @@ export function ChildDayDetailScreen({ navigation, route }: Props) {
         />
       </ScrollView>
       <PhotoLightbox
-        uri={lightboxUri}
-        visible={!!lightboxUri}
-        onClose={() => setLightboxUri(null)}
+        uri={lightbox?.uri ?? null}
+        visible={!!lightbox}
+        title={lightbox?.title}
+        subtitle={lightbox?.subtitle}
+        onClose={() => setLightbox(null)}
       />
     </View>
   );

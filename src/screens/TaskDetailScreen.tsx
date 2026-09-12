@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Image,
   Platform,
@@ -17,12 +17,22 @@ import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { PhotoLightbox } from "../components/PhotoLightbox";
 import { recurrenceLabel } from "../utils/recurrence";
-import { formatCompletionTime, todayISO } from "../utils/dates";
+import {
+  formatCompletionTime,
+  formatLocalizedDate,
+  todayISO,
+} from "../utils/dates";
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { openPhotoReportMail } from "../utils/reportPhoto";
 import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskDetail">;
+
+type LightboxState = {
+  uri: string;
+  title?: string;
+  subtitle?: string;
+};
 
 export function TaskDetailScreen({ navigation, route }: Props) {
   const { t, i18n } = useTranslation();
@@ -37,24 +47,35 @@ export function TaskDetailScreen({ navigation, route }: Props) {
   } = useApp();
   const { family } = useAuth();
   const task = getTask(route.params.taskId);
+  const viewDate = route.params.date ?? todayISO();
+  const isToday = viewDate === todayISO();
   const [busy, setBusy] = useState(false);
-  const [lightboxUri, setLightboxUri] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<LightboxState | null>(null);
 
-  if (!task) {
-    return (
-      <View style={styles.center}>
-        <Text>{t("taskDetail.notFound")}</Text>
-        <PrimaryButton label={t("common.back")} onPress={() => navigation.goBack()} style={{ marginTop: 12 }} />
-      </View>
-    );
-  }
+  const dayLabel = useMemo(
+    () => formatLocalizedDate(viewDate, i18n.language),
+    [viewDate, i18n.language]
+  );
 
-  const child = getProfile(task.childId);
-  const done = completionFor(task.id);
+  // Must key by day: recurring tasks have a completion per date.
+  const done = task ? completionFor(task.id, viewDate) : undefined;
   const isChild = currentProfile?.role === "child";
   const doneAtTime = done ? formatCompletionTime(done.completedAt, i18n.language) : null;
+  const child = task ? getProfile(task.childId) : undefined;
+
+  const openPhoto = (uri: string) => {
+    if (!task) return;
+    const parts: string[] = [dayLabel];
+    if (doneAtTime) parts.push(t("taskDetail.doneAt", { time: doneAtTime }));
+    setLightbox({
+      uri,
+      title: task.title,
+      subtitle: parts.join(" · "),
+    });
+  };
 
   const markDone = async (withPhoto: boolean) => {
+    if (!task || !isToday) return;
     setBusy(true);
     try {
       let photoUri: string | undefined;
@@ -78,9 +99,8 @@ export function TaskDetailScreen({ navigation, route }: Props) {
     }
   };
 
-
   const reportPhoto = () => {
-    if (!done?.photoUri || !done.id) return;
+    if (!task || !done?.photoUri || !done.id) return;
     void (async () => {
       const ok = await confirmUser(
         t("photoReport.title"),
@@ -109,6 +129,15 @@ export function TaskDetailScreen({ navigation, route }: Props) {
     })();
   };
 
+  if (!task) {
+    return (
+      <View style={styles.center}>
+        <Text>{t("taskDetail.notFound")}</Text>
+        <PrimaryButton label={t("common.back")} onPress={() => navigation.goBack()} style={{ marginTop: 12 }} />
+      </View>
+    );
+  }
+
   if (isChild) {
     return (
       <>
@@ -117,6 +146,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         <Text style={styles.childEmoji}>{child?.emoji ?? "✅"}</Text>
         <Text style={styles.childTitle}>{task.title}</Text>
         <Text style={styles.childTime}>{task.time}</Text>
+        <Text style={styles.meta}>{dayLabel}</Text>
 
         {doneAtTime ? (
           <Text style={styles.meta}>{t("taskDetail.doneAt", { time: doneAtTime })}</Text>
@@ -126,7 +156,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
           <View style={styles.photoBox}>
             <Text style={styles.label}>{t("taskDetail.photoProof")}</Text>
             <Pressable
-              onPress={() => setLightboxUri(done.photoUri!)}
+              onPress={() => openPhoto(done.photoUri!)}
               accessibilityRole="imagebutton"
               accessibilityLabel={t("photo.viewFull")}
               accessibilityHint={t("photo.tapToEnlarge")}
@@ -144,7 +174,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
           </View>
         ) : null}
 
-        {!done ? (
+        {isToday && !done ? (
           <>
             <PrimaryButton
               label={t("taskDetail.childMarkDone")}
@@ -162,21 +192,24 @@ export function TaskDetailScreen({ navigation, route }: Props) {
               style={{ marginTop: 12 }}
             />
           </>
-        ) : (
+        ) : null}
+        {isToday && done ? (
           <PrimaryButton
             label={t("taskDetail.childUnmark")}
             variant="ghost"
-            onPress={() => void unmarkTaskDone(task.id)}
+            onPress={() => void unmarkTaskDone(task.id, viewDate)}
             style={{ marginTop: 24 }}
           />
-        )}
+        ) : null}
 
         <PrimaryButton label={t("common.back")} variant="ghost" onPress={() => navigation.goBack()} style={{ marginTop: 8 }} />
       </ScrollView>
       <PhotoLightbox
-        uri={lightboxUri}
-        visible={!!lightboxUri}
-        onClose={() => setLightboxUri(null)}
+        uri={lightbox?.uri ?? null}
+        visible={!!lightbox}
+        title={lightbox?.title}
+        subtitle={lightbox?.subtitle}
+        onClose={() => setLightbox(null)}
       />
       </>
     );
@@ -190,8 +223,9 @@ export function TaskDetailScreen({ navigation, route }: Props) {
       <Text style={styles.meta}>
         {child?.name ?? t("taskDetail.childFallback")} · {task.time} · {recurrenceLabel(task.recurrence, task.intervalWeeks)}
       </Text>
+      <Text style={styles.meta}>{dayLabel}</Text>
       <Text style={styles.meta}>
-        {t("taskDetail.reminder", { value: task.reminderEnabled ? t("common.yes") : t("common.no"), date: todayISO() })}
+        {t("taskDetail.reminder", { value: task.reminderEnabled ? t("common.yes") : t("common.no"), date: viewDate })}
       </Text>
 
       <View style={[styles.badge, done ? styles.badgeDone : styles.badgeTodo]}>
@@ -206,7 +240,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         <View style={styles.photoBox}>
           <Text style={styles.label}>{t("taskDetail.photoProof")}</Text>
           <Pressable
-            onPress={() => setLightboxUri(done.photoUri!)}
+            onPress={() => openPhoto(done.photoUri!)}
             accessibilityRole="imagebutton"
             accessibilityLabel={t("photo.viewFull")}
             accessibilityHint={t("photo.tapToEnlarge")}
@@ -236,7 +270,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         <PrimaryButton
           label={t("taskDetail.unmark")}
           variant="ghost"
-          onPress={() => void unmarkTaskDone(task.id)}
+          onPress={() => void unmarkTaskDone(task.id, viewDate)}
           style={{ marginTop: 8 }}
         />
       )}
@@ -253,9 +287,11 @@ export function TaskDetailScreen({ navigation, route }: Props) {
       <PrimaryButton label={t("common.back")} variant="ghost" onPress={() => navigation.goBack()} style={{ marginTop: 8 }} />
     </ScrollView>
     <PhotoLightbox
-      uri={lightboxUri}
-      visible={!!lightboxUri}
-      onClose={() => setLightboxUri(null)}
+      uri={lightbox?.uri ?? null}
+      visible={!!lightbox}
+      title={lightbox?.title}
+      subtitle={lightbox?.subtitle}
+      onClose={() => setLightbox(null)}
     />
     </>
   );

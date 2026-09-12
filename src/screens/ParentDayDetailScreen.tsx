@@ -77,7 +77,7 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
                   return (
                     <Pressable
                       key={task.id}
-                      onPress={() => navigation.navigate("TaskDetail", { taskId: task.id })}
+                      onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date })}
                       style={[styles.taskRow, done && styles.taskDone]}
                     >
                       <Text style={styles.taskCheck}>{done ? "✅" : "⬜"}</Text>

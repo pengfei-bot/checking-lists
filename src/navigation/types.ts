@@ -13,7 +13,7 @@ export type RootStackParamList = {
   ParentCalendar: undefined;
   ParentDayDetail: { date: string };
   TaskForm: { taskId?: string; childId?: string };
-  TaskDetail: { taskId: string };
+  TaskDetail: { taskId: string; date?: string };
   ChildForm: { childId?: string };
   LanguageSettings: undefined;
 };
