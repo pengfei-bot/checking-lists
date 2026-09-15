@@ -50,5 +50,6 @@
     "submit:ios": "eas submit -p ios --profile production",
     "export:web": "EXPO_BASE_URL=/checking-lists expo export -p web"
   },
-  "private": true
+  "private": true,
+  "packageManager": "npm@10.9.8"
 }

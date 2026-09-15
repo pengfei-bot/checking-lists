@@ -38,3 +38,10 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# package managers — EAS prefers bun.lock over package-lock.json;
+# keep npm as the single source of truth for installs
+bun.lock
+bun.lockb
+yarn.lock
+pnpm-lock.yaml
