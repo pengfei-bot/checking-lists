@@ -35,8 +35,17 @@ export function OfflineBanner({ visible, syncing, onRetry, cachedAt, pendingMuta
       ? t("offline.pendingMutations", { count: pendingMutations })
       : null;
 
+  const tone = syncing ? "syncing" : pendingMutations > 0 ? "pending" : "offline";
+
   return (
-    <View style={[styles.wrap, syncing ? styles.syncing : styles.offline]} accessibilityRole="summary">
+    <View
+      style={[
+        styles.wrap,
+        tone === "syncing" ? styles.syncing : tone === "pending" ? styles.pendingWrap : styles.offline,
+      ]}
+      accessibilityRole="summary"
+      accessibilityLabel={pendingLabel ? `${t("offline.banner")}. ${pendingLabel}` : undefined}
+    >
       <View style={styles.row}>
         {syncing ? <ActivityIndicator size="small" color={colors.primary} /> : null}
         <View style={styles.textCol}>
@@ -67,12 +76,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: 12,
+    borderBottomWidth: 1,
   },
-  offline: { backgroundColor: "#FFF4E5" },
-  syncing: { backgroundColor: colors.primarySoft },
+  offline: { backgroundColor: "#FFF4E5", borderBottomColor: "#FFD8A8" },
+  pendingWrap: { backgroundColor: "#FFE8CC", borderBottomColor: "#FFB84D" },
+  syncing: { backgroundColor: colors.primarySoft, borderBottomColor: "#C9D4FF" },
   row: { flexDirection: "row", alignItems: "center", gap: 8, flex: 1 },
   textCol: { flexShrink: 1, flex: 1, gap: 2 },
   text: { color: colors.text, fontWeight: "600", fontSize: 13 },
-  pending: { color: colors.textMuted, fontWeight: "600", fontSize: 12 },
+  pending: { color: "#9C5B00", fontWeight: "800", fontSize: 13 },
   retry: { color: colors.primary, fontWeight: "800", fontSize: 13 },
 });

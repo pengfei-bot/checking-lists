@@ -1,5 +1,5 @@
 import React from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, ViewStyle } from "react-native";
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, ViewStyle } from "react-native";
 import { colors } from "../theme/colors";
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
   loading?: boolean;
   large?: boolean;
   style?: ViewStyle;
+  accessibilityLabel?: string;
 }
 
 export function PrimaryButton({
@@ -20,6 +21,7 @@ export function PrimaryButton({
   loading,
   large,
   style,
+  accessibilityLabel,
 }: Props) {
   const bg =
     variant === "primary"
@@ -40,10 +42,15 @@ export function PrimaryButton({
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel ?? label}
+      // RN Web: explicit role + pointer cursor so CTAs work in incognito / trackpads
+      {...(Platform.OS === "web" ? ({ role: "button" } as object) : null)}
       style={({ pressed }) => [
         styles.btn,
         large && styles.btnLarge,
-        { backgroundColor: bg, opacity: disabled ? 0.5 : pressed ? 0.85 : 1 },
+        Platform.OS === "web" && styles.btnWeb,
+        { backgroundColor: bg, opacity: disabled || loading ? 0.5 : pressed ? 0.85 : 1 },
         variant === "ghost" && styles.ghost,
         style,
       ]}
@@ -51,7 +58,9 @@ export function PrimaryButton({
       {loading ? (
         <ActivityIndicator color={color} />
       ) : (
-        <Text style={[styles.label, large && styles.labelLarge, { color }]}>{label}</Text>
+        <Text style={[styles.label, large && styles.labelLarge, { color }]} pointerEvents="none">
+          {label}
+        </Text>
       )}
     </Pressable>
   );
@@ -64,6 +73,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: "center",
     justifyContent: "center",
+  },
+  btnWeb: {
+    cursor: "pointer" as unknown as undefined,
+    userSelect: "none" as unknown as undefined,
   },
   btnLarge: {
     borderRadius: 18,

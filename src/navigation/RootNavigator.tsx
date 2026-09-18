@@ -4,6 +4,7 @@ import { NavigationContainer, NavigationContainerRef } from "@react-navigation/n
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth";
+import { CloudOfflineBanner } from "../components/CloudOfflineBanner";
 import { DemoEscapeBanner } from "../components/DemoEscapeBanner";
 import { WebLimitBanner } from "../components/WebLimitBanner";
 import { ChildDayDetailScreen } from "../screens/ChildDayDetailScreen";
@@ -55,6 +56,7 @@ export function RootNavigator() {
     <View style={styles.root}>
       <WebLimitBanner />
       <DemoEscapeBanner onEscape={escapeDemo} />
+      <CloudOfflineBanner />
       <NavigationContainer key={i18n.language} ref={navRef}>
         <Stack.Navigator
           initialRouteName={initial}

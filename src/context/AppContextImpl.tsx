@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { AppState as RnAppState, AppStateStatus } from "react-native";
+import { AppState as RnAppState, AppStateStatus, Platform } from "react-native";
 import { useAuth } from "../auth";
 import { loadCloudStateCache, saveCloudStateCache } from "../data/cloudCache";
 import {
@@ -19,6 +19,7 @@ import { childColors } from "../theme/colors";
 import { AppState, Profile, Task, TaskCompletion } from "../types";
 import { frenchCloudError } from "../utils/cloudTimeout";
 import { probeOnline } from "../utils/connectivity";
+import { isCloudNetworkError } from "../utils/networkError";
 import { todayISO, uid } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
 import * as Crypto from "expo-crypto";
@@ -250,6 +251,28 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return () => sub.remove();
   }, [familyId, authReady, syncWhenOnline]);
 
+  // Web: navigator online/offline so pending banner appears without waiting for AppState.
+  useEffect(() => {
+    if (!familyId || !authReady) return;
+    if (Platform.OS !== "web" || typeof window === "undefined") return;
+    const onOffline = () => {
+      setSyncError("offline");
+      void refreshPendingCount(familyId);
+    };
+    const onOnline = () => {
+      void syncWhenOnline(familyId, { background: true });
+    };
+    window.addEventListener("offline", onOffline);
+    window.addEventListener("online", onOnline);
+    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+      onOffline();
+    }
+    return () => {
+      window.removeEventListener("offline", onOffline);
+      window.removeEventListener("online", onOnline);
+    };
+  }, [familyId, authReady, syncWhenOnline, refreshPendingCount]);
+
   const persistLocal = useCallback(async (next: AppState) => {
     setState(next);
     if (!familyId) await saveAppState(next);
@@ -288,7 +311,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         } catch (e) {
           // Fall through to queue if network died mid-request
           const msg = frenchCloudError(e, "");
-          if (!/réseau|network|timeout|fetch|offline|Failed to fetch|Network request failed/i.test(msg)) {
+          if (!isCloudNetworkError(msg)) {
             throw e;
           }
         }
@@ -350,7 +373,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           return;
         } catch (e) {
           const msg = frenchCloudError(e, "");
-          if (!/réseau|network|timeout|fetch|offline|Failed to fetch|Network request failed/i.test(msg)) {
+          if (!isCloudNetworkError(msg)) {
             throw e;
           }
         }
@@ -391,7 +414,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           return;
         } catch (e) {
           const msg = frenchCloudError(e, "");
-          if (!/réseau|network|timeout|fetch|offline|Failed to fetch|Network request failed/i.test(msg)) {
+          if (!isCloudNetworkError(msg)) {
             throw e;
           }
         }
@@ -441,7 +464,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           return saved;
         } catch (e) {
           const msg = frenchCloudError(e, "");
-          if (!/réseau|network|timeout|fetch|offline|Failed to fetch|Network request failed/i.test(msg)) {
+          if (!isCloudNetworkError(msg)) {
             throw e;
           }
         }
@@ -555,7 +578,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           return;
         } catch (e) {
           const msg = frenchCloudError(e, "");
-          if (!/réseau|network|timeout|fetch|offline|Failed to fetch|Network request failed/i.test(msg)) {
+          if (!isCloudNetworkError(msg)) {
             throw e;
           }
         }

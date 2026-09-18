@@ -72,7 +72,10 @@ export function WelcomeScreen({ navigation }: Props) {
         <PrimaryButton
           label={t("welcome.joinFamily")}
           variant="secondary"
-          onPress={() => navigation.navigate("RedeemInvite")}
+          accessibilityLabel={t("welcome.joinFamily")}
+          onPress={() => {
+            navigation.navigate("RedeemInvite");
+          }}
           style={{ marginTop: 12 }}
         />
       </View>

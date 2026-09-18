@@ -14,7 +14,6 @@ import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
-import { OfflineBanner } from "../components/OfflineBanner";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { formatLocalizedDate, todayISO } from "../utils/dates";
 import { confirmUser, notifyUser } from "../utils/feedback";
@@ -29,11 +28,8 @@ export function ProfilePickerScreen({ navigation }: Props) {
     setCurrentProfileId,
     resetDemo,
     cloudSync,
-    usingCache,
     isSyncing,
     syncError,
-    cacheSavedAt,
-    pendingMutations,
     reloadFromCloud,
   } = useApp();
   const { session, isDemo, isAuthenticated, isChildDevice, family, signOut, deleteAccount } = useAuth();
@@ -155,13 +151,6 @@ export function ProfilePickerScreen({ navigation }: Props) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <OfflineBanner
-        visible={cloudSync && (usingCache || syncError === "offline" || pendingMutations > 0)}
-        syncing={isSyncing}
-        cachedAt={cacheSavedAt}
-        pendingMutations={pendingMutations}
-        onRetry={() => { void reloadFromCloud(); }}
-      />
       <Image source={require("../../assets/icon.png")} style={styles.logo} accessibilityLabel={t("common.appName")} />
       <Text style={styles.title}>{t("common.appName")}</Text>
       <Text style={styles.subtitle}>

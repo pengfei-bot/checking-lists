@@ -51,6 +51,9 @@ export type QueuedMutation =
       createdAt: string;
     };
 
+/** In-memory mirror so pending UI stays correct if AsyncStorage write fails (private mode). */
+const memoryQueues = new Map<string, QueuedMutation[]>();
+
 function queueKey(familyId: string): string {
   return `${QUEUE_PREFIX}${familyId}`;
 }
@@ -68,18 +71,24 @@ function newQueueId(): string {
 
 export async function loadMutationQueue(familyId: string): Promise<QueuedMutation[]> {
   if (!familyId) return [];
+  const mem = memoryQueues.get(familyId);
+  if (mem && mem.length) return mem;
   try {
     const raw = await AsyncStorage.getItem(queueKey(familyId));
-    if (!raw) return [];
+    if (!raw) return mem ?? [];
     const parsed = JSON.parse(raw) as QueuedMutation[];
-    return Array.isArray(parsed) ? parsed : [];
+    const list = Array.isArray(parsed) ? parsed : [];
+    memoryQueues.set(familyId, list);
+    return list;
   } catch {
-    return [];
+    return mem ?? [];
   }
 }
 
 async function saveMutationQueue(familyId: string, items: QueuedMutation[]): Promise<void> {
   if (!familyId) return;
+  if (!items.length) memoryQueues.delete(familyId);
+  else memoryQueues.set(familyId, items);
   try {
     if (!items.length) {
       await AsyncStorage.removeItem(queueKey(familyId));
@@ -87,7 +96,7 @@ async function saveMutationQueue(familyId: string, items: QueuedMutation[]): Pro
     }
     await AsyncStorage.setItem(queueKey(familyId), JSON.stringify(items));
   } catch {
-    /* ignore quota */
+    /* ignore quota — memory mirror still holds the queue for this session */
   }
 }
 
@@ -213,9 +222,11 @@ export async function replaceMutationQueue(
 export async function clearMutationQueue(familyId?: string | null): Promise<void> {
   try {
     if (familyId) {
+      memoryQueues.delete(familyId);
       await AsyncStorage.removeItem(queueKey(familyId));
       return;
     }
+    memoryQueues.clear();
     const keys = await AsyncStorage.getAllKeys();
     const ours = keys.filter((k) => k.startsWith(QUEUE_PREFIX));
     if (ours.length) await AsyncStorage.multiRemove(ours);

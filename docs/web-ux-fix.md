@@ -26,10 +26,21 @@ While `isDemo`, a persistent top banner offers **Créer un compte / Se connecter
 
 ## Offline mutation banner (demo vs cloud)
 
-`OfflineBanner` + pending mutation queue are **cloud-only**:
+`CloudOfflineBanner` (app chrome in `RootNavigator`) + pending mutation queue are **cloud-only**:
 
 - Visibility requires `cloudSync` (`familyId` present, not demo).
 - Demo edits persist locally via `saveAppState` and **never** enqueue mutations — no pending banner is expected (and correct).
-- Cloud sessions: offline mark/unmark/edit enqueue the mutation queue, set `pendingMutations`, and show the banner with pending count (+ retry) on ProfilePicker, ParentDashboard, and ChildHome.
+- Cloud sessions: offline mark/unmark/edit enqueue the mutation queue, set `pendingMutations`, and show the banner with pending count (+ retry) **above all screens** (including TaskForm / TaskDetail), not only ProfilePicker / dashboards.
+- Web: `navigator.onLine` + `online`/`offline` events update the banner; `probeOnline` uses `cache: "no-store"`.
 
-If Bob sees no banner while signed into a real family offline, that would be a bug; in demo it is intentional.
+### Retest (Bob)
+
+1. Open `https://pengfei-bot.github.io/checking-lists/?cloud=1` — Sign in (not demo).
+2. Enter parent profile. Enable airplane mode / DevTools Offline.
+3. Expect amber offline banner immediately (or after first edit).
+4. Edit or mark a task → banner shows pending count (`N modification(s) en attente de sync`).
+5. Go back online → banner switches to syncing / clears after flush; edit persists on server.
+
+## Welcome « Entrer le code famille » (web)
+
+Join CTA is a real `PrimaryButton` (`Pressable` + `accessibilityRole="button"` + web `cursor:pointer` / `pointerEvents="none"` on label) navigating to `RedeemInvite`. If it still no-ops in incognito, capture console errors — not a Text-only control.

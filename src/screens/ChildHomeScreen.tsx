@@ -13,7 +13,6 @@ import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { TaskCard } from "../components/TaskCard";
-import { OfflineBanner } from "../components/OfflineBanner";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { formatLocalizedDate, todayISO } from "../utils/dates";
 import { notifyUser } from "../utils/feedback";
@@ -34,13 +33,6 @@ export function ChildHomeScreen({ navigation }: Props) {
     setCurrentProfileId,
     state,
     refreshReminders,
-    cloudSync,
-    usingCache,
-    isSyncing,
-    syncError,
-    cacheSavedAt,
-    pendingMutations,
-    reloadFromCloud,
   } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -72,6 +64,7 @@ export function ChildHomeScreen({ navigation }: Props) {
           <Pressable
             onPress={() => setMenuOpen(true)}
             style={styles.moreBtn}
+            accessibilityRole="button"
             accessibilityLabel={t("childHome.more")}
           >
             <Text style={styles.moreBtnText}>⋯</Text>
@@ -139,13 +132,6 @@ export function ChildHomeScreen({ navigation }: Props) {
 
   return (
     <View style={styles.root}>
-      <OfflineBanner
-        visible={cloudSync && (usingCache || syncError === "offline" || pendingMutations > 0)}
-        syncing={isSyncing}
-        cachedAt={cacheSavedAt}
-        pendingMutations={pendingMutations}
-        onRetry={() => { void reloadFromCloud(); }}
-      />
       <ScrollView contentContainerStyle={styles.container}>
         {header}
         {tasks.length === 0 ? (
