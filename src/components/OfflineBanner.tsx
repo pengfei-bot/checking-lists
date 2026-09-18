@@ -8,9 +8,10 @@ interface Props {
   syncing?: boolean;
   onRetry?: () => void;
   cachedAt?: string | null;
+  pendingMutations?: number;
 }
 
-export function OfflineBanner({ visible, syncing, onRetry, cachedAt }: Props) {
+export function OfflineBanner({ visible, syncing, onRetry, cachedAt, pendingMutations = 0 }: Props) {
   const { t, i18n } = useTranslation();
   if (!visible && !syncing) return null;
 
@@ -29,17 +30,25 @@ export function OfflineBanner({ visible, syncing, onRetry, cachedAt }: Props) {
       }
     })();
 
+  const pendingLabel =
+    pendingMutations > 0
+      ? t("offline.pendingMutations", { count: pendingMutations })
+      : null;
+
   return (
     <View style={[styles.wrap, syncing ? styles.syncing : styles.offline]} accessibilityRole="summary">
       <View style={styles.row}>
         {syncing ? <ActivityIndicator size="small" color={colors.primary} /> : null}
-        <Text style={styles.text}>
-          {syncing
-            ? t("offline.bannerSyncing")
-            : timeLabel
-              ? t("offline.bannerCached", { time: timeLabel })
-              : t("offline.banner")}
-        </Text>
+        <View style={styles.textCol}>
+          <Text style={styles.text}>
+            {syncing
+              ? t("offline.bannerSyncing")
+              : timeLabel
+                ? t("offline.bannerCached", { time: timeLabel })
+                : t("offline.banner")}
+          </Text>
+          {pendingLabel ? <Text style={styles.pending}>{pendingLabel}</Text> : null}
+        </View>
       </View>
       {!syncing && onRetry ? (
         <Pressable onPress={onRetry} hitSlop={8} accessibilityRole="button">
@@ -62,6 +71,8 @@ const styles = StyleSheet.create({
   offline: { backgroundColor: "#FFF4E5" },
   syncing: { backgroundColor: colors.primarySoft },
   row: { flexDirection: "row", alignItems: "center", gap: 8, flex: 1 },
-  text: { color: colors.text, fontWeight: "600", fontSize: 13, flexShrink: 1 },
+  textCol: { flexShrink: 1, flex: 1, gap: 2 },
+  text: { color: colors.text, fontWeight: "600", fontSize: 13 },
+  pending: { color: colors.textMuted, fontWeight: "600", fontSize: 12 },
   retry: { color: colors.primary, fontWeight: "800", fontSize: 13 },
 });

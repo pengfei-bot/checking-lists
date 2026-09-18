@@ -409,6 +409,9 @@
     "noCacheTitle": "No connection",
     "noCacheBody": "Your lists can’t load without a network, and nothing is cached on this device yet. Try again once you’re online.",
     "retry": "Retry",
-    "mutationsNeedNetwork": "This action needs an Internet connection."
+    "mutationsNeedNetwork": "This action needs an Internet connection.",
+    "queuedLocally": "Saved on this device — will sync when you’re back online.",
+    "photoUploadFailed": "Could not upload the proof photo.",
+    "pendingMutations": "{{count}} change(s) waiting to sync"
   }
 }

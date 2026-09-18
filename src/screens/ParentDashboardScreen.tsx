@@ -44,6 +44,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
     isSyncing,
     syncError,
     cacheSavedAt,
+    pendingMutations,
     reloadFromCloud,
   } = useApp();
   const { isAuthenticated, family, deleteAccount } = useAuth();
@@ -162,9 +163,10 @@ export function ParentDashboardScreen({ navigation }: Props) {
   return (
     <View style={styles.root}>
       <OfflineBanner
-        visible={cloudSync && (usingCache || syncError === "offline")}
+        visible={cloudSync && (usingCache || syncError === "offline" || pendingMutations > 0)}
         syncing={isSyncing}
         cachedAt={cacheSavedAt}
+        pendingMutations={pendingMutations}
         onRetry={() => { void reloadFromCloud(); }}
       />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">

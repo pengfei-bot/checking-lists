@@ -33,6 +33,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
     isSyncing,
     syncError,
     cacheSavedAt,
+    pendingMutations,
     reloadFromCloud,
   } = useApp();
   const { session, isDemo, isAuthenticated, isChildDevice, family, signOut, deleteAccount } = useAuth();
@@ -155,9 +156,10 @@ export function ProfilePickerScreen({ navigation }: Props) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <OfflineBanner
-        visible={cloudSync && (usingCache || syncError === "offline")}
+        visible={cloudSync && (usingCache || syncError === "offline" || pendingMutations > 0)}
         syncing={isSyncing}
         cachedAt={cacheSavedAt}
+        pendingMutations={pendingMutations}
         onRetry={() => { void reloadFromCloud(); }}
       />
       <Image source={require("../../assets/icon.png")} style={styles.logo} accessibilityLabel={t("common.appName")} />

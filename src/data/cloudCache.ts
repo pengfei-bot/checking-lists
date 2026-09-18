@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Family, ParentAccount } from "../auth/types";
 import { AppState } from "../types";
+import { clearMutationQueue } from "./mutationQueue";
 
 const STATE_PREFIX = "@famlist/cloud_state/v1:";
 const FAMILY_PREFIX = "@famlist/family_snapshot/v1:";
@@ -89,6 +90,7 @@ export async function saveCachedFamily(
 
 export async function clearCloudCaches(familyId?: string | null): Promise<void> {
   try {
+    await clearMutationQueue(familyId);
     if (familyId) {
       await AsyncStorage.multiRemove([stateKey(familyId), familyKey(familyId)]);
       return;

@@ -409,6 +409,9 @@
     "noCacheTitle": "Pas de connexion",
     "noCacheBody": "Impossible de charger vos listes sans réseau, et aucune donnée n’est encore en cache sur cet appareil. Réessayez une fois connecté.",
     "retry": "Réessayer",
-    "mutationsNeedNetwork": "Cette action nécessite une connexion Internet."
+    "mutationsNeedNetwork": "Cette action nécessite une connexion Internet.",
+    "queuedLocally": "Enregistré sur cet appareil — synchronisation dès que vous serez en ligne.",
+    "photoUploadFailed": "Impossible d’envoyer la photo preuve.",
+    "pendingMutations": "{{count}} modification(s) en attente de sync"
   }
 }

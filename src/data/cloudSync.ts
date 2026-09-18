@@ -3,6 +3,14 @@ import { getSupabase } from "../lib/supabase";
 import { AppState, Profile, Recurrence, Task, TaskCompletion } from "../types";
 import { colors, childColors } from "../theme/colors";
 import { frenchCloudError, withCloudTimeout } from "../utils/cloudTimeout";
+import {
+  deleteProofPhoto,
+  isLocalPhotoUri,
+  resolvePhotoDisplayUrls,
+  storagePathFromPhotoUrl,
+  toStoredPhotoRef,
+  uploadProofPhoto,
+} from "./proofPhotos";
 
 /** DB row shapes (public schema already created + RLS). */
 export interface DbFamily {
@@ -185,7 +193,16 @@ export async function loadCloudAppState(
     const kids = (kidsRes.data as DbChildProfile[]).map(mapChild);
     const parent = synthesizeParentProfile(parentDisplayName);
     const tasks = (tasksRes.data as DbTask[]).map(mapTask);
-    const completions = (compsRes.data as DbTaskCompletion[]).map(mapCompletion);
+    const rawComps = (compsRes.data as DbTaskCompletion[]) || [];
+    const displayMap = await resolvePhotoDisplayUrls(rawComps.map((r) => r.photo_url));
+    const completions = rawComps.map((row) => {
+      const base = mapCompletion(row);
+      if (!row.photo_url) return base;
+      const display = displayMap.get(row.photo_url);
+      // Keep durable storage ref in photoUri for clear/delete; UI needs signed URL.
+      // Prefer signed/display URL when available so Image works cross-device.
+      return { ...base, photoUri: display ?? base.photoUri };
+    });
 
     return {
       profiles: [parent, ...kids],
@@ -279,31 +296,10 @@ export async function cloudUpsertTask(
   const now = new Date().toISOString();
 
   const run = async (): Promise<Task> => {
-    if (input.id) {
-      const dates = taskDateColumns(input);
-      const { data, error } = await supabase
-        .from("tasks")
-        .update({
-          title: input.title,
-          child_profile_id: input.childId,
-          time_of_day: input.time,
-          recurrence: input.recurrence,
-          reminder_enabled: input.reminderEnabled,
-          active: true,
-          interval_weeks: dates.interval_weeks,
-          start_date: dates.start_date,
-          end_date: dates.end_date,
-        })
-        .eq("id", input.id)
-        .select("*")
-        .single();
-      if (error) throwCloud(error, "Impossible d'enregistrer la tâche.");
-      return mapTask(data as DbTask);
-    }
-
     const dates = taskDateColumns(input);
+    const id = input.id || newId();
     const row = {
-      id: newId(),
+      id,
       family_id: fid,
       child_profile_id: input.childId,
       title: input.title,
@@ -315,7 +311,12 @@ export async function cloudUpsertTask(
       start_date: dates.start_date,
       end_date: dates.end_date,
     };
-    const { data, error } = await supabase.from("tasks").insert(row).select("*").single();
+    // Upsert so offline-created tasks keep their client id on flush.
+    const { data, error } = await supabase
+      .from("tasks")
+      .upsert(row, { onConflict: "id" })
+      .select("*")
+      .single();
     if (error) throwCloud(error, "Impossible d'enregistrer la tâche.");
     const mapped = mapTask(data as DbTask);
     return { ...mapped, createdAt: mapped.createdAt || now, updatedAt: now };
@@ -352,12 +353,32 @@ export async function cloudMarkDone(
   taskId: string,
   childId: string,
   date: string,
-  photoUri?: string
+  photoUri?: string,
+  opts?: { completionId?: string }
 ): Promise<TaskCompletion> {
   const fid = requireFamilyId(familyId);
   const supabase = getSupabase();
 
   const run = async (): Promise<TaskCompletion> => {
+    let durablePhoto: string | null | undefined = undefined;
+    if (photoUri !== undefined) {
+      if (!photoUri) {
+        durablePhoto = null;
+      } else if (isLocalPhotoUri(photoUri)) {
+        durablePhoto = await uploadProofPhoto({
+          familyId: fid,
+          childId,
+          taskId,
+          date,
+          localUri: photoUri,
+        });
+      } else {
+        // Already a storage ref or remote URL — normalize to storage ref when possible
+        const path = storagePathFromPhotoUrl(photoUri);
+        durablePhoto = path ? toStoredPhotoRef(path) : photoUri;
+      }
+    }
+
     const existing = await supabase
       .from("task_completions")
       .select("*")
@@ -366,33 +387,51 @@ export async function cloudMarkDone(
       .maybeSingle();
 
     if (existing.data) {
+      const prev = existing.data as DbTaskCompletion;
+      const nextPhoto =
+        durablePhoto !== undefined ? durablePhoto : prev.photo_url;
+      if (
+        durablePhoto !== undefined &&
+        prev.photo_url &&
+        prev.photo_url !== nextPhoto
+      ) {
+        await deleteProofPhoto(prev.photo_url);
+      }
       const { data, error } = await supabase
         .from("task_completions")
-        .update({
-          photo_url: photoUri ?? (existing.data as DbTaskCompletion).photo_url,
-        })
-        .eq("id", (existing.data as DbTaskCompletion).id)
+        .update({ photo_url: nextPhoto })
+        .eq("id", prev.id)
         .select("*")
         .single();
       if (error) throwCloud(error, "Impossible de marquer la tâche.");
-      return mapCompletion(data as DbTaskCompletion);
+      const mapped = mapCompletion(data as DbTaskCompletion);
+      if (mapped.photoUri) {
+        const display = (await resolvePhotoDisplayUrls([mapped.photoUri])).get(mapped.photoUri);
+        if (display) mapped.photoUri = display;
+      }
+      return mapped;
     }
 
     const row = {
-      id: newId(),
+      id: opts?.completionId || newId(),
       family_id: fid,
       task_id: taskId,
       child_profile_id: childId,
       completed_on: date,
-      photo_url: photoUri ?? null,
+      photo_url: durablePhoto ?? null,
     };
     const { data, error } = await supabase.from("task_completions").insert(row).select("*").single();
     if (error) throwCloud(error, "Impossible de marquer la tâche.");
-    return mapCompletion(data as DbTaskCompletion);
+    const mapped = mapCompletion(data as DbTaskCompletion);
+    if (mapped.photoUri) {
+      const display = (await resolvePhotoDisplayUrls([mapped.photoUri])).get(mapped.photoUri);
+      if (display) mapped.photoUri = display;
+    }
+    return mapped;
   };
 
   try {
-    return await withCloudTimeout(run(), 15_000, "Marquage de la tâche");
+    return await withCloudTimeout(run(), 60_000, "Marquage de la tâche");
   } catch (e) {
     throwCloud(e, "Impossible de marquer la tâche.");
   }
@@ -402,6 +441,15 @@ export async function cloudUnmarkDone(taskId: string, date: string): Promise<voi
   const supabase = getSupabase();
 
   const run = async (): Promise<void> => {
+    const existing = await supabase
+      .from("task_completions")
+      .select("id, photo_url")
+      .eq("task_id", taskId)
+      .eq("completed_on", date)
+      .maybeSingle();
+    if (existing.data) {
+      await deleteProofPhoto((existing.data as { photo_url: string | null }).photo_url);
+    }
     const { error } = await supabase
       .from("task_completions")
       .delete()
@@ -411,7 +459,7 @@ export async function cloudUnmarkDone(taskId: string, date: string): Promise<voi
   };
 
   try {
-    await withCloudTimeout(run(), 15_000, "Annulation de la complétion");
+    await withCloudTimeout(run(), 20_000, "Annulation de la complétion");
   } catch (e) {
     throwCloud(e, "Impossible d'annuler la complétion.");
   }
@@ -420,6 +468,14 @@ export async function cloudUnmarkDone(taskId: string, date: string): Promise<voi
 export async function cloudClearCompletionPhoto(completionId: string): Promise<void> {
   const supabase = getSupabase();
   const run = async (): Promise<void> => {
+    const existing = await supabase
+      .from("task_completions")
+      .select("photo_url")
+      .eq("id", completionId)
+      .maybeSingle();
+    if (existing.data) {
+      await deleteProofPhoto((existing.data as { photo_url: string | null }).photo_url);
+    }
     const { error } = await supabase
       .from("task_completions")
       .update({ photo_url: null })
@@ -427,7 +483,7 @@ export async function cloudClearCompletionPhoto(completionId: string): Promise<v
     if (error) throwCloud(error, "Impossible de retirer la photo.");
   };
   try {
-    await withCloudTimeout(run(), 15_000, "Retrait de la photo");
+    await withCloudTimeout(run(), 20_000, "Retrait de la photo");
   } catch (e) {
     throwCloud(e, "Impossible de retirer la photo.");
   }
