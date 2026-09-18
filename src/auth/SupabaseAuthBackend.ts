@@ -8,6 +8,7 @@ import { DbFamily } from "../data/cloudSync";
 import { getSupabase } from "../lib/supabase";
 import { withCloudTimeout } from "../utils/cloudTimeout";
 import { probeOnline } from "../utils/connectivity";
+import { preferCloudQaFromUrl } from "../utils/webCloudFlag";
 import { AuthBackend } from "./AuthBackend";
 import { generateInviteCode, normalizeInviteCode } from "./inviteCode";
 import { secureDelete, secureGet, secureSet } from "./secureStorage";
@@ -49,12 +50,17 @@ export class SupabaseAuthBackend implements AuthBackend {
   }
 
   async bootstrap(): Promise<AuthResult | null> {
-    const demoRaw = await secureGet(DEMO_SESSION_KEY);
-    if (demoRaw) {
-      try {
-        const session = JSON.parse(demoRaw) as Session;
-        if (session?.isDemo) return { session, parent: null, family: null };
-      } catch { /* ignore */ }
+    const preferCloud = preferCloudQaFromUrl();
+    if (preferCloud) {
+      await clearDemo();
+    } else {
+      const demoRaw = await secureGet(DEMO_SESSION_KEY);
+      if (demoRaw) {
+        try {
+          const session = JSON.parse(demoRaw) as Session;
+          if (session?.isDemo) return { session, parent: null, family: null };
+        } catch { /* ignore */ }
+      }
     }
 
     // Fast path: no network → restore meta + family/task caches immediately.
@@ -327,9 +333,13 @@ export class SupabaseAuthBackend implements AuthBackend {
   }
 
   async getSession(): Promise<Session | null> {
-    const demoRaw = await secureGet(DEMO_SESSION_KEY);
-    if (demoRaw) {
-      try { return JSON.parse(demoRaw) as Session; } catch { /* fall through */ }
+    if (preferCloudQaFromUrl()) {
+      await clearDemo();
+    } else {
+      const demoRaw = await secureGet(DEMO_SESSION_KEY);
+      if (demoRaw) {
+        try { return JSON.parse(demoRaw) as Session; } catch { /* fall through */ }
+      }
     }
     const restored = await this.bootstrap();
     return restored?.session ?? null;

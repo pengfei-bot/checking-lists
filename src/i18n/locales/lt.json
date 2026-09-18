@@ -413,5 +413,9 @@
     "pendingMutations": "",
     "queuedLocally": "",
     "photoUploadFailed": ""
+  },
+  "demoEscape": {
+    "message": "Demo mode — local data only (no cloud sync).",
+    "cta": "Create an account / Sign in"
   }
 }

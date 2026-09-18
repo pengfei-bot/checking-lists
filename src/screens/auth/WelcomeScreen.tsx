@@ -13,6 +13,7 @@ import { PrimaryButton } from "../../components/PrimaryButton";
 import { RootStackParamList } from "../../navigation/types";
 import { useTranslation } from "react-i18next";
 import { colors } from "../../theme/colors";
+import { preferCloudQaFromUrl } from "../../utils/webCloudFlag";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
 
@@ -20,6 +21,7 @@ export function WelcomeScreen({ navigation }: Props) {
   const { t } = useTranslation();
   const { ready, session, continueAsDemo } = useAuth();
   const [demoBusy, setDemoBusy] = React.useState(false);
+  const preferCloud = preferCloudQaFromUrl();
 
   React.useEffect(() => {
     if (ready && session) {
@@ -75,23 +77,25 @@ export function WelcomeScreen({ navigation }: Props) {
         />
       </View>
 
-      <PrimaryButton
-        label={t("welcome.continueDemo")}
-        variant="ghost"
-        loading={demoBusy}
-        onPress={() => {
-          void (async () => {
-            setDemoBusy(true);
-            try {
-              await continueAsDemo();
-              navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
-            } finally {
-              setDemoBusy(false);
-            }
-          })();
-        }}
-        style={{ marginTop: 4 }}
-      />
+      {!preferCloud ? (
+        <PrimaryButton
+          label={t("welcome.continueDemo")}
+          variant="ghost"
+          loading={demoBusy}
+          onPress={() => {
+            void (async () => {
+              setDemoBusy(true);
+              try {
+                await continueAsDemo();
+                navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
+              } finally {
+                setDemoBusy(false);
+              }
+            })();
+          }}
+          style={{ marginTop: 4 }}
+        />
+      ) : null}
     </View>
   );
 }

@@ -413,5 +413,9 @@
     "queuedLocally": "Saved on this device — will sync when you’re back online.",
     "photoUploadFailed": "Could not upload the proof photo.",
     "pendingMutations": "{{count}} change(s) waiting to sync"
+  },
+  "demoEscape": {
+    "message": "Demo mode — local data only (no cloud sync).",
+    "cta": "Create an account / Sign in"
   }
 }

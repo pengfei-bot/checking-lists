@@ -413,5 +413,9 @@
     "queuedLocally": "Enregistré sur cet appareil — synchronisation dès que vous serez en ligne.",
     "photoUploadFailed": "Impossible d’envoyer la photo preuve.",
     "pendingMutations": "{{count}} modification(s) en attente de sync"
+  },
+  "demoEscape": {
+    "message": "Mode démo — données locales uniquement (pas de sync cloud).",
+    "cta": "Créer un compte / Se connecter"
   }
 }

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useCallback, useRef } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth";
+import { DemoEscapeBanner } from "../components/DemoEscapeBanner";
 import { WebLimitBanner } from "../components/WebLimitBanner";
 import { ChildDayDetailScreen } from "../screens/ChildDayDetailScreen";
 import { ChildFormScreen } from "../screens/ChildFormScreen";
@@ -28,8 +29,16 @@ import { RootStackParamList } from "./types";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator() {
-  const { ready, session } = useAuth();
+  const { ready, session, signOut } = useAuth();
   const { t, i18n } = useTranslation();
+  const navRef = useRef<NavigationContainerRef<RootStackParamList>>(null);
+
+  const escapeDemo = useCallback(() => {
+    void (async () => {
+      await signOut();
+      navRef.current?.reset({ index: 0, routes: [{ name: "Welcome" }] });
+    })();
+  }, [signOut]);
 
   if (!ready) {
     return (
@@ -45,7 +54,8 @@ export function RootNavigator() {
   return (
     <View style={styles.root}>
       <WebLimitBanner />
-      <NavigationContainer key={i18n.language}>
+      <DemoEscapeBanner onEscape={escapeDemo} />
+      <NavigationContainer key={i18n.language} ref={navRef}>
         <Stack.Navigator
           initialRouteName={initial}
           screenOptions={{

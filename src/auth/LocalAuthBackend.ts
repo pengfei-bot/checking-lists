@@ -3,6 +3,7 @@ import { AuthBackend } from "./AuthBackend";
 import { generateInviteCode, normalizeInviteCode } from "./inviteCode";
 import { createSalt, hashPassword, verifyPassword } from "./password";
 import { secureDelete, secureGet, secureSet } from "./secureStorage";
+import { preferCloudQaFromUrl } from "../utils/webCloudFlag";
 import {
   AuthResult,
   Family,
@@ -67,6 +68,11 @@ export class LocalAuthBackend implements AuthBackend {
   async bootstrap(): Promise<AuthResult | null> {
     const store = await readStore();
     if (!store.session) return null;
+    if (preferCloudQaFromUrl() && store.session.isDemo) {
+      store.session = null;
+      await writeStore(store);
+      return null;
+    }
     return toResult(store.session, store);
   }
 
