@@ -49,6 +49,7 @@ export function RedeemInviteScreen({ navigation }: Props) {
         value={code}
         onChangeText={(t) => setCode(t.toUpperCase())}
         placeholder={t("redeem.codePlaceholder")}
+        placeholderTextColor={colors.textMuted}
         autoCapitalize="characters"
         maxLength={6}
       />

@@ -96,7 +96,7 @@
     "title": "Rejoindre une famille",
     "hint": "Entrez le code à 6 caractères affiché sur le téléphone du parent (réseau Internet requis). L'enfant choisira ensuite son profil. Cet appareil n'accède qu'à la checklist enfant — pas au tableau de bord parent ni à la création de tâches.",
     "codeLabel": "Code d'invitation (6 caractères)",
-    "codePlaceholder": "ABC123",
+    "codePlaceholder": "ex. ABC123",
     "submit": "Lier cet appareil",
     "invalid": "Code invalide."
   },

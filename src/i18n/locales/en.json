@@ -96,7 +96,7 @@
     "title": "Join a family",
     "hint": "Enter the 6-character code shown on the parent's phone (Internet required). The child will then pick a profile. This device only gets the child checklist — not the parent dashboard or task creation.",
     "codeLabel": "Invite code (6 characters)",
-    "codePlaceholder": "ABC123",
+    "codePlaceholder": "e.g. ABC123",
     "submit": "Link this device",
     "invalid": "Invalid code."
   },
