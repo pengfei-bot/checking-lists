@@ -12,6 +12,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
+import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { PrimaryButton } from "../components/PrimaryButton";
@@ -191,13 +192,20 @@ export function RewardsScreen({ navigation }: Props) {
           const bal = balanceFor(child.id);
           const unit = t(unitShortKey(kind));
           return (
-            <View key={child.id} style={[styles.childCard, { borderColor: child.color }]}>
+            <View key={child.id} style={styles.childCard}>
               <View style={styles.childHeader}>
                 <Pressable
                   onPress={() => navigation.navigate("RewardsChild", { childId: child.id })}
                   style={styles.childIdentity}
                 >
-                  <Text style={styles.childEmoji}>{child.emoji}</Text>
+                  <View
+                    style={[
+                      rewardsStyles.avatarCircle,
+                      { backgroundColor: (child.color || colors.primary) + "33" },
+                    ]}
+                  >
+                    <Text style={rewardsStyles.avatarEmoji}>{child.emoji}</Text>
+                  </View>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.childName}>
                       {child.name} {child.emoji}
@@ -216,22 +224,28 @@ export function RewardsScreen({ navigation }: Props) {
                   value={active}
                   onValueChange={(v) => void onToggleChild(child.id, v)}
                   disabled={saving}
+                  trackColor={{ false: "#D1D5DB", true: colors.success }}
+                  thumbColor="#FFFFFF"
+                  ios_backgroundColor="#D1D5DB"
                   accessibilityLabel={
                     active ? t("rewards.activated") : t("rewards.deactivated")
                   }
                 />
               </View>
               <View style={[styles.unitRow, !active && styles.unitRowDisabled]}>
-                <View style={styles.chips}>
+                <View style={rewardsStyles.unitSeg}>
                   <Pressable
                     onPress={() => void onUnitKind(child.id, "points")}
                     disabled={saving || !active}
-                    style={[styles.unitChip, kind === "points" && active && styles.unitChipActive]}
+                    style={[
+                      rewardsStyles.unitSegItem,
+                      kind === "points" && active && rewardsStyles.unitSegItemActive,
+                    ]}
                   >
                     <Text
                       style={[
-                        styles.unitChipText,
-                        kind === "points" && active && styles.unitChipTextActive,
+                        rewardsStyles.unitSegText,
+                        kind === "points" && active && rewardsStyles.unitSegTextActive,
                       ]}
                     >
                       {t("rewards.unitPoints")}
@@ -240,12 +254,15 @@ export function RewardsScreen({ navigation }: Props) {
                   <Pressable
                     onPress={() => void onUnitKind(child.id, "money")}
                     disabled={saving || !active}
-                    style={[styles.unitChip, kind === "money" && active && styles.unitChipActive]}
+                    style={[
+                      rewardsStyles.unitSegItem,
+                      kind === "money" && active && rewardsStyles.unitSegItemActive,
+                    ]}
                   >
                     <Text
                       style={[
-                        styles.unitChipText,
-                        kind === "money" && active && styles.unitChipTextActive,
+                        rewardsStyles.unitSegText,
+                        kind === "money" && active && rewardsStyles.unitSegTextActive,
                       ]}
                     >
                       {t("rewards.unitMoneyChip")}
@@ -258,17 +275,27 @@ export function RewardsScreen({ navigation }: Props) {
         })
       )}
 
-      <View style={styles.infoRow}>
-        <Text style={styles.infoIcon}>ℹ️</Text>
-        <Text style={styles.infoText}>{t("rewards.parentOnlyActivate")}</Text>
+      <View style={rewardsStyles.infoBanner}>
+        <View style={rewardsStyles.infoBannerIcon}>
+          <Text style={rewardsStyles.infoBannerIconText}>i</Text>
+        </View>
+        <Text style={rewardsStyles.infoBannerText}>{t("rewards.parentOnlyActivate")}</Text>
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsScroll}>
         <Pressable
           onPress={() => setFilterChildId("all")}
-          style={[styles.filterChip, filterChildId === "all" && styles.filterChipActive]}
+          style={[
+            rewardsStyles.filterChip,
+            filterChildId === "all" && rewardsStyles.filterChipActive,
+          ]}
         >
-          <Text style={[styles.filterChipText, filterChildId === "all" && styles.filterChipTextActive]}>
+          <Text
+            style={[
+              rewardsStyles.filterChipText,
+              filterChildId === "all" && rewardsStyles.filterChipTextActive,
+            ]}
+          >
             {t("common.all")}
           </Text>
         </Pressable>
@@ -277,12 +304,16 @@ export function RewardsScreen({ navigation }: Props) {
             key={c.id}
             onPress={() => setFilterChildId(c.id)}
             style={[
-              styles.filterChip,
-              { borderColor: c.color },
-              filterChildId === c.id && { backgroundColor: c.color, borderColor: c.color },
+              rewardsStyles.filterChip,
+              filterChildId === c.id && rewardsStyles.filterChipActive,
             ]}
           >
-            <Text style={[styles.filterChipText, filterChildId === c.id && { color: "#fff" }]}>
+            <Text
+              style={[
+                rewardsStyles.filterChipText,
+                filterChildId === c.id && rewardsStyles.filterChipTextActive,
+              ]}
+            >
               {c.emoji} {c.name}
             </Text>
           </Pressable>
@@ -344,6 +375,11 @@ export function RewardsScreen({ navigation }: Props) {
                   {!childActive ? ` · ${t("rewards.deactivated")}` : ""}
                 </Text>
               </View>
+              {current != null && childActive ? (
+                <View style={[rewardsStyles.pointsPill, { marginRight: 4 }]}>
+                  <Text style={rewardsStyles.pointsPillText}>+{current} ⭐</Text>
+                </View>
+              ) : null}
               <TextInput
                 value={draft}
                 onChangeText={(v) => setPointsDraft((p) => ({ ...p, [task.id]: v }))}
@@ -369,7 +405,7 @@ export function RewardsScreen({ navigation }: Props) {
         label={t("rewards.saveSettings")}
         onPress={() => void onSaveAll()}
         loading={saving}
-        style={{ marginTop: 20 }}
+        style={styles.saveBtn}
       />
     </ScrollView>
   );
@@ -377,17 +413,18 @@ export function RewardsScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
-  container: { padding: 16, paddingBottom: 48, backgroundColor: colors.parentBg },
+  container: { ...rewardsStyles.screenParent },
   title: { fontSize: 24, fontWeight: "800", color: colors.text },
   sub: { color: colors.textMuted, marginTop: 4, marginBottom: 14 },
   pendingCard: {
     backgroundColor: colors.card,
-    borderRadius: 16,
+    borderRadius: rewardsUi.cardRadius,
     padding: 14,
     borderWidth: 2,
     borderColor: colors.primary,
     marginBottom: 16,
     marginTop: 8,
+    ...rewardsUi.shadow,
   },
   pendingTitle: { fontWeight: "800", fontSize: 17, color: colors.text, marginBottom: 8 },
   pendingRow: {
@@ -403,64 +440,32 @@ const styles = StyleSheet.create({
   section: { fontWeight: "800", fontSize: 16, marginTop: 8, marginBottom: 8, color: colors.text },
   childCard: {
     backgroundColor: colors.card,
-    borderRadius: 14,
-    borderWidth: 2,
-    padding: 12,
-    marginBottom: 10,
+    borderRadius: rewardsUi.cardRadius,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 14,
+    marginBottom: 12,
+    ...rewardsUi.shadow,
   },
   childHeader: { flexDirection: "row", alignItems: "center", gap: 10 },
-  childIdentity: { flexDirection: "row", alignItems: "center", gap: 10, flex: 1 },
-  childEmoji: { fontSize: 28 },
-  childName: { fontWeight: "800", color: colors.text },
+  childIdentity: { flexDirection: "row", alignItems: "center", gap: 12, flex: 1 },
+  childName: { fontWeight: "800", color: colors.text, fontSize: 16 },
   statusLabel: { fontWeight: "700", fontSize: 13, marginTop: 2 },
   statusOn: { color: colors.success },
   statusOff: { color: colors.textMuted },
   childMeta: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
-  unitRow: { marginTop: 10 },
-  unitRowDisabled: { opacity: 0.45 },
-  chips: { flexDirection: "row", gap: 8 },
-  unitChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 999,
-    backgroundColor: colors.bg,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  unitChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  unitChipText: { fontWeight: "700", color: colors.text, fontSize: 13 },
-  unitChipTextActive: { color: "#fff" },
-  infoRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 8,
-    marginVertical: 10,
-    paddingHorizontal: 4,
-  },
-  infoIcon: { fontSize: 14, marginTop: 1 },
-  infoText: { flex: 1, color: colors.textMuted, fontSize: 13, lineHeight: 18 },
+  unitRow: { marginTop: 12 },
+  unitRowDisabled: { opacity: 0.4 },
   chipsScroll: { marginBottom: 8, flexGrow: 0 },
-  filterChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 999,
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginRight: 8,
-  },
-  filterChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  filterChipText: { fontWeight: "700", color: colors.text },
-  filterChipTextActive: { color: "#fff" },
   taskRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
     backgroundColor: colors.card,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.border,
-    padding: 10,
+    padding: 12,
     marginTop: 8,
   },
   taskRowMuted: { opacity: 0.55 },
@@ -484,4 +489,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primarySoft,
   },
   savePtsText: { fontWeight: "700", color: colors.primary, fontSize: 12 },
+  saveBtn: { marginTop: 20, borderRadius: 16 },
 });

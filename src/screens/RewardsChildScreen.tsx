@@ -4,6 +4,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
+import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { frenchCloudError } from "../utils/cloudTimeout";
@@ -98,13 +99,23 @@ export function RewardsChildScreen({ navigation, route }: Props) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.emoji}>{child.emoji}</Text>
       <Text style={styles.title}>
-        {isOwnChild ? t("rewards.myHistory") : child.name}
+        {isOwnChild ? t("rewards.myHistory") : `${child.emoji} ${child.name}`}
       </Text>
-      <Text style={styles.balance}>
-        {t("rewards.currentBalance", { amount: balance, unit: unitLabel })}
-      </Text>
+
+      <View style={styles.soldeCard}>
+        <View style={styles.soldeStarCircle}>
+          <Text style={styles.soldeStar}>⭐</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.soldeLabel}>{t("rewards.currentBalanceLabel")}</Text>
+          <Text style={styles.soldeValue}>
+            {balance} <Text style={styles.soldeUnit}>{unitLabel}</Text>
+          </Text>
+        </View>
+        <Text style={styles.soldeDecor}>✨</Text>
+      </View>
+
       {!childActive && isParent ? (
         <Text style={styles.help}>{t("rewards.disabledHint")}</Text>
       ) : null}
@@ -112,7 +123,7 @@ export function RewardsChildScreen({ navigation, route }: Props) {
       {isParent ? (
         <View style={styles.unitBlock}>
           <Text style={styles.unitLabel}>{t("rewards.unitKind")}</Text>
-          <View style={styles.chips}>
+          <View style={rewardsStyles.unitSeg}>
             {(["points", "money"] as RewardUnitKind[]).map((kind) => (
               <Pressable
                 key={kind}
@@ -130,12 +141,15 @@ export function RewardsChildScreen({ navigation, route }: Props) {
                     }
                   })();
                 }}
-                style={[styles.unitChip, unitKind === kind && styles.unitChipActive]}
+                style={[
+                  rewardsStyles.unitSegItem,
+                  unitKind === kind && rewardsStyles.unitSegItemActive,
+                ]}
               >
                 <Text
                   style={[
-                    styles.unitChipText,
-                    unitKind === kind && styles.unitChipTextActive,
+                    rewardsStyles.unitSegText,
+                    unitKind === kind && rewardsStyles.unitSegTextActive,
                   ]}
                 >
                   {kind === "points" ? t("rewards.unitPoints") : t("rewards.unitMoney")}
@@ -156,39 +170,71 @@ export function RewardsChildScreen({ navigation, route }: Props) {
         />
       ) : null}
 
-      <Text style={styles.section}>{isOwnChild ? t("rewards.history") : t("rewards.history")}</Text>
+      <Text style={styles.section}>{t("rewards.history")}</Text>
       {entries.length === 0 ? (
         <Text style={styles.help}>{t("rewards.historyEmpty")}</Text>
       ) : (
-        entries.map((entry) => {
-          const task = entry.taskId ? getTask(entry.taskId) : undefined;
-          const day = entry.createdAt.slice(0, 10);
-          const time = formatCompletionTime(entry.createdAt, i18n.language);
-          const amountStr =
-            entry.amount > 0 ? `+${entry.amount}` : String(entry.amount);
-          return (
-            <View key={entry.id} style={styles.row}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.rowTitle}>
-                  {kindLabel(entry.kind)}
-                  {task ? ` · ${task.title}` : ""}
-                </Text>
-                <Text style={styles.rowMeta}>
-                  {formatLocalizedDate(day, i18n.language)} · {time}
-                  {entry.note ? ` · ${entry.note}` : ""}
-                </Text>
+        <View style={styles.timeline}>
+          {entries.map((entry, index) => {
+            const task = entry.taskId ? getTask(entry.taskId) : undefined;
+            const day = entry.createdAt.slice(0, 10);
+            const time = formatCompletionTime(entry.createdAt, i18n.language);
+            const amountStr =
+              entry.amount > 0 ? `+${entry.amount}` : String(entry.amount);
+            const isReset = entry.kind === "reset";
+            const isLast = index === entries.length - 1;
+            return (
+              <View key={entry.id} style={styles.timelineItem}>
+                <View style={styles.timelineRail}>
+                  <View
+                    style={[
+                      rewardsStyles.timelineDot,
+                      isReset
+                        ? rewardsStyles.timelineDotReset
+                        : rewardsStyles.timelineDotEarn,
+                    ]}
+                  >
+                    <Text style={rewardsStyles.timelineDotText}>
+                      {isReset ? "↺" : "✓"}
+                    </Text>
+                  </View>
+                  {!isLast ? <View style={styles.timelineLine} /> : null}
+                </View>
+                <View
+                  style={[
+                    styles.row,
+                    isReset ? rewardsStyles.resetRow : rewardsStyles.earnRow,
+                  ]}
+                >
+                  <View style={{ flex: 1 }}>
+                    {!isReset ? (
+                      <Text
+                        style={[
+                          styles.earnAmount,
+                          entry.amount < 0 && styles.amountNeg,
+                        ]}
+                      >
+                        {amountStr} {unitLabel}
+                      </Text>
+                    ) : null}
+                    <Text style={styles.rowTitle}>
+                      {isReset
+                        ? kindLabel(entry.kind)
+                        : task
+                          ? task.title
+                          : kindLabel(entry.kind)}
+                    </Text>
+                    <Text style={styles.rowMeta}>
+                      {formatLocalizedDate(day, i18n.language)} · {time}
+                      {entry.note ? ` · ${entry.note}` : ""}
+                    </Text>
+                  </View>
+                  <Text style={styles.resetIcon}>{isReset ? "🗑️" : "✨"}</Text>
+                </View>
               </View>
-              <Text
-                style={[
-                  styles.amount,
-                  entry.amount >= 0 ? styles.amountPos : styles.amountNeg,
-                ]}
-              >
-                {amountStr} {unitLabel}
-              </Text>
-            </View>
-          );
-        })
+            );
+          })}
+        </View>
       )}
 
       <PrimaryButton
@@ -203,46 +249,55 @@ export function RewardsChildScreen({ navigation, route }: Props) {
 
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
-  container: { padding: 16, paddingBottom: 48, backgroundColor: colors.bg },
-  emoji: { fontSize: 48, textAlign: "center" },
-  title: { fontSize: 24, fontWeight: "800", textAlign: "center", color: colors.text, marginTop: 4 },
-  balance: {
-    marginTop: 10,
-    textAlign: "center",
-    fontSize: 22,
+  container: { ...rewardsStyles.screenHistory },
+  title: {
+    fontSize: 24,
     fontWeight: "800",
-    color: colors.primary,
+    color: colors.text,
+    marginBottom: 14,
   },
+  soldeCard: {
+    ...rewardsStyles.soldePurpleCard,
+    marginBottom: 8,
+  },
+  soldeStarCircle: { ...rewardsStyles.soldePurpleStarCircle },
+  soldeStar: { fontSize: 26 },
+  soldeLabel: { fontSize: 13, fontWeight: "700", color: colors.text },
+  soldeValue: { ...rewardsStyles.soldePurpleValue },
+  soldeUnit: { fontSize: 18, fontWeight: "800", color: rewardsUi.purpleDeep },
+  soldeDecor: { fontSize: 22 },
   help: { color: colors.textMuted, textAlign: "center", marginTop: 8 },
-  section: { fontWeight: "800", fontSize: 16, marginTop: 24, marginBottom: 8, color: colors.text },
+  section: { fontWeight: "800", fontSize: 16, marginTop: 24, marginBottom: 12, color: colors.text },
+  timeline: { paddingLeft: 2 },
+  timelineItem: { flexDirection: "row", alignItems: "stretch", gap: 10, marginBottom: 10 },
+  timelineRail: { width: 22, alignItems: "center" },
+  timelineLine: {
+    flex: 1,
+    width: 2,
+    marginTop: 4,
+    backgroundColor: "#D1D5DB",
+    borderStyle: "dashed",
+    minHeight: 12,
+  },
   row: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    backgroundColor: colors.card,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: colors.border,
     padding: 12,
-    marginBottom: 8,
+  },
+  earnAmount: {
+    fontWeight: "800",
+    fontSize: 15,
+    color: colors.success,
+    marginBottom: 2,
   },
   rowTitle: { fontWeight: "700", color: colors.text },
   rowMeta: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
-  amount: { fontWeight: "800", fontSize: 15 },
-  amountPos: { color: colors.success },
   amountNeg: { color: colors.danger },
-  unitBlock: { marginTop: 14, alignItems: "center", gap: 6 },
+  resetIcon: { fontSize: 18 },
+  unitBlock: { marginTop: 14, alignItems: "flex-start", gap: 6 },
   unitLabel: { fontWeight: "700", fontSize: 12, color: colors.textMuted },
-  chips: { flexDirection: "row", gap: 8 },
-  unitChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 999,
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  unitChipActive: { backgroundColor: colors.primarySoft, borderColor: colors.primary },
-  unitChipText: { fontWeight: "700", color: colors.text, fontSize: 13 },
-  unitChipTextActive: { color: colors.primary },
 });

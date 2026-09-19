@@ -11,6 +11,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
+import { rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { TaskCard } from "../components/TaskCard";
 import { PrimaryButton } from "../components/PrimaryButton";
@@ -66,46 +67,56 @@ export function ChildHomeScreen({ navigation }: Props) {
 
   const header = useMemo(
     () => (
-      <View style={[styles.hero, { backgroundColor: currentProfile.color + "22" }]}>
-        <View style={styles.heroTop}>
-          <Text style={styles.heroEmoji}>{currentProfile.emoji}</Text>
-          <Pressable
-            onPress={() => setMenuOpen(true)}
-            style={styles.moreBtn}
-            accessibilityRole="button"
-            accessibilityLabel={t("childHome.more")}
-          >
-            <Text style={styles.moreBtnText}>⋯</Text>
-          </Pressable>
+      <>
+        <View
+          style={[
+            styles.hero,
+            {
+              backgroundColor: rewardsActive
+                ? rewardsUi.peach
+                : currentProfile.color + "22",
+            },
+          ]}
+        >
+          <View style={styles.heroTop}>
+            <Text style={styles.heroEmoji}>{currentProfile.emoji}</Text>
+            <Pressable
+              onPress={() => setMenuOpen(true)}
+              style={styles.moreBtn}
+              accessibilityRole="button"
+              accessibilityLabel={t("childHome.more")}
+            >
+              <Text style={styles.moreBtnText}>⋯</Text>
+            </Pressable>
+          </View>
+          <Text style={styles.heroTitle}>{t("childHome.hello", { name: currentProfile.name })}</Text>
+          <Text style={styles.heroSub}>{formatLocalizedDate(todayISO(), i18n.language)}</Text>
+          <Text style={styles.progress}>
+            {t("childHome.progress", { done: doneCount, total: tasks.length, percent: progress })}
+          </Text>
         </View>
-        <Text style={styles.heroTitle}>{t("childHome.hello", { name: currentProfile.name })}</Text>
-        <Text style={styles.heroSub}>{formatLocalizedDate(todayISO(), i18n.language)}</Text>
-        <Text style={styles.progress}>
-          {t("childHome.progress", { done: doneCount, total: tasks.length, percent: progress })}
-        </Text>
         {rewardsActive ? (
-          <>
-            <Pressable
-              onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
-              style={styles.balanceChip}
-              accessibilityRole="button"
-              accessibilityLabel={t("rewards.soldeChip", { amount: balance, unit: unitLabel })}
-            >
-              <Text style={styles.balanceChipText}>
-                {t("rewards.soldeChip", { amount: balance, unit: unitLabel })}
+          <Pressable
+            onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
+            style={styles.soldeCard}
+            accessibilityRole="button"
+            accessibilityLabel={t("rewards.soldeChip", { amount: balance, unit: unitLabel })}
+          >
+            <View style={styles.soldeStarCircle}>
+              <Text style={styles.soldeStar}>⭐</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.soldeLabel}>{t("rewards.soldeLabel")}</Text>
+              <Text style={styles.soldeValue}>
+                {balance} <Text style={styles.soldeUnit}>{unitLabel}</Text>
               </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
-              style={styles.myHistoryBtn}
-              accessibilityRole="button"
-              accessibilityLabel={t("rewards.myHistory")}
-            >
-              <Text style={styles.myHistoryBtnText}>{t("rewards.myHistory")}</Text>
-            </Pressable>
-          </>
+            </View>
+            <View style={styles.historyCtaMini}>
+              <Text style={styles.historyCtaMiniText}>{t("rewards.myHistory")} ›</Text>
+            </View>
+          </Pressable>
         ) : null}
-      </View>
+      </>
     ),
     [currentProfile, doneCount, tasks.length, progress, balance, rewardsActive, unitLabel, t, i18n.language, navigation]
   );
@@ -209,12 +220,12 @@ export function ChildHomeScreen({ navigation }: Props) {
 
         {rewardsActive ? (
           <Pressable
-            style={styles.historyChip}
+            style={styles.rewardsHistoryChip}
             onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
             accessibilityRole="button"
             accessibilityLabel={t("rewards.myHistory")}
           >
-            <Text style={styles.historyChipText}>⭐ {t("rewards.myHistory")}</Text>
+            <Text style={styles.rewardsHistoryChipText}>⭐ {t("rewards.myHistory")}</Text>
           </Pressable>
         ) : null}
         <Pressable
@@ -277,7 +288,7 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.kidBg },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
   container: { padding: 16, paddingBottom: 40 },
-  hero: { borderRadius: 20, padding: 18, marginBottom: 16 },
+  hero: { borderRadius: 20, padding: 18, marginBottom: 12 },
   heroTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   heroEmoji: { fontSize: 40 },
   moreBtn: {
@@ -292,37 +303,42 @@ const styles = StyleSheet.create({
   heroTitle: { fontSize: 24, fontWeight: "800", color: colors.text, marginTop: 4 },
   heroSub: { color: colors.textMuted, textTransform: "capitalize", marginTop: 2 },
   progress: { marginTop: 10, fontWeight: "700", color: colors.primary },
-  balanceChip: {
-    marginTop: 10,
-    alignSelf: "flex-start",
-    backgroundColor: "#ffffffcc",
-    borderRadius: 999,
+  soldeCard: {
+    backgroundColor: colors.card,
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 16,
+    borderWidth: 1.5,
+    borderColor: "#D6E0FF",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  soldeStarCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.primarySoft,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  soldeStar: { fontSize: 26 },
+  soldeLabel: { fontSize: 13, fontWeight: "700", color: colors.textMuted },
+  soldeValue: { fontSize: 26, fontWeight: "800", color: colors.primary, marginTop: 2 },
+  soldeUnit: { fontSize: 18, fontWeight: "800", color: colors.primary },
+  historyCtaMini: {
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center",
+    borderRadius: 999,
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+    backgroundColor: "#fff",
   },
-  balanceChipText: { fontWeight: "800", color: colors.primary, fontSize: 15 },
-  myHistoryBtn: {
-    marginTop: 8,
-    alignSelf: "flex-start",
-    paddingVertical: 4,
-  },
-  myHistoryBtnText: {
-    fontWeight: "800",
-    color: colors.primary,
-    fontSize: 15,
-    textDecorationLine: "underline",
-  },
+  historyCtaMiniText: { fontWeight: "800", color: colors.primary, fontSize: 12 },
   empty: { textAlign: "center", color: colors.textMuted, marginVertical: 24, fontSize: 16 },
   actions: { flexDirection: "row", alignItems: "center", gap: 6 },
-  pointsBadge: {
-    backgroundColor: "#FFF3E0",
-    borderColor: "#FFB74D",
-    borderWidth: 1,
-    borderRadius: 999,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  pointsBadgeText: { fontWeight: "800", color: "#E65100", fontSize: 12 },
   miniBtn: {
     minWidth: 48,
     height: 48,
@@ -333,8 +349,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   miniText: { fontSize: 20 },
-  historyChip: {
+  rewardsHistoryChip: {
     marginTop: 16,
+    alignSelf: "center",
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    minHeight: 48,
+    borderRadius: 999,
+    backgroundColor: colors.primarySoft,
+    borderWidth: 0,
+    justifyContent: "center",
+  },
+  rewardsHistoryChipText: { fontWeight: "800", color: colors.primary, fontSize: 15 },
+  historyChip: {
+    marginTop: 12,
     alignSelf: "center",
     paddingHorizontal: 18,
     paddingVertical: 12,

@@ -467,7 +467,7 @@
     "history": "History",
     "historyEmpty": "No reward entries yet.",
     "kindEarn": "Earned",
-    "kindReset": "Reset",
+    "kindReset": "Reset to zero",
     "kindAdjust": "Adjustment",
     "validateCta": "Validate +{{amount}} {{unit}}",
     "validateTitle": "Rewards",
@@ -485,16 +485,18 @@
     "toValidateEmpty": "Nothing waiting for validation.",
     "validatePendingCta": "Validate",
     "subtitleV2": "Enable rewards per child, choose Points or €, and set points per task.",
-    "perChild": "Per-child activation",
+    "perChild": "By child",
     "activated": "Enabled",
     "deactivated": "Disabled",
-    "parentOnlyActivate": "Only a parent can turn rewards on. The child sees their balance only when enabled for them.",
+    "parentOnlyActivate": "Only the parent activates. The child sees their balance when enabled.",
     "unitMoneyChip": "€",
     "myHistory": "My history",
     "currentBalance": "Current balance · {{amount}} {{unit}}",
     "soldeChip": "Balance {{amount}} {{unit}}",
     "openHistory": "My history",
     "disabledHintChild": "Rewards are not enabled for you yet. Ask a parent.",
-    "noChildrenHelp": "Add a child (or open the demo) to configure rewards."
+    "noChildrenHelp": "Add a child (or open the demo) to configure rewards.",
+    "soldeLabel": "Balance",
+    "currentBalanceLabel": "Current balance"
   }
 }

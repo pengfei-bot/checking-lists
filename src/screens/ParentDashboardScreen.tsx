@@ -188,13 +188,9 @@ export function ParentDashboardScreen({ navigation }: Props) {
             <Pressable
               key={c.id}
               onPress={() => setFilterChildId(c.id)}
-              style={[
-                styles.chip,
-                { borderColor: c.color },
-                filterChildId === c.id && { backgroundColor: c.color },
-              ]}
+              style={[styles.chip, filterChildId === c.id && styles.chipActive]}
             >
-              <Text style={[styles.chipText, filterChildId === c.id && { color: "#fff" }]}>
+              <Text style={[styles.chipText, filterChildId === c.id && styles.chipTextActive]}>
                 {c.emoji} {c.name}
               </Text>
             </Pressable>
@@ -211,7 +207,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   onPress={() => setFilterChildId(isSelected ? "all" : child.id)}
                   style={[
                     styles.statCard,
-                    { borderColor: child.color },
                     isSelected && styles.statCardSelected,
                     filterChildId === "all" && styles.statCardCompact,
                   ]}
@@ -355,7 +350,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
             <Pressable
               key={`manage-${child.id}`}
               onPress={() => navigation.navigate("ChildForm", { childId: child.id })}
-              style={[styles.kidManageCard, { borderColor: child.color }]}
+              style={styles.kidManageCard}
             >
               <Text style={styles.statEmoji}>{child.emoji}</Text>
               <Text style={styles.kidManageName}>{child.name}</Text>
@@ -498,11 +493,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     borderRadius: 16,
     padding: 12,
-    borderWidth: 2,
+    borderWidth: 1,
+    borderColor: colors.border,
     alignItems: "center",
   },
   statCardCompact: { paddingVertical: 10 },
-  statCardSelected: { borderWidth: 3, minWidth: "100%", flexBasis: "100%" },
+  statCardSelected: {
+    borderWidth: 2,
+    borderColor: colors.primary,
+    minWidth: "100%",
+    flexBasis: "100%",
+  },
   statEmoji: { fontSize: 28 },
   statName: { fontWeight: "700", marginTop: 4 },
   statValue: { fontSize: 22, fontWeight: "800", color: colors.primary, marginTop: 4 },
@@ -558,7 +559,8 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: colors.card,
     borderRadius: 12,
-    borderWidth: 2,
+    borderWidth: 1,
+    borderColor: colors.border,
     paddingVertical: 8,
     paddingHorizontal: 10,
   },

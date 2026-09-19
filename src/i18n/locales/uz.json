@@ -495,6 +495,8 @@
     "soldeChip": "Balance {{amount}} {{unit}}",
     "openHistory": "My history",
     "disabledHintChild": "Rewards are not enabled for you yet. Ask a parent.",
-    "noChildrenHelp": "Add a child (or open the demo) to configure rewards."
+    "noChildrenHelp": "Add a child (or open the demo) to configure rewards.",
+    "soldeLabel": "Balance",
+    "currentBalanceLabel": "Current balance"
   }
 }

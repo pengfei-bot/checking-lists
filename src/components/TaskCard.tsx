@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Task } from "../types";
 import { colors } from "../theme/colors";
+import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { recurrenceLabel } from "../utils/recurrence";
 import { formatCompletionTime } from "../utils/dates";
 
@@ -90,7 +91,7 @@ export function TaskCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.card,
-    borderRadius: 16,
+    borderRadius: rewardsUi.cardRadius,
     padding: 14,
     marginBottom: 10,
     borderWidth: 1,
@@ -115,14 +116,11 @@ const styles = StyleSheet.create({
   title: { fontSize: 16, fontWeight: "700", color: colors.text, flexShrink: 1 },
   titleDone: { textDecorationLine: "line-through", color: colors.textMuted },
   pointsBadge: {
-    backgroundColor: "#FFF3E0",
-    borderColor: "#FFB74D",
-    borderWidth: 1,
-    borderRadius: 999,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
+    ...rewardsStyles.pointsPill,
   },
-  pointsBadgeText: { fontWeight: "800", color: "#E65100", fontSize: 12 },
+  pointsBadgeText: {
+    ...rewardsStyles.pointsPillText,
+  },
   photoPill: { fontSize: 14 },
   meta: { marginTop: 2, fontSize: 12, color: colors.textMuted },
   muted: { color: colors.textMuted },

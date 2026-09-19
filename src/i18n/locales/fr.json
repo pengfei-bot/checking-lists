@@ -467,7 +467,7 @@
     "history": "Historique",
     "historyEmpty": "Aucune entrée de récompense pour le moment.",
     "kindEarn": "Gagné",
-    "kindReset": "Reset",
+    "kindReset": "Remise à zéro",
     "kindAdjust": "Ajustement",
     "validateCta": "Valider +{{amount}} {{unit}}",
     "validateTitle": "Récompenses",
@@ -485,16 +485,18 @@
     "toValidateEmpty": "Rien à valider pour le moment.",
     "validatePendingCta": "Valider",
     "subtitleV2": "Activez les récompenses par enfant, choisissez Points ou €, configurez les points par tâche.",
-    "perChild": "Activation par enfant",
+    "perChild": "Par enfant",
     "activated": "Activé",
     "deactivated": "Désactivé",
-    "parentOnlyActivate": "Seul le parent peut activer. L’enfant voit son solde seulement si c’est activé pour lui.",
+    "parentOnlyActivate": "Seul le parent active. L'enfant voit son solde s'il est activé.",
     "unitMoneyChip": "€",
     "myHistory": "Mon historique",
     "currentBalance": "Solde actuel · {{amount}} {{unit}}",
     "soldeChip": "Solde {{amount}} {{unit}}",
     "openHistory": "Mon historique",
     "disabledHintChild": "Les récompenses ne sont pas encore activées pour toi. Demande à un parent.",
-    "noChildrenHelp": "Ajoute un enfant (ou ouvre la démo) pour configurer les récompenses."
+    "noChildrenHelp": "Ajoute un enfant (ou ouvre la démo) pour configurer les récompenses.",
+    "soldeLabel": "Solde",
+    "currentBalanceLabel": "Solde actuel"
   }
 }
