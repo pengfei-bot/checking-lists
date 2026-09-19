@@ -69,7 +69,7 @@ export function ChildRewardsBottomNav({
       {item("tasks", "📅", t("childHome.navTasks"), () => navigation.navigate("ChildHistory"))}
       {/* No Récompenses tab — Accueil solde card opens RewardsChild. */}
       {rewardsActive
-        ? item("history", "📜", t("childHome.navHistory"), () => {
+        ? item("history", "🏆", t("childHome.navHistory"), () => {
             if (childId) navigation.navigate("RewardsChild", { childId });
           })
         : null}

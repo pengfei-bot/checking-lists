@@ -133,7 +133,7 @@ export function RewardsChildScreen({ navigation, route }: Props) {
           <View style={styles.heroIdentity}>
             {!isOwnChild ? <Text style={styles.heroEmoji}>{child.emoji}</Text> : null}
             <Text style={styles.heroTitle} numberOfLines={1}>
-              {isOwnChild ? t("rewards.myHistory") : child.name}
+              {child.name}
             </Text>
           </View>
           <View style={styles.heroBalanceChip}>
