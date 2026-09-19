@@ -58,7 +58,7 @@ export interface RewardChildSettings {
   childProfileId: string;
   familyId: string;
   unitKind: RewardUnitKind;
-  /** Parent-only per-child gate for balance/history/badges/pending. */
+  /** Parent-only per-child gate for balance/history/badges. */
   enabled: boolean;
   updatedAt: string;
 }

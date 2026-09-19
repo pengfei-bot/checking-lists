@@ -114,12 +114,7 @@ export function RewardsChildScreen({ navigation, route }: Props) {
     const p = state.profiles.find((x) => x.id === createdBy);
     return p?.name || t("profiles.parentFallback");
   };
-  const validatorLabel = (createdBy?: string) => {
-    if (!createdBy) return t("rewards.validatedByParent");
-    const p = state.profiles.find((x) => x.id === createdBy);
-    if (p) return t("rewards.validatedBy", { name: p.name });
-    return t("rewards.validatedByParent");
-  };
+  const earnMetaLabel = () => t("rewards.creditedOnComplete");
 
   const tint = softTint(child.color || colors.primary, 0.22);
 
@@ -268,8 +263,10 @@ export function RewardsChildScreen({ navigation, route }: Props) {
                       <Text style={styles.rowMeta}>
                         {isReset
                           ? `${actorName(entry.createdBy)} · ${formatLocalizedDate(day, i18n.language)}`
-                          : `${validatorLabel(entry.createdBy)} · 🕒 ${time}`}
-                        {!isReset && entry.note ? ` · ${entry.note}` : ""}
+                          : `${earnMetaLabel()} · 🕒 ${time}`}
+                        {!isReset && entry.note && entry.note !== "auto_complete" && entry.note !== "auto_complete_backfill" && entry.note !== "void_uncomplete" && entry.note !== "Demo"
+                          ? ` · ${entry.note}`
+                          : ""}
                       </Text>
                     </View>
                     <View style={[styles.sideIcon, isReset ? styles.sideIconReset : styles.sideIconEarn]}>

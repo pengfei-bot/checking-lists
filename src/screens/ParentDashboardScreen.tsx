@@ -34,7 +34,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
     state,
     completionFor,
     setCurrentProfileId,
-    pendingEarnCount,
     isRewardsActiveForChild,
     pointsFor,
     unitKindFor,
@@ -273,13 +272,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
             </View>
             <View style={styles.balanceCta}>
               <Text style={styles.balanceCtaText}>{t("parentDash.rewards")} ›</Text>
-              {pendingEarnCount > 0 ? (
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>
-                    {pendingEarnCount > 99 ? "99+" : String(pendingEarnCount)}
-                  </Text>
-                </View>
-              ) : null}
             </View>
           </Pressable>
         ) : null}
@@ -420,16 +412,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   balanceCtaText: { fontWeight: "800", color: rewardsUi.filterOrange, fontSize: 12 },
-  badge: {
-    minWidth: 20,
-    height: 20,
-    borderRadius: 10,
-    paddingHorizontal: 6,
-    backgroundColor: colors.danger,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  badgeText: { color: "#fff", fontWeight: "800", fontSize: 11 },
   section: { fontWeight: "800", fontSize: 16, marginBottom: 8, color: colors.text },
   emptyBox: {
     backgroundColor: colors.card,

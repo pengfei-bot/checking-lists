@@ -42,13 +42,11 @@ import {
 } from "../types";
 import {
   balanceForChild,
+  buildEarnForCompletion,
   buildVoidAdjustForCompletion,
   emptyRewardsState,
   isRewardsActiveForChild as isRewardsActiveForChildUtil,
   ledgerForChild,
-  ledgerHasActiveEarnForCompletion,
-  listPendingEarns,
-  PendingEarnItem,
   pointsForTask,
   unitKindForChild,
 } from "../utils/rewards";
@@ -115,10 +113,7 @@ interface AppContextValue {
   balanceFor: (childId: string) => number;
   ledgerByChild: (childId: string) => RewardLedgerEntry[];
   pointsFor: (taskId: string) => number | null;
-  isEarnValidated: (completionId: string) => boolean;
   unitKindFor: (childId: string) => RewardUnitKind;
-  pendingEarns: PendingEarnItem[];
-  pendingEarnCount: number;
   updateRewardSettings: (input: { enabled: boolean; unitLabel?: string }) => Promise<RewardSettings>;
   setChildUnitKind: (childId: string, unitKind: RewardUnitKind) => Promise<RewardChildSettings>;
   setChildRewardsEnabled: (childId: string, enabled: boolean) => Promise<RewardChildSettings>;
@@ -132,7 +127,6 @@ interface AppContextValue {
    */
   ensureMissingChildRewardSettings: () => Promise<void>;
   setTaskPoints: (taskId: string, points: number | null) => Promise<void>;
-  validateEarn: (taskId: string, childId: string, completionId: string) => Promise<RewardLedgerEntry | null>;
   resetChildBalance: (childId: string, note?: string) => Promise<RewardLedgerEntry | null>;
 }
 
@@ -400,18 +394,36 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const markTaskDone = useCallback(async (taskId: string, childId: string, photoUri?: string) => {
     const date = todayISO();
+    const applyLocalMark = (prev: AppState, saved: TaskCompletion): AppState => {
+      const completions = [
+        ...prev.completions.filter((c) => !(c.taskId === taskId && c.date === date)),
+        saved,
+      ];
+      let rewardLedger = prev.rewardLedger ?? [];
+      const fid = familyId || prev.rewardSettings?.familyId || "local";
+      const earn = buildEarnForCompletion(
+        rewardLedger,
+        prev.rewardTasks ?? [],
+        prev.rewardChildSettings ?? [],
+        prev.rewardSettings,
+        saved,
+        fid,
+        newCloudId(),
+        saved.completedAt
+      );
+      if (earn) {
+        rewardLedger = [earn, ...rewardLedger];
+      }
+      return { ...prev, completions, rewardLedger };
+    };
+
     if (familyId) {
       const online = await probeOnline(2_000);
       if (online) {
         try {
           const saved = await cloudMarkDone(familyId, taskId, childId, date, photoUri);
-          const next = {
-            ...stateRef.current,
-            completions: [
-              ...stateRef.current.completions.filter((c) => !(c.taskId === taskId && c.date === date)),
-              saved,
-            ],
-          };
+          // DB trigger credits earn; mirror locally for immediate solde update.
+          const next = applyLocalMark(stateRef.current, saved);
           stateRef.current = next;
           setState(next);
           void cacheCloudSnapshot(next);
@@ -436,13 +448,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         completedAt: new Date().toISOString(),
         photoUri,
       };
-      const next = {
-        ...stateRef.current,
-        completions: [
-          ...stateRef.current.completions.filter((c) => !(c.taskId === taskId && c.date === date)),
-          saved,
-        ],
-      };
+      const next = applyLocalMark(stateRef.current, saved);
       stateRef.current = next;
       setState(next);
       void cacheCloudSnapshot(next);
@@ -460,10 +466,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     const existing = state.completions.find((c) => c.taskId === taskId && c.date === date);
-    const completions = existing
-      ? state.completions.map((c) => c.id === existing.id ? { ...c, completedAt: new Date().toISOString(), photoUri: photoUri ?? c.photoUri } : c)
-      : [...state.completions, { id: uid("done"), taskId, childId, date, completedAt: new Date().toISOString(), photoUri }];
-    await persistLocal({ ...state, completions });
+    const saved: TaskCompletion = existing
+      ? {
+          ...existing,
+          completedAt: new Date().toISOString(),
+          photoUri: photoUri ?? existing.photoUri,
+        }
+      : {
+          id: uid("done"),
+          taskId,
+          childId,
+          date,
+          completedAt: new Date().toISOString(),
+          photoUri,
+        };
+    await persistLocal(applyLocalMark(state, saved));
   }, [familyId, persistLocal, state, cacheCloudSnapshot, flushPending]);
 
   const unmarkTaskDone = useCallback(async (taskId: string, date = todayISO()) => {
@@ -888,19 +905,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [state.rewardChildSettings, state.rewardSettings]
   );
 
-  const pendingEarns = useMemo(
-    () =>
-      listPendingEarns(
-        rewardChildSettings,
-        rewardSettings,
-        state.completions ?? [],
-        state.tasks ?? [],
-        rewardTasks,
-        rewardLedger
-      ),
-    [rewardChildSettings, rewardSettings, state.completions, state.tasks, rewardTasks, rewardLedger]
-  );
-  const pendingEarnCount = pendingEarns.length;
 
   const unitKindFor = useCallback(
     (childId: string) => unitKindForChild(state.rewardChildSettings ?? [], childId),
@@ -919,10 +923,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const pointsFor = useCallback(
     (taskId: string) => pointsForTask(state.rewardTasks ?? [], taskId),
     [state.rewardTasks]
-  );
-  const isEarnValidated = useCallback(
-    (completionId: string) => !!ledgerHasActiveEarnForCompletion(state.rewardLedger ?? [], completionId),
-    [state.rewardLedger]
   );
 
   const updateRewardSettings = useCallback(
@@ -1121,85 +1121,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [familyId, persistLocal, cacheCloudSnapshot]
   );
 
-  const validateEarn = useCallback(
-    async (
-      taskId: string,
-      childId: string,
-      completionId: string
-    ): Promise<RewardLedgerEntry | null> => {
-      const prev = stateRef.current;
-      if (
-        !isRewardsActiveForChildUtil(
-          childId,
-          prev.rewardChildSettings ?? [],
-          prev.rewardSettings
-        )
-      ) {
-        throw new Error("Les récompenses sont désactivées pour cet enfant.");
-      }
-      const pts = pointsForTask(prev.rewardTasks ?? [], taskId);
-      if (pts == null) return null;
-
-      const existing = ledgerHasActiveEarnForCompletion(prev.rewardLedger ?? [], completionId);
-      if (existing) return existing;
-
-      if (familyId) {
-        const online = await probeOnline(2_000);
-        if (!online) throw new Error("Cette action nécessite une connexion Internet.");
-        await cloudEnsureRewardSettings(familyId);
-        const saved = await cloudInsertRewardLedger(familyId, {
-          childProfileId: childId,
-          amount: pts,
-          kind: "earn",
-          taskId,
-          completionId,
-        });
-        setState((p) => {
-          const ledger = p.rewardLedger ?? [];
-          const hasActiveEarn = ledgerHasActiveEarnForCompletion(ledger, completionId);
-          if (ledger.some((e) => e.id === saved.id) || hasActiveEarn) {
-            const next = {
-              ...p,
-              rewardLedger: ledger.map((e) =>
-                e.id === saved.id || (hasActiveEarn && e.completionId === completionId && e.kind === "earn")
-                  ? saved
-                  : e
-              ),
-            };
-            stateRef.current = next;
-            void cacheCloudSnapshot(next);
-            return next;
-          }
-          const next = { ...p, rewardLedger: [saved, ...ledger] };
-          stateRef.current = next;
-          void cacheCloudSnapshot(next);
-          return next;
-        });
-        return saved;
-      }
-
-      const fid = prev.rewardSettings?.familyId || "local";
-      const saved: RewardLedgerEntry = {
-        id: newCloudId(),
-        familyId: fid,
-        childProfileId: childId,
-        amount: pts,
-        kind: "earn",
-        taskId,
-        completionId,
-        createdAt: new Date().toISOString(),
-      };
-      const next = {
-        ...prev,
-        rewardSettings: prev.rewardSettings ?? emptyRewardsState(fid).rewardSettings,
-        rewardLedger: [saved, ...(prev.rewardLedger ?? [])],
-      };
-      stateRef.current = next;
-      await persistLocal(next);
-      return saved;
-    },
-    [familyId, persistLocal, cacheCloudSnapshot]
-  );
 
   const resetChildBalance = useCallback(
     async (childId: string, note?: string): Promise<RewardLedgerEntry | null> => {
@@ -1291,10 +1212,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     addChild, updateChild, deleteChild, getTask, getProfile, resetDemo, refreshReminders, reloadFromCloud,
     rewardSettings, rewardChildSettings, rewardTasks, rewardLedger, rewardsEnabled, unitLabel,
     isRewardsActiveForChild,
-    balanceFor, ledgerByChild, pointsFor, isEarnValidated, unitKindFor, pendingEarns, pendingEarnCount,
+    balanceFor, ledgerByChild, pointsFor, unitKindFor,
     updateRewardSettings, setChildUnitKind, setChildRewardsEnabled, upsertChildRewardSettings,
     ensureMissingChildRewardSettings,
-    setTaskPoints, validateEarn, resetChildBalance,
+    setTaskPoints, resetChildBalance,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

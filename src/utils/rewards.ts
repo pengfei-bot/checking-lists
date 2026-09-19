@@ -69,8 +69,8 @@ export function ledgerHasVoidForCompletion(
 }
 
 /**
- * Active (not voided) earn for a completion. Used by pending list + validate
- * so a voided earn does not block re-earn after a rare same-id race.
+ * Active (not voided) earn for a completion. Used so a voided earn does not
+ * block re-earn after a rare same-id race, and for optimistic credit checks.
  */
 export function ledgerHasActiveEarnForCompletion(
   ledger: RewardLedgerEntry[],
@@ -84,7 +84,7 @@ export function ledgerHasActiveEarnForCompletion(
 
 /**
  * Build a local optimistic void adjust for an uncomplete, or null if there is
- * nothing to reverse (pending-only / already voided / no earn).
+ * nothing to reverse (already voided / no earn).
  */
 export function buildVoidAdjustForCompletion(
   ledger: RewardLedgerEntry[],
@@ -104,6 +104,39 @@ export function buildVoidAdjustForCompletion(
     taskId: completion.taskId,
     completionId: completion.id,
     note: VOID_UNCOMPLETE_NOTE,
+    createdAt,
+  };
+}
+
+/**
+ * Local optimistic earn on task complete (mirrors DB credit trigger).
+ * Returns null when rewards inactive, no points, or already credited.
+ */
+export function buildEarnForCompletion(
+  ledger: RewardLedgerEntry[],
+  rewardTasks: RewardTask[],
+  childSettings: RewardChildSettings[],
+  familySettings: RewardSettings | null | undefined,
+  completion: Pick<TaskCompletion, "id" | "taskId" | "childId">,
+  familyId: string,
+  id: string,
+  createdAt = new Date().toISOString()
+): RewardLedgerEntry | null {
+  if (!isRewardsActiveForChild(completion.childId, childSettings, familySettings)) {
+    return null;
+  }
+  const pts = pointsForTask(rewardTasks, completion.taskId);
+  if (pts == null) return null;
+  if (ledgerHasActiveEarnForCompletion(ledger, completion.id)) return null;
+  return {
+    id,
+    familyId,
+    childProfileId: completion.childId,
+    amount: pts,
+    kind: "earn",
+    taskId: completion.taskId,
+    completionId: completion.id,
+    note: "auto_complete",
     createdAt,
   };
 }
@@ -153,54 +186,4 @@ export function isRewardsActiveForChild(
 /** Short display unit for balances / CTAs (i18n keys resolved by caller). */
 export function unitShortKey(kind: RewardUnitKind): "rewards.unitPointsShort" | "rewards.unitMoneyShort" {
   return kind === "money" ? "rewards.unitMoneyShort" : "rewards.unitPointsShort";
-}
-
-export interface PendingEarnItem {
-  completionId: string;
-  taskId: string;
-  childId: string;
-  points: number;
-  taskTitle: string;
-  completedAt: string;
-  date: string;
-}
-
-/**
- * Pending = completions where rewards are active for that child, the task has
- * active reward_tasks.points, and no ledger earn row exists yet for completion_id.
- */
-export function listPendingEarns(
-  childSettings: RewardChildSettings[],
-  familySettings: RewardSettings | null | undefined,
-  completions: TaskCompletion[],
-  tasks: Task[],
-  rewardTasks: RewardTask[],
-  ledger: RewardLedgerEntry[]
-): PendingEarnItem[] {
-  const taskById = new Map(tasks.map((t) => [t.id, t]));
-  const earned = new Set(
-    ledger
-      .filter((e) => e.kind === "earn" && e.completionId)
-      .filter((e) => !ledgerHasVoidForCompletion(ledger, e.completionId as string))
-      .map((e) => e.completionId as string)
-  );
-  const out: PendingEarnItem[] = [];
-  for (const c of completions) {
-    if (!isRewardsActiveForChild(c.childId, childSettings, familySettings)) continue;
-    if (earned.has(c.id)) continue;
-    const pts = pointsForTask(rewardTasks, c.taskId);
-    if (pts == null) continue;
-    const task = taskById.get(c.taskId);
-    out.push({
-      completionId: c.id,
-      taskId: c.taskId,
-      childId: c.childId,
-      points: pts,
-      taskTitle: task?.title ?? "—",
-      completedAt: c.completedAt,
-      date: c.date,
-    });
-  }
-  out.sort((a, b) => b.completedAt.localeCompare(a.completedAt));
-  return out;
 }

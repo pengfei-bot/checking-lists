@@ -295,7 +295,7 @@ export function createSeedState(now = new Date()): AppState {
   ];
   const completions = buildDemoCompletions(tasks, now);
   const pointsByTask = new Map(rewardTasks.map((r) => [r.taskId, r.points]));
-  // Credit past demo completions so « À valider » is not flooded; leave none pending in seed.
+  // Credit past demo completions so balances match completed rewarded tasks.
   const rewardLedger: RewardLedgerEntry[] = completions
     .filter((c) => pointsByTask.has(c.taskId))
     .map((c, i) => ({

@@ -42,16 +42,11 @@ export function RewardsScreen({ navigation }: Props) {
     state,
     pointsFor,
     setTaskPoints,
-    pendingEarns,
-    validateEarn,
-    getProfile,
   } = useApp();
 
   const [saving, setSaving] = useState(false);
-  const [validatingId, setValidatingId] = useState<string | null>(null);
   const [pointsDraft, setPointsDraft] = useState<Record<string, string>>({});
   const [filterChildId, setFilterChildId] = useState<ChildFilter>("all");
-  const [pendingOpen, setPendingOpen] = useState(false);
   /** Per-child accordion — collapsed by default so the header affordance is obvious. */
   const [expandedByChild, setExpandedByChild] = useState<Record<string, boolean>>({});
   const scrollRef = useRef<ScrollView>(null);
@@ -68,27 +63,6 @@ export function RewardsScreen({ navigation }: Props) {
       .slice()
       .sort((a, b) => a.title.localeCompare(b.title) || a.time.localeCompare(b.time));
   }, [state.tasks, filterChildId]);
-
-  const filteredPending = useMemo(
-    () =>
-      pendingEarns.filter(
-        (item) => filterChildId === "all" || item.childId === filterChildId
-      ),
-    [pendingEarns, filterChildId]
-  );
-
-  const pendingCountByChild = useMemo(() => {
-    const map: Record<string, number> = {};
-    for (const item of pendingEarns) {
-      map[item.childId] = (map[item.childId] ?? 0) + 1;
-    }
-    return map;
-  }, [pendingEarns]);
-
-  // Auto-expand hub only when there is something to validate (still below fold).
-  useEffect(() => {
-    if (filteredPending.length > 0) setPendingOpen(true);
-  }, [filteredPending.length]);
 
   if (blocked || !currentProfile || currentProfile.role !== "parent") {
     return (
@@ -148,28 +122,6 @@ export function RewardsScreen({ navigation }: Props) {
       notifyUser(t("common.error"), frenchCloudError(e, t("rewards.saveFailed")));
     } finally {
       setSaving(false);
-    }
-  };
-
-  const onValidatePending = async (item: (typeof pendingEarns)[number]) => {
-    setValidatingId(item.completionId);
-    try {
-      const entry = await validateEarn(item.taskId, item.childId, item.completionId);
-      if (!entry) {
-        notifyUser(t("rewards.validateTitle"), t("rewards.noPointsConfigured"));
-        return;
-      }
-      notifyUser(
-        t("rewards.validateTitle"),
-        t("rewards.validateDone", {
-          amount: entry.amount,
-          unit: unitLabelFor(item.childId),
-        })
-      );
-    } catch (e) {
-      notifyUser(t("common.error"), frenchCloudError(e, t("rewards.validateFailed")));
-    } finally {
-      setValidatingId(null);
     }
   };
 
@@ -274,7 +226,6 @@ export function RewardsScreen({ navigation }: Props) {
             const bal = balanceFor(child.id);
             const unit = t(unitShortKey(kind));
             const expanded = !!expandedByChild[child.id];
-            const pendingCount = pendingCountByChild[child.id] ?? 0;
             return (
               <View
                 key={child.id}
@@ -321,11 +272,6 @@ export function RewardsScreen({ navigation }: Props) {
                           ? ` · ${t("rewards.soldeChip", { amount: bal, unit })}`
                           : ""}
                       </Text>
-                      {pendingCount > 0 ? (
-                        <Text style={styles.pendingBadgeText}>
-                          {t("rewards.pendingForChild", { count: pendingCount })}
-                        </Text>
-                      ) : null}
                       <Text style={styles.expandHint}>
                         {expanded ? t("rewards.tapToCollapse") : t("rewards.tapToExpand")}
                       </Text>
@@ -478,47 +424,6 @@ export function RewardsScreen({ navigation }: Props) {
           )}
         </View>
 
-        {/* « À valider » hub below the fold — collapsed when empty */}
-        <Pressable
-          onPress={() => setPendingOpen((v) => !v)}
-          style={styles.pendingHeader}
-          accessibilityRole="button"
-        >
-          <Text style={styles.pendingTitle}>
-            {t("rewards.toValidate")}
-            {filteredPending.length > 0 ? ` (${filteredPending.length})` : ""}
-          </Text>
-          <Text style={styles.pendingChevron}>{pendingOpen ? "▼" : "▶"}</Text>
-        </Pressable>
-        {pendingOpen ? (
-          <View style={styles.pendingCard}>
-            {filteredPending.length === 0 ? (
-              <Text style={styles.help}>{t("rewards.toValidateEmpty")}</Text>
-            ) : (
-              filteredPending.map((item) => {
-                const child = getProfile(item.childId);
-                const unit = unitLabelFor(item.childId);
-                return (
-                  <View key={item.completionId} style={styles.pendingRow}>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.taskTitle}>{item.taskTitle}</Text>
-                      <Text style={styles.childMeta}>
-                        {child ? `${child.emoji} ${child.name}` : "—"} · +{item.points} {unit}
-                      </Text>
-                    </View>
-                    <PrimaryButton
-                      label={t("rewards.validatePendingCta")}
-                      onPress={() => void onValidatePending(item)}
-                      loading={validatingId === item.completionId}
-                      style={styles.validateBtn}
-                    />
-                  </View>
-                );
-              })
-            )}
-          </View>
-        ) : null}
-
         <BuildStamp />
         <View style={{ height: 72 }} />
       </ScrollView>
@@ -556,32 +461,6 @@ const styles = StyleSheet.create({
     color: rewardsUi.navy,
   },
   help: { color: colors.textMuted, fontSize: 13, marginTop: 2, marginBottom: 6 },
-  pendingHeader: {
-    marginTop: 16,
-    marginBottom: 6,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  pendingTitle: { fontWeight: "800", fontSize: 16, color: rewardsUi.navy },
-  pendingChevron: { fontSize: 14, color: colors.textMuted, fontWeight: "700" },
-  pendingCard: {
-    backgroundColor: colors.card,
-    borderRadius: rewardsUi.cardRadius,
-    padding: 12,
-    borderWidth: 0,
-    marginBottom: 8,
-    ...rewardsUi.shadow,
-  },
-  pendingRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  validateBtn: { paddingHorizontal: 12, minWidth: 96 },
   childCard: {
     backgroundColor: colors.card,
     borderRadius: rewardsUi.cardRadius,
@@ -615,12 +494,6 @@ const styles = StyleSheet.create({
   statusLabel: { fontWeight: "700", fontSize: 13, marginTop: 2 },
   statusOn: { color: colors.success },
   statusOff: { color: colors.textMuted },
-  pendingBadgeText: {
-    marginTop: 3,
-    fontSize: 12,
-    fontWeight: "800",
-    color: rewardsUi.filterOrange,
-  },
   expandHint: {
     marginTop: 3,
     fontSize: 11,

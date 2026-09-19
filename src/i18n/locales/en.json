@@ -470,7 +470,7 @@
     "pointsInvalid": "Points must be a whole number ≥ 0.",
     "pointsSaved": "Task points updated.",
     "taskPoints": "Reward points",
-    "taskPointsHelp": "Optional. Parent validates after the child completes the task.",
+    "taskPointsHelp": "Optional. Points are credited as soon as the child completes the task.",
     "childNotFound": "Child not found.",
     "balanceLabel": "{{amount}} {{unit}}",
     "disabledHint": "Rewards are currently disabled.",
@@ -526,7 +526,8 @@
     "configureCtaShort": "Configure",
     "pendingForChild": "{{count}} to validate",
     "unitRowLabel": "Unit (€ / ⭐)",
-    "openChildHistory": "View balance and history"
+    "openChildHistory": "View balance and history",
+    "creditedOnComplete": "Credited on completion"
   },
   "parentSettings": {
     "title": "Settings",

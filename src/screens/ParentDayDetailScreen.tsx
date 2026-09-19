@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
@@ -6,12 +6,9 @@ import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
-import { frenchCloudError } from "../utils/cloudTimeout";
 import { unitShortKey } from "../utils/rewards";
 import { formatCompletionTime, formatLocalizedDate } from "../utils/dates";
 import { buildDayOverview, statusColor } from "../utils/calendarStatus";
-import { notifyUser } from "../utils/feedback";
-
 type Props = NativeStackScreenProps<RootStackParamList, "ParentDayDetail">;
 
 export function ParentDayDetailScreen({ navigation, route }: Props) {
@@ -24,11 +21,8 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
     setCurrentProfileId,
     isRewardsActiveForChild,
     pointsFor,
-    isEarnValidated,
-    validateEarn,
     unitKindFor,
   } = useApp();
-  const [busyId, setBusyId] = useState<string | null>(null);
 
   const overview = useMemo(
     () => buildDayOverview(date, state.tasks, state.completions, childrenProfiles),
@@ -91,82 +85,28 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
                   const pts = pointsFor(task.id);
                   const unitLabel = t(unitShortKey(unitKindFor(childDay.child.id)));
                   const childRewardsOn = isRewardsActiveForChild(childDay.child.id);
-                  // Points badge renders next to the title (visible before validate CTA).
-                  const validated = completion?.id ? isEarnValidated(completion.id) : false;
-                  const canValidate =
-                    !!done &&
-                    !!completion?.id &&
-                    isRewardsActiveForChild(childDay.child.id) &&
-                    pts != null &&
-                    !validated;
                   return (
-                    <View key={task.id} style={[styles.taskRow, done && styles.taskDone]}>
-                      <Pressable
-                        onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date })}
-                        style={{ flexDirection: "row", alignItems: "center", flex: 1, gap: 10 }}
-                      >
-                        <Text style={styles.taskCheck}>{done ? "✅" : "⬜"}</Text>
-                        <View style={{ flex: 1 }}>
-                          <View style={styles.titleRow}>
-                            <Text style={[styles.taskTitle, done && styles.taskTitleDone]}>{task.title}</Text>
-                            {childRewardsOn && pts != null ? (
-                              <View style={styles.pointsBadge}>
-                                <Text style={styles.pointsBadgeText}>
-                                  +{pts} {unitLabel}
-                                </Text>
-                              </View>
-                            ) : null}
-                          </View>
-                          <Text style={styles.taskMeta}>{metaParts.join(" · ")}</Text>
-                          {done && validated && pts != null ? (
-                            <Text style={styles.validated}>
-                              {t("rewards.alreadyValidated", { amount: pts, unit: unitLabel })}
-                            </Text>
+                    <Pressable
+                      key={task.id}
+                      onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date })}
+                      style={[styles.taskRow, done && styles.taskDone]}
+                    >
+                      <Text style={styles.taskCheck}>{done ? "✅" : "⬜"}</Text>
+                      <View style={{ flex: 1 }}>
+                        <View style={styles.titleRow}>
+                          <Text style={[styles.taskTitle, done && styles.taskTitleDone]}>{task.title}</Text>
+                          {childRewardsOn && pts != null ? (
+                            <View style={styles.pointsBadge}>
+                              <Text style={styles.pointsBadgeText}>
+                                +{pts} {unitLabel}
+                              </Text>
+                            </View>
                           ) : null}
                         </View>
-                        <Text style={styles.taskLink}>{t("calendar.detailLink")}</Text>
-                      </Pressable>
-                      {canValidate ? (
-                        <Pressable
-                          onPress={() => {
-                            void (async () => {
-                              setBusyId(completion!.id);
-                              try {
-                                const entry = await validateEarn(
-                                  task.id,
-                                  childDay.child.id,
-                                  completion!.id
-                                );
-                                if (entry) {
-                                  notifyUser(
-                                    t("rewards.validateTitle"),
-                                    t("rewards.validateDone", {
-                                      amount: entry.amount,
-                                      unit: unitLabel,
-                                    })
-                                  );
-                                }
-                              } catch (e) {
-                                notifyUser(
-                                  t("common.error"),
-                                  frenchCloudError(e, t("rewards.validateFailed"))
-                                );
-                              } finally {
-                                setBusyId(null);
-                              }
-                            })();
-                          }}
-                          style={styles.validateBtn}
-                          disabled={busyId === completion?.id}
-                        >
-                          <Text style={styles.validateBtnText}>
-                            {busyId === completion?.id
-                              ? "…"
-                              : t("rewards.validateCta", { amount: pts, unit: unitLabel })}
-                          </Text>
-                        </Pressable>
-                      ) : null}
-                    </View>
+                        <Text style={styles.taskMeta}>{metaParts.join(" · ")}</Text>
+                      </View>
+                      <Text style={styles.taskLink}>{t("calendar.detailLink")}</Text>
+                    </Pressable>
                   );
                 })}
               </View>
@@ -237,13 +177,4 @@ const styles = StyleSheet.create({
   taskTitleDone: { textDecorationLine: "line-through", color: colors.textMuted },
   taskMeta: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
   taskLink: { color: colors.primary, fontWeight: "700", fontSize: 12 },
-  validateBtn: {
-    marginLeft: 8,
-    backgroundColor: colors.primarySoft,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-  },
-  validateBtnText: { fontWeight: "800", color: colors.primary, fontSize: 12 },
-  validated: { color: colors.success, fontSize: 11, fontWeight: "700", marginTop: 2 },
 });

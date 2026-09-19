@@ -470,7 +470,7 @@
     "pointsInvalid": "Les points doivent être un entier ≥ 0.",
     "pointsSaved": "Points de la tâche mis à jour.",
     "taskPoints": "Points de récompense",
-    "taskPointsHelp": "Optionnel. Le parent valide après que l’enfant a terminé la tâche.",
+    "taskPointsHelp": "Optionnel. Les points sont crédités dès que l’enfant termine la tâche.",
     "childNotFound": "Enfant introuvable.",
     "balanceLabel": "{{amount}} {{unit}}",
     "disabledHint": "Les récompenses sont désactivées.",
@@ -526,7 +526,8 @@
     "configureCtaShort": "Configurer",
     "pendingForChild": "{{count}} à valider",
     "unitRowLabel": "Unité (€ / ⭐)",
-    "openChildHistory": "Voir solde et historique"
+    "openChildHistory": "Voir solde et historique",
+    "creditedOnComplete": "Crédité à la complétion"
   },
   "parentSettings": {
     "title": "Réglages",

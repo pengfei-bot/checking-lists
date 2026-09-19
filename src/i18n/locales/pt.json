@@ -526,7 +526,8 @@
     "configureCtaShort": "Configure",
     "pendingForChild": "{{count}} to validate",
     "unitRowLabel": "Unit (€ / ⭐)",
-    "openChildHistory": "View balance and history"
+    "openChildHistory": "View balance and history",
+    "creditedOnComplete": "Credited on completion"
   },
   "parentSettings": {
     "title": "",
