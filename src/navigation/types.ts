@@ -4,6 +4,7 @@ export type RootStackParamList = {
   SignIn: undefined;
   ForgotPassword: undefined;
   RedeemInvite: undefined;
+  JoinPending: undefined;
   FamilyShare: undefined;
   ProfilePicker: { mode?: "switch" } | undefined;
   ChildHome: undefined;

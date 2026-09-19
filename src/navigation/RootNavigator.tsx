@@ -23,6 +23,7 @@ import { TaskDetailScreen } from "../screens/TaskDetailScreen";
 import { TaskFormScreen } from "../screens/TaskFormScreen";
 import { FamilyShareScreen } from "../screens/auth/FamilyShareScreen";
 import { ForgotPasswordScreen } from "../screens/auth/ForgotPasswordScreen";
+import { JoinPendingScreen } from "../screens/auth/JoinPendingScreen";
 import { RedeemInviteScreen } from "../screens/auth/RedeemInviteScreen";
 import { SignInScreen } from "../screens/auth/SignInScreen";
 import { SignUpScreen } from "../screens/auth/SignUpScreen";
@@ -33,7 +34,7 @@ import { RootStackParamList } from "./types";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator() {
-  const { ready, session, signOut } = useAuth();
+  const { ready, session, signOut, isPendingJoin } = useAuth();
   const { t, i18n } = useTranslation();
   const navRef = useRef<NavigationContainerRef<RootStackParamList>>(null);
 
@@ -53,7 +54,7 @@ export function RootNavigator() {
     );
   }
 
-  const initial = session ? "ProfilePicker" : "Welcome";
+  const initial = !session ? "Welcome" : isPendingJoin ? "JoinPending" : "ProfilePicker";
 
   return (
     <View style={styles.root}>
@@ -75,6 +76,7 @@ export function RootNavigator() {
           <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: t("nav.signIn") }} />
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: t("nav.forgotPassword") }} />
           <Stack.Screen name="RedeemInvite" component={RedeemInviteScreen} options={{ title: t("nav.redeemInvite") }} />
+          <Stack.Screen name="JoinPending" component={JoinPendingScreen} options={{ title: t("nav.joinPending"), headerShown: false }} />
           <Stack.Screen name="FamilyShare" component={FamilyShareScreen} options={{ title: t("nav.familyShare") }} />
           <Stack.Screen name="ProfilePicker" component={ProfilePickerScreen} options={{ title: t("nav.whoAreYou"), headerShown: false }} />
           <Stack.Screen name="ChildHome" component={ChildHomeScreen} options={{ title: t("nav.childHome"), headerBackVisible: false, headerLeft: () => null }} />

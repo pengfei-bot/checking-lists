@@ -16,9 +16,51 @@ import {
   authErrorMessage, buildParent, CHILD_CREDS_KEY, clearDemo, DEMO_SESSION_KEY,
   mapFamily, randomToken, readMeta, saveMeta, ChildDeviceCreds,
 } from "./supabaseAuthHelpers";
-import { AuthResult, Family, FamilyInvite, ParentAccount, Session, SignInInput, SignUpInput } from "./types";
+import {
+  AuthResult,
+  Family,
+  FamilyInvite,
+  FamilyJoinRequest,
+  JoinRedeemResult,
+  JoinRequestStatus,
+  ParentAccount,
+  Session,
+  SignInInput,
+  SignUpInput,
+} from "./types";
+
 
 const BOOT_MS = 8_000;
+
+type RpcJoinPayload = {
+  status?: string;
+  family_id?: string | null;
+  family_name?: string | null;
+  request_id?: string | null;
+  display_name?: string | null;
+  created_at?: string | null;
+  resolved_at?: string | null;
+  id?: string;
+  user_id?: string;
+};
+
+function parseJoinStatus(raw: unknown): JoinRequestStatus {
+  const s = typeof raw === "string" ? raw : "";
+  if (s === "pending" || s === "approved" || s === "refused" || s === "none") return s;
+  return "none";
+}
+
+function asJoinPayload(data: unknown): RpcJoinPayload {
+  if (data && typeof data === "object" && !Array.isArray(data)) return data as RpcJoinPayload;
+  if (typeof data === "string") {
+    try {
+      return JSON.parse(data) as RpcJoinPayload;
+    } catch {
+      return { family_id: data, status: "approved" };
+    }
+  }
+  return {};
+}
 
 export class SupabaseAuthBackend implements AuthBackend {
   /** Restore session from secure meta + family cache when cloud is unreachable. */
@@ -31,6 +73,21 @@ export class SupabaseAuthBackend implements AuthBackend {
       displayName: meta.displayName,
       parentAccountId: meta.parentAccountId,
     });
+    if (meta.mode === "pending_join") {
+      const session: Session = {
+        mode: "pending_join",
+        familyId: meta.familyId,
+        email: meta.email,
+        displayName: meta.pendingFamilyName || meta.displayName || "Famille",
+        isDemo: false,
+        linkedViaInvite: true,
+        pendingRequestId: meta.pendingRequestId,
+        pendingFamilyName: meta.pendingFamilyName || meta.displayName,
+        joinStatus: meta.joinStatus ?? "pending",
+        startedAt: new Date().toISOString(),
+      };
+      return { session, parent: null, family: null };
+    }
     const session: Session = {
       mode: meta.mode ?? "authenticated",
       parentAccountId: meta.parentAccountId,
@@ -99,7 +156,16 @@ export class SupabaseAuthBackend implements AuthBackend {
           BOOT_MS,
           "Famille"
         );
-        if (membership.error || !membership.data?.family_id) return null;
+        if (membership.error || !membership.data?.family_id) {
+          // May be waiting for parent approval
+          try {
+            const pending = await this.refreshJoinRequest();
+            if (pending) return pending;
+          } catch { /* ignore */ }
+          const offlinePending = await this.restoreOfflineSession();
+          if (offlinePending?.session.mode === "pending_join") return offlinePending;
+          return null;
+        }
         const row = membership.data;
         const family = await this.getFamily(row.family_id);
         if (!family) return this.restoreOfflineSession();
@@ -133,6 +199,25 @@ export class SupabaseAuthBackend implements AuthBackend {
       } catch {
         return this.restoreOfflineSession();
       }
+    }
+
+    if (meta?.mode === "pending_join") {
+      try {
+        const pending = await this.refreshJoinRequest();
+        if (pending) return pending;
+      } catch { /* keep meta pending */ }
+      const session: Session = {
+        mode: "pending_join",
+        familyId,
+        displayName: meta.pendingFamilyName || meta.displayName,
+        isDemo: false,
+        linkedViaInvite: true,
+        pendingRequestId: meta.pendingRequestId,
+        pendingFamilyName: meta.pendingFamilyName || meta.displayName,
+        joinStatus: meta.joinStatus ?? "pending",
+        startedAt: new Date().toISOString(),
+      };
+      return { session, parent: null, family: null };
     }
 
     const family = await this.getFamily(familyId);
@@ -259,19 +344,72 @@ export class SupabaseAuthBackend implements AuthBackend {
     const nickname = (displayName?.trim() || "Appareil enfant").slice(0, 40);
     await this.ensureChildAuthSession(nickname);
     const supabase = getSupabase();
-    const { data: familyId, error: rpcErr } = await supabase.rpc("redeem_family_invite", { p_code: normalized, p_display_name: nickname });
+    const { data, error: rpcErr } = await supabase.rpc("redeem_family_invite", {
+      p_code: normalized,
+      p_display_name: nickname,
+    });
     if (rpcErr) {
       const msg = rpcErr.message || "";
-      if (msg.toLowerCase().includes("not authenticated")) throw new Error("Session enfant manquante. Réessayez avec le réseau actif.");
-      throw new Error(msg.includes("invalid") || msg.includes("not found") || msg.includes("inconnu") ? "Code d'invitation inconnu ou expiré." : msg || "Impossible de rejoindre la famille.");
+      if (msg.toLowerCase().includes("not authenticated")) {
+        throw new Error("Session enfant manquante. Réessayez avec le réseau actif.");
+      }
+      throw new Error(
+        msg.includes("invalid") || msg.includes("not found") || msg.includes("inconnu")
+          ? "Code d'invitation inconnu ou expiré."
+          : msg || "Impossible de rejoindre la famille."
+      );
     }
-    if (!familyId || typeof familyId !== "string") throw new Error("Code d'invitation inconnu ou expiré.");
-    const family = await this.getFamily(familyId);
-    if (!family) throw new Error("Famille liée au code introuvable.");
-    const session: Session = { mode: "child_device", familyId: family.id, displayName: family.name, isDemo: false, linkedViaInvite: true, startedAt: new Date().toISOString() };
-    await saveMeta({ mode: "child_device", displayName: family.name, linkedViaInvite: true, familyId: family.id });
-    await saveCachedFamily(family, null);
-    return { session, parent: null, family };
+    const payload = asJoinPayload(data);
+    const status = parseJoinStatus(payload.status);
+    const familyId = payload.family_id ?? null;
+    const familyName = payload.family_name || "Famille";
+    const requestId = payload.request_id ?? undefined;
+
+    if (status === "approved" && familyId) {
+      const family = await this.getFamily(familyId);
+      if (!family) throw new Error("Famille liée au code introuvable.");
+      const session: Session = {
+        mode: "child_device",
+        familyId: family.id,
+        displayName: family.name,
+        isDemo: false,
+        linkedViaInvite: true,
+        joinStatus: "approved",
+        startedAt: new Date().toISOString(),
+      };
+      await saveMeta({
+        mode: "child_device",
+        displayName: family.name,
+        linkedViaInvite: true,
+        familyId: family.id,
+        joinStatus: "approved",
+      });
+      await saveCachedFamily(family, null);
+      return { session, parent: null, family };
+    }
+
+    // Default: pending approval — no family_members → no family data access
+    const session: Session = {
+      mode: "pending_join",
+      familyId: familyId ?? undefined,
+      displayName: familyName,
+      isDemo: false,
+      linkedViaInvite: true,
+      pendingRequestId: requestId,
+      pendingFamilyName: familyName,
+      joinStatus: "pending",
+      startedAt: new Date().toISOString(),
+    };
+    await saveMeta({
+      mode: "pending_join",
+      displayName: familyName,
+      linkedViaInvite: true,
+      familyId: familyId ?? undefined,
+      pendingRequestId: requestId,
+      pendingFamilyName: familyName,
+      joinStatus: "pending",
+    });
+    return { session, parent: null, family: null };
   }
 
   private async ensureChildAuthSession(nickname: string): Promise<void> {
@@ -305,7 +443,145 @@ export class SupabaseAuthBackend implements AuthBackend {
     await secureSet(CHILD_CREDS_KEY, JSON.stringify({ email, password } satisfies ChildDeviceCreds));
   }
 
+
+  async refreshJoinRequest(): Promise<AuthResult | null> {
+    const meta = await readMeta();
+    if (!meta || (meta.mode !== "pending_join" && meta.joinStatus !== "pending" && meta.joinStatus !== "refused")) {
+      // Still allow poll if we have a pending request id
+      if (!meta?.pendingRequestId && meta?.mode !== "pending_join") return null;
+    }
+    const supabase = getSupabase();
+    const { data, error } = await supabase.rpc("get_my_join_request", {
+      p_request_id: meta?.pendingRequestId ?? null,
+    });
+    if (error) throw new Error(error.message);
+    const payload = asJoinPayload(data);
+    const status = parseJoinStatus(payload.status);
+
+    if (status === "approved") {
+      const familyId = payload.family_id ?? meta?.familyId;
+      if (!familyId) return null;
+      const family = await this.getFamily(familyId);
+      if (!family) return null;
+      const session: Session = {
+        mode: "child_device",
+        familyId: family.id,
+        displayName: family.name,
+        isDemo: false,
+        linkedViaInvite: true,
+        joinStatus: "approved",
+        startedAt: new Date().toISOString(),
+      };
+      await saveMeta({
+        mode: "child_device",
+        displayName: family.name,
+        linkedViaInvite: true,
+        familyId: family.id,
+        joinStatus: "approved",
+      });
+      await saveCachedFamily(family, null);
+      return { session, parent: null, family };
+    }
+
+    if (status === "refused") {
+      const familyName = payload.family_name || meta?.pendingFamilyName || meta?.displayName || "Famille";
+      const session: Session = {
+        mode: "pending_join",
+        familyId: payload.family_id ?? meta?.familyId,
+        displayName: familyName,
+        isDemo: false,
+        linkedViaInvite: true,
+        pendingRequestId: payload.request_id ?? meta?.pendingRequestId,
+        pendingFamilyName: familyName,
+        joinStatus: "refused",
+        startedAt: new Date().toISOString(),
+      };
+      await saveMeta({
+        mode: "pending_join",
+        displayName: familyName,
+        linkedViaInvite: true,
+        familyId: session.familyId,
+        pendingRequestId: session.pendingRequestId,
+        pendingFamilyName: familyName,
+        joinStatus: "refused",
+      });
+      return { session, parent: null, family: null };
+    }
+
+    if (status === "pending") {
+      const familyName = payload.family_name || meta?.pendingFamilyName || meta?.displayName || "Famille";
+      const session: Session = {
+        mode: "pending_join",
+        familyId: payload.family_id ?? meta?.familyId,
+        displayName: familyName,
+        isDemo: false,
+        linkedViaInvite: true,
+        pendingRequestId: payload.request_id ?? meta?.pendingRequestId,
+        pendingFamilyName: familyName,
+        joinStatus: "pending",
+        startedAt: new Date().toISOString(),
+      };
+      await saveMeta({
+        mode: "pending_join",
+        displayName: familyName,
+        linkedViaInvite: true,
+        familyId: session.familyId,
+        pendingRequestId: session.pendingRequestId,
+        pendingFamilyName: familyName,
+        joinStatus: "pending",
+      });
+      return { session, parent: null, family: null };
+    }
+
+    return null;
+  }
+
+  async listJoinRequests(familyId: string): Promise<FamilyJoinRequest[]> {
+    const { data, error } = await getSupabase().rpc("list_family_join_requests", {
+      p_family_id: familyId,
+    });
+    if (error) throw new Error(error.message);
+    const rows = Array.isArray(data) ? data : typeof data === "string" ? JSON.parse(data) : data;
+    if (!Array.isArray(rows)) return [];
+    return rows.map((r: RpcJoinPayload & { id?: string; user_id?: string; display_name?: string; created_at?: string; resolved_at?: string | null; family_id?: string; status?: string }) => ({
+      id: String(r.id),
+      familyId: String(r.family_id ?? familyId),
+      userId: String(r.user_id ?? ""),
+      displayName: String(r.display_name || "Appareil enfant"),
+      status: parseJoinStatus(r.status),
+      createdAt: String(r.created_at ?? new Date().toISOString()),
+      resolvedAt: r.resolved_at ?? null,
+    }));
+  }
+
+  async approveJoinRequest(requestId: string): Promise<JoinRedeemResult> {
+    const { data, error } = await getSupabase().rpc("approve_family_join_request", {
+      p_request_id: requestId,
+    });
+    if (error) throw new Error(error.message);
+    const payload = asJoinPayload(data);
+    return {
+      status: parseJoinStatus(payload.status),
+      familyId: payload.family_id,
+      requestId: payload.request_id ?? requestId,
+    };
+  }
+
+  async refuseJoinRequest(requestId: string): Promise<JoinRedeemResult> {
+    const { data, error } = await getSupabase().rpc("refuse_family_join_request", {
+      p_request_id: requestId,
+    });
+    if (error) throw new Error(error.message);
+    const payload = asJoinPayload(data);
+    return {
+      status: parseJoinStatus(payload.status),
+      familyId: payload.family_id,
+      requestId: payload.request_id ?? requestId,
+    };
+  }
+
   async getFamily(familyId: string): Promise<Family | null> {
+
     const fetchRemote = async (): Promise<Family | null> => {
       const supabase = getSupabase();
       const { data, error } = await supabase.from("families").select("*").eq("id", familyId).maybeSingle();

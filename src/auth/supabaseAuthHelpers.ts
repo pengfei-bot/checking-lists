@@ -14,6 +14,9 @@ export interface SessionMeta {
   familyId?: string;
   parentAccountId?: string;
   email?: string;
+  pendingRequestId?: string;
+  pendingFamilyName?: string;
+  joinStatus?: Session["joinStatus"];
 }
 
 export interface ChildDeviceCreds {

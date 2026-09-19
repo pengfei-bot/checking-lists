@@ -40,7 +40,8 @@
     "language": "ভাষা",
     "rewards": "Rewards",
     "rewardsChild": "Balance",
-    "parentSettings": ""
+    "parentSettings": "",
+    "joinPending": ""
   },
   "roles": {
     "parentRequired": "ঊর্ধ্বতন প্রোফাইল আবশ্যক।",
@@ -535,5 +536,30 @@
   "parentSettings": {
     "title": "",
     "subtitle": ""
+  },
+  "joinPending": {
+    "title": "",
+    "body": "",
+    "waiting": "",
+    "refresh": "",
+    "leave": "",
+    "refusedTitle": "",
+    "refusedBody": "",
+    "tryAgain": "",
+    "pollFailed": "",
+    "familyFallback": ""
+  },
+  "joinRequests": {
+    "title": "",
+    "hint": "",
+    "empty": "",
+    "approve": "",
+    "refuse": "",
+    "refuseTitle": "",
+    "refuseBody": "",
+    "approvedTitle": "",
+    "approvedBody": "",
+    "actionFailed": "",
+    "requestedAt": ""
   }
 }

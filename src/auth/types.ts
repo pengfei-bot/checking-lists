@@ -2,7 +2,9 @@
  * Auth domain types — pluggable LocalAuthBackend / SupabaseAuthBackend.
  */
 
-export type AuthMode = "anonymous" | "demo" | "authenticated" | "child_device";
+export type AuthMode = "anonymous" | "demo" | "authenticated" | "child_device" | "pending_join";
+
+export type JoinRequestStatus = "pending" | "approved" | "refused" | "none";
 
 export interface ParentAccount {
   id: string;
@@ -34,6 +36,23 @@ export interface FamilyInvite {
   expiresAt?: string;
 }
 
+export interface FamilyJoinRequest {
+  id: string;
+  familyId: string;
+  userId: string;
+  displayName: string;
+  status: JoinRequestStatus;
+  createdAt: string;
+  resolvedAt?: string | null;
+}
+
+export interface JoinRedeemResult {
+  status: JoinRequestStatus;
+  familyId?: string | null;
+  familyName?: string | null;
+  requestId?: string | null;
+}
+
 export interface Session {
   mode: AuthMode;
   parentAccountId?: string;
@@ -44,6 +63,10 @@ export interface Session {
   isDemo: boolean;
   /** Child device linked via invite (no parent password on device) */
   linkedViaInvite?: boolean;
+  /** Pending parent approval after redeeming an invite */
+  pendingRequestId?: string;
+  pendingFamilyName?: string;
+  joinStatus?: JoinRequestStatus;
   startedAt: string;
 }
 

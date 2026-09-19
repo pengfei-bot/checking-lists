@@ -40,7 +40,8 @@
     "language": "Language",
     "rewards": "Rewards",
     "rewardsChild": "Wins",
-    "parentSettings": "Settings"
+    "parentSettings": "Settings",
+    "joinPending": "Pending"
   },
   "roles": {
     "parentRequired": "Parent profile required.",
@@ -97,7 +98,7 @@
   },
   "redeem": {
     "title": "Join a family",
-    "hint": "Enter the 6-character code shown on the parent's phone (Internet required). The child will then pick a profile. This device only gets the child checklist — not the parent dashboard or task creation.",
+    "hint": "Enter the 6-character code shown on the parent's phone (Internet required). A parent must approve this device before it can access family lists. Then the child picks a profile.",
     "codeLabel": "Invite code (6 characters)",
     "codePlaceholder": "e.g. ABC123",
     "submit": "Link this device",
@@ -110,7 +111,7 @@
     "demoBody": "Available after creating a parent account. In demo mode, use seed profiles on the same device (no cloud sync).",
     "createParent": "Create parent account",
     "yourFamily": "Your family",
-    "body": "Show this code to your child. On their iPhone they open Famlist → “Join a family” and enter the code (Internet required). Lists sync via Supabase.",
+    "body": "Show this code to your child. On their device they open Famlist → “Join a family” and enter the code. You must then approve the request below before they can access the lists.",
     "inviteCode": "Invite code",
     "account": "Account: {{email}}",
     "generate": "Generate a new code",
@@ -534,6 +535,31 @@
   },
   "parentSettings": {
     "title": "Settings",
-    "subtitle": "Language, profile, family sharing, reminders, and account."
+    "subtitle": "Language, profile, family sharing (approvals), reminders, and account."
+  },
+  "joinPending": {
+    "title": "Waiting for approval",
+    "body": "Your request to join “{{family}}” was sent. A parent must approve it on their phone. This device does not have access to family data yet.",
+    "waiting": "Waiting for a parent…",
+    "refresh": "Refresh",
+    "leave": "Cancel and leave",
+    "refusedTitle": "Request refused",
+    "refusedBody": "A parent refused the request for “{{family}}”. You can try another code, or leave.",
+    "tryAgain": "Enter another code",
+    "pollFailed": "Could not check status. Try again.",
+    "familyFallback": "the family"
+  },
+  "joinRequests": {
+    "title": "Pending requests",
+    "hint": "Child devices that entered the invite code appear here. Approve to grant access, or refuse.",
+    "empty": "No pending requests.",
+    "approve": "Approve",
+    "refuse": "Refuse",
+    "refuseTitle": "Refuse this device?",
+    "refuseBody": "The child will see that the request was refused and will not get family access.",
+    "approvedTitle": "Device approved",
+    "approvedBody": "The child device can now pick a profile and use the app.",
+    "actionFailed": "Could not complete the action.",
+    "requestedAt": "Requested {{date}}"
   }
 }

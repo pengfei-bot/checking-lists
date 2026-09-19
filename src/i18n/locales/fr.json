@@ -40,7 +40,8 @@
     "language": "Langue",
     "rewards": "Récompenses",
     "rewardsChild": "Victoires",
-    "parentSettings": "Réglages"
+    "parentSettings": "Réglages",
+    "joinPending": "En attente"
   },
   "roles": {
     "parentRequired": "Profil parent requis.",
@@ -97,7 +98,7 @@
   },
   "redeem": {
     "title": "Rejoindre une famille",
-    "hint": "Entrez le code à 6 caractères affiché sur le téléphone du parent (réseau Internet requis). L'enfant choisira ensuite son profil. Cet appareil n'accède qu'à la checklist enfant — pas au tableau de bord parent ni à la création de tâches.",
+    "hint": "Entrez le code à 6 caractères affiché sur le téléphone du parent (réseau Internet requis). Un parent doit d'abord approuver cet appareil avant l'accès aux listes. Ensuite l'enfant choisira son profil.",
     "codeLabel": "Code d'invitation (6 caractères)",
     "codePlaceholder": "ex. ABC123",
     "submit": "Lier cet appareil",
@@ -110,7 +111,7 @@
     "demoBody": "Disponible après création d'un compte parent. En mode démo, utilisez les profils seed sur le même appareil (sans sync cloud).",
     "createParent": "Créer un compte parent",
     "yourFamily": "Votre famille",
-    "body": "Montrez ce code à votre enfant. Sur son iPhone, il ouvre Famlist → « Rejoindre une famille » et saisit le code (connexion Internet requise). Les listes se synchronisent via Supabase.",
+    "body": "Montrez ce code à votre enfant. Sur son appareil, il ouvre Famlist → « Rejoindre une famille » et saisit le code. Vous devez ensuite approuver la demande ci-dessous avant qu'il accède aux listes.",
     "inviteCode": "Code d'invitation",
     "account": "Compte : {{email}}",
     "generate": "Générer un nouveau code",
@@ -534,6 +535,31 @@
   },
   "parentSettings": {
     "title": "Réglages",
-    "subtitle": "Langue, profil, partage famille, rappels et compte."
+    "subtitle": "Langue, profil, partage famille (approbations), rappels et compte."
+  },
+  "joinPending": {
+    "title": "En attente d'approbation",
+    "body": "Votre demande pour rejoindre « {{family}} » a bien été envoyée. Un parent doit l'approuver sur son téléphone. Cet appareil n'a pas encore accès aux données de la famille.",
+    "waiting": "En attente du parent…",
+    "refresh": "Actualiser",
+    "leave": "Annuler et quitter",
+    "refusedTitle": "Demande refusée",
+    "refusedBody": "Un parent a refusé la demande pour « {{family}} ». Vous pouvez réessayer avec un nouveau code, ou quitter.",
+    "tryAgain": "Saisir un autre code",
+    "pollFailed": "Impossible de vérifier le statut. Réessayez.",
+    "familyFallback": "la famille"
+  },
+  "joinRequests": {
+    "title": "Demandes en attente",
+    "hint": "Les appareils enfants qui ont saisi le code apparaissent ici. Approuvez pour leur donner accès, ou refusez.",
+    "empty": "Aucune demande en attente.",
+    "approve": "Approuver",
+    "refuse": "Refuser",
+    "refuseTitle": "Refuser cet appareil ?",
+    "refuseBody": "L'enfant verra que la demande a été refusée et n'aura pas accès à la famille.",
+    "approvedTitle": "Appareil approuvé",
+    "approvedBody": "L'appareil enfant peut maintenant choisir un profil et utiliser l'app.",
+    "actionFailed": "Action impossible.",
+    "requestedAt": "Demandé le {{date}}"
   }
 }

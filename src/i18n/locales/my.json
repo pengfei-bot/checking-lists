@@ -40,7 +40,8 @@
     "language": "语言",
     "rewards": "Rewards",
     "rewardsChild": "Balance",
-    "parentSettings": ""
+    "parentSettings": "",
+    "joinPending": ""
   },
   "roles": {
     "parentRequired": "မိဘပရိုဖိုင် လိုအပ်သည်။",
@@ -535,5 +536,30 @@
   "parentSettings": {
     "title": "",
     "subtitle": ""
+  },
+  "joinPending": {
+    "title": "",
+    "body": "",
+    "waiting": "",
+    "refresh": "",
+    "leave": "",
+    "refusedTitle": "",
+    "refusedBody": "",
+    "tryAgain": "",
+    "pollFailed": "",
+    "familyFallback": ""
+  },
+  "joinRequests": {
+    "title": "",
+    "hint": "",
+    "empty": "",
+    "approve": "",
+    "refuse": "",
+    "refuseTitle": "",
+    "refuseBody": "",
+    "approvedTitle": "",
+    "approvedBody": "",
+    "actionFailed": "",
+    "requestedAt": ""
   }
 }

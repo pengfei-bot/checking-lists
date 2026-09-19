@@ -8,6 +8,8 @@ import {
   AuthResult,
   Family,
   FamilyInvite,
+  FamilyJoinRequest,
+  JoinRedeemResult,
   ParentAccount,
   Session,
   SignInInput,
@@ -246,7 +248,26 @@ export class LocalAuthBackend implements AuthBackend {
     return { session, parent: null, family };
   }
 
+
+  /** Local/demo: no parent approval gate — join is immediate. */
+  async refreshJoinRequest(): Promise<AuthResult | null> {
+    return null;
+  }
+
+  async listJoinRequests(_familyId: string): Promise<FamilyJoinRequest[]> {
+    return [];
+  }
+
+  async approveJoinRequest(_requestId: string): Promise<JoinRedeemResult> {
+    return { status: "approved" };
+  }
+
+  async refuseJoinRequest(_requestId: string): Promise<JoinRedeemResult> {
+    return { status: "refused" };
+  }
+
   async getFamily(familyId: string): Promise<Family | null> {
+
     const store = await readStore();
     return store.families.find((f) => f.id === familyId) ?? null;
   }

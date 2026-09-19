@@ -12,6 +12,9 @@ import { isUsingSecureStore } from "./secureStorage";
 import {
   Family,
   FamilyInvite,
+  AuthMode,
+  FamilyJoinRequest,
+  JoinRedeemResult,
   ParentAccount,
   Session,
   SignInInput,
@@ -36,8 +39,14 @@ interface AuthContextValue {
   deleteAccount: () => Promise<void>;
   continueAsDemo: () => Promise<void>;
   createInvite: () => Promise<FamilyInvite>;
-  redeemInvite: (code: string, displayName?: string) => Promise<void>;
+  redeemInvite: (code: string, displayName?: string) => Promise<"pending_join" | "child_device" | AuthMode>;
   refreshFamily: () => Promise<void>;
+  /** True while waiting for parent approval after invite redeem */
+  isPendingJoin: boolean;
+  refreshJoinRequest: () => Promise<void>;
+  listJoinRequests: () => Promise<FamilyJoinRequest[]>;
+  approveJoinRequest: (requestId: string) => Promise<JoinRedeemResult>;
+  refuseJoinRequest: (requestId: string) => Promise<JoinRedeemResult>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -121,19 +130,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const redeemInvite = useCallback(
     async (code: string, displayName?: string) => {
-      apply(await backend.redeemInvite(code, displayName));
+      const result = await backend.redeemInvite(code, displayName);
+      apply(result);
+      return result.session.mode;
     },
     [apply]
   );
 
   const refreshFamily = useCallback(async () => {
     if (!session?.familyId) return;
+    if (session.mode === "pending_join") return;
     setFamily(await backend.getFamily(session.familyId));
+  }, [session?.familyId, session?.mode]);
+
+  const refreshJoinRequest = useCallback(async () => {
+    const result = await backend.refreshJoinRequest();
+    if (result) apply(result);
+  }, [apply]);
+
+  const listJoinRequests = useCallback(async () => {
+    if (!session?.familyId) return [];
+    return backend.listJoinRequests(session.familyId);
   }, [session?.familyId]);
 
-  const isCloud = !!session && !session.isDemo && !!session.familyId;
+  const approveJoinRequest = useCallback(async (requestId: string) => {
+    return backend.approveJoinRequest(requestId);
+  }, []);
+
+  const refuseJoinRequest = useCallback(async (requestId: string) => {
+    return backend.refuseJoinRequest(requestId);
+  }, []);
+
+  const isCloud = !!session && !session.isDemo && !!session.familyId && session.mode !== "pending_join";
+  const isPendingJoin = session?.mode === "pending_join";
   const isChildDevice =
-    session?.mode === "child_device" || (!!session?.linkedViaInvite && !session.isDemo);
+    session?.mode === "child_device" ||
+    (!!session?.linkedViaInvite && !session.isDemo && session?.mode !== "pending_join");
 
   const value: AuthContextValue = useMemo(
     () => ({
@@ -154,6 +186,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       createInvite,
       redeemInvite,
       refreshFamily,
+      isPendingJoin,
+      refreshJoinRequest,
+      listJoinRequests,
+      approveJoinRequest,
+      refuseJoinRequest,
     }),
     [
       ready,
@@ -162,6 +199,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       parent,
       isChildDevice,
       isCloud,
+      isPendingJoin,
       signUp,
       signIn,
       signOut,
@@ -170,6 +208,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       createInvite,
       redeemInvite,
       refreshFamily,
+      refreshJoinRequest,
+      listJoinRequests,
+      approveJoinRequest,
+      refuseJoinRequest,
     ]
   );
 

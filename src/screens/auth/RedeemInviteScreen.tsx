@@ -26,8 +26,12 @@ export function RedeemInviteScreen({ navigation }: Props) {
     setError(null);
     setBusy(true);
     try {
-      await redeemInvite(code);
-      navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
+      const mode = await redeemInvite(code);
+      if (mode === "pending_join") {
+        navigation.reset({ index: 0, routes: [{ name: "JoinPending" }] });
+      } else {
+        navigation.reset({ index: 0, routes: [{ name: "ProfilePicker" }] });
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : t("redeem.invalid"));
     } finally {
@@ -47,7 +51,7 @@ export function RedeemInviteScreen({ navigation }: Props) {
       <TextInput
         style={styles.input}
         value={code}
-        onChangeText={(t) => setCode(t.toUpperCase())}
+        onChangeText={(txt) => setCode(txt.toUpperCase())}
         placeholder={t("redeem.codePlaceholder")}
         placeholderTextColor={colors.textMuted}
         autoCapitalize="characters"

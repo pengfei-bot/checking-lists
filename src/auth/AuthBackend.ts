@@ -2,6 +2,8 @@ import {
   AuthResult,
   Family,
   FamilyInvite,
+  FamilyJoinRequest,
+  JoinRedeemResult,
   ParentAccount,
   Session,
   SignInInput,
@@ -18,6 +20,7 @@ import {
  * - signUp / signIn / signOut → Supabase Auth (+ Sign in with Apple later)
  * - createInvite / redeemInvite → families.invite_code + RPC redeem_family_invite
  * - Session → JWT + refresh; Family → families / family_members
+ * - Join approval → family_join_requests + approve/refuse RPCs
  */
 export interface AuthBackend {
   /** Restore persisted session on app launch */
@@ -37,10 +40,23 @@ export interface AuthBackend {
   createInvite(familyId: string): Promise<FamilyInvite>;
 
   /**
-   * Child device enters invite code to join parent family (Supabase RPC).
-   * @param displayName optional; defaults to « Appareil enfant » (UI no longer collects a name)
+   * Child device enters invite code. Cloud path creates a *pending* join request
+   * until a parent approves (no full family data until then).
+   * @param displayName optional; defaults to « Appareil enfant »
    */
   redeemInvite(code: string, displayName?: string): Promise<AuthResult>;
+
+  /** Child: poll join request status; may promote session to child_device when approved */
+  refreshJoinRequest(): Promise<AuthResult | null>;
+
+  /** Parent: list pending join requests for the active family */
+  listJoinRequests(familyId: string): Promise<FamilyJoinRequest[]>;
+
+  /** Parent: approve a pending join request (links child_device membership) */
+  approveJoinRequest(requestId: string): Promise<JoinRedeemResult>;
+
+  /** Parent: refuse a pending join request */
+  refuseJoinRequest(requestId: string): Promise<JoinRedeemResult>;
 
   getFamily(familyId: string): Promise<Family | null>;
   getParent(accountId: string): Promise<ParentAccount | null>;
