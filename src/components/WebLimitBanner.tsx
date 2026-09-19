@@ -1,16 +1,22 @@
 import React from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../auth";
 import { colors } from "../theme/colors";
 
+/** Web-only capability notice — must not claim "demo" when session is cloud. */
 export function WebLimitBanner() {
   const { t } = useTranslation();
+  const { isDemo, isCloud } = useAuth();
   if (Platform.OS !== "web") return null;
+  const text = isDemo
+    ? t("webBanner.demo")
+    : isCloud
+      ? t("webBanner.cloud")
+      : t("webBanner.guest");
   return (
     <View style={styles.wrap}>
-      <Text style={styles.text}>
-        {t("webBanner.text")}
-      </Text>
+      <Text style={styles.text}>{text}</Text>
     </View>
   );
 }

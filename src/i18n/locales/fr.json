@@ -354,7 +354,9 @@
     "webDownloaded": "{{count}} tâche(s) prêtes. Ouvre le fichier .ics pour les ajouter à ton calendrier."
   },
   "webBanner": {
-    "text": "Mode démo web : UI + données locales OK. Notifications désactivées. Photo = sélecteur de fichier (feedback affiché)."
+    "demo": "Mode démo web : UI + données locales. Notifications désactivées. Photo = sélecteur de fichier.",
+    "cloud": "Version web : notifications poussées désactivées. Photo = sélecteur de fichier. Compte cloud synchronisé.",
+    "guest": "Version web Famlist. Connectez-vous ou créez un compte pour synchroniser."
   },
   "language": {
     "title": "Langue",

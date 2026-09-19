@@ -354,7 +354,9 @@
     "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
-    "text": "Web demo mode: UI + local data OK. Notifications off. Photo = file picker (feedback shown)."
+    "demo": "Web demo mode: local UI data only. Push notifications off. Photo = file picker.",
+    "cloud": "Web build: push notifications off. Photo = file picker. Cloud account synced.",
+    "guest": "Famlist web. Sign in or create an account to sync."
   },
   "language": {
     "title": "Language",
