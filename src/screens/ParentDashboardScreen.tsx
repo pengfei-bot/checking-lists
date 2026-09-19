@@ -28,6 +28,7 @@ import { confirmUser, notifyUser } from "../utils/feedback";
 import { unitShortKey } from "../utils/rewards";
 import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
 import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
+import { BuildStamp } from "../components/BuildStamp";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParentDashboard">;
 
@@ -489,6 +490,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
           </View>
         </Pressable>
       </Modal>
+      <BuildStamp />
       <ParentRewardsBottomNav navigation={navigation} active="dashboard" />
 
       <PhotoLightbox

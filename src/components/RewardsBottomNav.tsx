@@ -11,6 +11,10 @@ type Navigate = {
       ? [screen: RouteName] | [screen: RouteName, params: RootStackParamList[RouteName]]
       : [screen: RouteName, params: RootStackParamList[RouteName]]
   ) => void;
+  reset?: (state: {
+    index: number;
+    routes: Array<{ name: keyof RootStackParamList; params?: object }>;
+  }) => void;
 };
 
 type ChildTab = "home" | "tasks" | "rewards" | "history";
@@ -125,7 +129,14 @@ export function ParentRewardsBottomNav({
       )}
       {item("profile", "👤", t("parentDash.navProfile"), () => {
         setCurrentProfileId(null);
-        navigation.navigate("ProfilePicker", { mode: "switch" });
+        if (navigation.reset) {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "ProfilePicker", params: { mode: "switch" } }],
+          });
+        } else {
+          navigation.navigate("ProfilePicker", { mode: "switch" });
+        }
       })}
     </View>
   );

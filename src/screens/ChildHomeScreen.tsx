@@ -21,6 +21,7 @@ import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
 import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
 import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
 import { ChildRewardsBottomNav } from "../components/RewardsBottomNav";
+import { BuildStamp } from "../components/BuildStamp";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChildHome">;
 
@@ -243,6 +244,7 @@ export function ChildHomeScreen({ navigation }: Props) {
         </View>
       </ScrollView>
 
+      <BuildStamp />
       <ChildRewardsBottomNav
         navigation={navigation}
         active="home"

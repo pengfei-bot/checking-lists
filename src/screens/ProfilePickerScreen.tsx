@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -38,18 +38,24 @@ export function ProfilePickerScreen({ navigation, route }: Props) {
   const kids = state.profiles.filter((p) => p.role === "child");
   const singleChildId = kids.length === 1 ? kids[0].id : null;
 
-  // Resume last profile (and always auto-enter when this device is a child with one kid).
-  // Skip when opened from bottom-nav "Profil" (mode=switch) so the picker stays usable.
+  // Resume last profile once on cold entry. Never when switching profiles from the tab bar.
+  const didAutoEnter = useRef(false);
   useEffect(() => {
     if (!ready) return;
-    if (route.params?.mode === "switch") return;
+    if (route.params?.mode === "switch") {
+      didAutoEnter.current = true; // block later auto-enter this mount
+      return;
+    }
+    if (didAutoEnter.current) return;
     if (isChildDevice && singleChildId) {
+      didAutoEnter.current = true;
       if (state.currentProfileId !== singleChildId) setCurrentProfileId(singleChildId);
       navigation.reset({ index: 0, routes: [{ name: "ChildHome" }] });
       return;
     }
     const remembered = state.profiles.find((p) => p.id === state.currentProfileId);
     if (!remembered) return;
+    didAutoEnter.current = true;
     navigation.reset({
       index: 0,
       routes: [{ name: remembered.role === "parent" ? "ParentDashboard" : "ChildHome" }],
