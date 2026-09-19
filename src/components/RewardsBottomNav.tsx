@@ -66,7 +66,7 @@ export function ChildRewardsBottomNav({
   return (
     <View style={[rewardsStyles.fakeNav, styles.navBar]}>
       {item("home", "🏠", t("childHome.navHome"), () => navigation.navigate("ChildHome"))}
-      {item("tasks", "📋", t("childHome.navTasks"), () => navigation.navigate("ChildHistory"))}
+      {item("tasks", "📅", t("childHome.navTasks"), () => navigation.navigate("ChildHistory"))}
       {/* No Récompenses tab — Accueil solde card opens RewardsChild. */}
       {rewardsActive
         ? item("history", "📜", t("childHome.navHistory"), () => {
@@ -122,7 +122,7 @@ export function ParentRewardsBottomNav({
       {item("dashboard", "🏠", t("parentDash.navDashboard"), () =>
         navigation.navigate("ParentDashboard")
       )}
-      {item("tasks", "📋", t("parentDash.navTasks"), () =>
+      {item("tasks", "📅", t("parentDash.navTasks"), () =>
         navigation.navigate("ParentCalendar")
       )}
       {item("rewards", "🏆", t("parentDash.navRewards"), () =>

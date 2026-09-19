@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
 import { colors, softTint } from "../theme/colors";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
@@ -41,7 +40,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
     unitKindFor,
     balanceFor,
   } = useApp();
-  const { isAuthenticated, family } = useAuth();
   const [filterChildId, setFilterChildId] = useState<string | "all">("all");
   const [lightbox, setLightbox] = useState<{
     uri: string;
@@ -93,10 +91,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
   const goNewTask = () => navigation.navigate("TaskForm", {});
 
 
-
-  const shareLabel = family?.inviteCode
-    ? t("parentDash.shareFamilyCode", { code: family.inviteCode })
-    : t("parentDash.shareFamily");
 
   return (
     <View style={styles.root}>
@@ -194,58 +188,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
             ))}
           </View>
         ) : null}
-
-        <View style={styles.compactRow}>
-          <Pressable
-            onPress={() => navigation.navigate("ParentCalendar")}
-            style={({ pressed }) => [styles.compactBtn, { opacity: pressed ? 0.85 : 1 }]}
-          >
-            <Text style={styles.compactEmoji}>📅</Text>
-            <Text style={styles.compactLabel} numberOfLines={1}>
-              {t("parentDash.calendar")}
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate("Rewards")}
-            accessibilityRole="button"
-            accessibilityLabel={t("parentDash.rewards")}
-            style={({ pressed }) => [
-              styles.compactBtn,
-              styles.compactBtnIconOnly,
-              { opacity: pressed ? 0.85 : 1 },
-            ]}
-          >
-            <Text style={styles.compactEmoji}>⭐</Text>
-            {pendingEarnCount > 0 ? (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>
-                  {pendingEarnCount > 99 ? "99+" : String(pendingEarnCount)}
-                </Text>
-              </View>
-            ) : null}
-          </Pressable>
-          {isAuthenticated ? (
-            <Pressable
-              onPress={() => navigation.navigate("FamilyShare")}
-              style={({ pressed }) => [styles.compactBtn, { opacity: pressed ? 0.85 : 1 }]}
-            >
-              <Text style={styles.compactEmoji}>🔗</Text>
-              <Text style={styles.compactLabel} numberOfLines={1}>
-                {shareLabel}
-              </Text>
-            </Pressable>
-          ) : (
-            <Pressable
-              onPress={() => navigation.navigate("SignUp")}
-              style={({ pressed }) => [styles.compactBtn, { opacity: pressed ? 0.85 : 1 }]}
-            >
-              <Text style={styles.compactEmoji}>🔗</Text>
-              <Text style={styles.compactLabel} numberOfLines={1}>
-                {t("parentDash.shareFamily")}
-              </Text>
-            </Pressable>
-          )}
-        </View>
 
         <Text style={styles.section}>{todayTitle}</Text>
         {todayTasks.length === 0 ? (
@@ -478,22 +420,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   balanceCtaText: { fontWeight: "800", color: rewardsUi.filterOrange, fontSize: 12 },
-  compactRow: { flexDirection: "row", gap: 8, marginBottom: 10 },
-  compactBtn: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    backgroundColor: colors.card,
-    borderRadius: 14,
-    borderWidth: 0,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    ...rewardsUi.shadow,
-  },
-  compactBtnIconOnly: { flex: 0.55, justifyContent: "center", gap: 6, paddingHorizontal: 10 },
-  compactEmoji: { fontSize: 18 },
-  compactLabel: { flex: 1, fontWeight: "700", color: colors.primary, fontSize: 13 },
   badge: {
     minWidth: 20,
     height: 20,

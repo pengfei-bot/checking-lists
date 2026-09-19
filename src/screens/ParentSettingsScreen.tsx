@@ -146,6 +146,19 @@ export function ParentSettingsScreen({ navigation }: Props) {
 
         <View style={styles.group}>
           <SettingsRow
+            label={t("familyShare.title")}
+            onPress={() => {
+              if (isAuthenticated) {
+                navigation.navigate("FamilyShare");
+              } else {
+                navigation.navigate("SignUp");
+              }
+            }}
+          />
+        </View>
+
+        <View style={styles.group}>
+          <SettingsRow
             label={t("parentDash.openRewards")}
             onPress={() => navigation.navigate("Rewards")}
           />

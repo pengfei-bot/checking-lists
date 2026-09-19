@@ -168,7 +168,7 @@
     "tasksToday": "Today's tasks",
     "tasksPossible": "{{count}} tasks · {{stars}} ⭐ possible",
     "navHome": "Home",
-    "navTasks": "Tasks",
+    "navTasks": "Calendar",
     "navRewards": "Rewards",
     "navHistory": "History",
     "changeColor": "Change my color",
@@ -210,7 +210,7 @@
     "rewards": "Rewards",
     "openRewards": "⭐ Open Rewards",
     "navDashboard": "Dashboard",
-    "navTasks": "Tasks",
+    "navTasks": "Calendar",
     "navRewards": "Rewards",
     "navProfile": "Profile"
   },
@@ -522,6 +522,6 @@
   },
   "parentSettings": {
     "title": "Settings",
-    "subtitle": "Language, profile, reminders, and account."
+    "subtitle": "Language, profile, family sharing, reminders, and account."
   }
 }
