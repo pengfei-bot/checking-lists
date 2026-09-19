@@ -188,7 +188,6 @@ export function ChildHomeScreen({ navigation }: Props) {
               <Text style={styles.ready}>{t("childHome.readyLine")}</Text>
             </View>
             <View style={styles.mascotWrap}>
-              <Text style={styles.mascot}>{currentProfile.emoji || "🦁"}</Text>
               <Pressable
                 onPress={() => setMenuOpen(true)}
                 style={styles.moreBtn}
@@ -273,19 +272,17 @@ export function ChildHomeScreen({ navigation }: Props) {
                     <Text style={styles.taskMeta}>🕒 {task.time}</Text>
                   </Pressable>
 
-                  {task.photoRequired ? (
-                    <Pressable
-                      style={styles.camBtn}
-                      onPress={() => void doneWithPhoto(task.id)}
-                      accessibilityLabel={
-                        task.photoRequired
-                          ? t("photoRequired.addToValidate")
-                          : t("taskDetail.childDonePhoto")
-                      }
-                    >
-                      <Text style={styles.camText}>{completionFor(task.id)?.photoUri ? "✓📷" : "📷"}</Text>
-                    </Pressable>
-                  ) : null}
+                  <Pressable
+                    style={styles.camBtn}
+                    onPress={() => void doneWithPhoto(task.id)}
+                    accessibilityLabel={
+                      task.photoRequired
+                        ? t("photoRequired.addToValidate")
+                        : t("taskDetail.childDonePhoto")
+                    }
+                  >
+                    <Text style={styles.camText}>{completionFor(task.id)?.photoUri ? "✓📷" : "📷"}</Text>
+                  </Pressable>
 
                   {pts != null ? (
                     <View style={rewardsStyles.pointsPill}>
