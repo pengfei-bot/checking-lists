@@ -274,6 +274,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   task={task}
                   done={!!done}
                   completedAt={done?.completedAt}
+                  hasPhoto={!!done?.photoUri}
                   childName={child?.name}
                   onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                   rightAccessory={

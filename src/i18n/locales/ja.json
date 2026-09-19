@@ -354,7 +354,9 @@
     "webDownloaded": "{{count}}件のタスクを書き出しました。.icsファイルを開いてカレンダーに追加してください。"
   },
   "webBanner": {
-    "text": "Webデモモード:UI +ローカルデータOK。 通知オフ。 写真=ファイルピッカー(フィードバック表示)"
+    "demo": "Webデモモード:UI +ローカルデータOK。 通知オフ。 写真=ファイルピッカー(フィードバック表示)",
+    "cloud": "Webデモモード:UI +ローカルデータOK。 通知オフ。 写真=ファイルピッカー(フィードバック表示)",
+    "guest": "Webデモモード:UI +ローカルデータOK。 通知オフ。 写真=ファイルピッカー(フィードバック表示)"
   },
   "language": {
     "title": "用語集",
@@ -417,5 +419,14 @@
   "demoEscape": {
     "message": "Demo mode — local data only (no cloud sync).",
     "cta": "Create an account / Sign in"
+  },
+  "photoRequired": {
+    "badge": "Photo required",
+    "toggle": "Require proof photo",
+    "help": "The child must add a photo to complete this task.",
+    "addToValidate": "Add a photo to complete",
+    "ctaPhoto": "Photo 📷",
+    "requiredA11y": "Photo required",
+    "receivedA11y": "Photo received"
   }
 }

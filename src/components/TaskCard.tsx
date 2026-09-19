@@ -10,18 +10,34 @@ interface Props {
   task: Task;
   done?: boolean;
   completedAt?: string;
+  /** Proof photo already received (Storage URL / local) */
+  hasPhoto?: boolean;
   childName?: string;
   onPress?: () => void;
   rightAccessory?: React.ReactNode;
 }
 
-export function TaskCard({ task, done, completedAt, childName, onPress, rightAccessory }: Props) {
+export function TaskCard({
+  task,
+  done,
+  completedAt,
+  hasPhoto,
+  childName,
+  onPress,
+  rightAccessory,
+}: Props) {
   const { t, i18n } = useTranslation();
   const doneTime = done && completedAt ? formatCompletionTime(completedAt, i18n.language) : null;
   const doneLabel = done
     ? doneTime
       ? `· ✅ ${t("common.doneAt", { time: doneTime })}`
       : `· ✅ ${t("common.done")}`
+    : "";
+
+  const photoPill = task.photoRequired
+    ? hasPhoto
+      ? " ✓📷"
+      : " 📷"
     : "";
 
   return (
@@ -36,11 +52,24 @@ export function TaskCard({ task, done, completedAt, childName, onPress, rightAcc
       <View style={styles.left}>
         <Text style={[styles.time, done && styles.muted]}>{task.time}</Text>
         <View style={{ flex: 1 }}>
-          <Text style={[styles.title, done && styles.titleDone]}>{task.title}</Text>
+          <View style={styles.titleRow}>
+            <Text style={[styles.title, done && styles.titleDone]}>{task.title}</Text>
+            {task.photoRequired ? (
+              <Text
+                style={styles.photoPill}
+                accessibilityLabel={
+                  hasPhoto ? t("photoRequired.receivedA11y") : t("photoRequired.requiredA11y")
+                }
+              >
+                {hasPhoto ? "✓📷" : "📷"}
+              </Text>
+            ) : null}
+          </View>
           <Text style={styles.meta}>
             {childName ? `${childName} · ` : ""}
             {recurrenceLabel(task.recurrence, task.intervalWeeks)}
             {task.reminderEnabled ? " · 🔔" : ""}
+            {photoPill ? ` ·${photoPill.trim()}` : ""}
             {doneLabel ? ` ${doneLabel}` : ""}
           </Text>
         </View>
@@ -74,8 +103,10 @@ const styles = StyleSheet.create({
     color: colors.primary,
     minWidth: 48,
   },
-  title: { fontSize: 16, fontWeight: "700", color: colors.text },
+  titleRow: { flexDirection: "row", alignItems: "center", gap: 6, flexWrap: "wrap" },
+  title: { fontSize: 16, fontWeight: "700", color: colors.text, flexShrink: 1 },
   titleDone: { textDecorationLine: "line-through", color: colors.textMuted },
+  photoPill: { fontSize: 14 },
   meta: { marginTop: 2, fontSize: 12, color: colors.textMuted },
   muted: { color: colors.textMuted },
 });

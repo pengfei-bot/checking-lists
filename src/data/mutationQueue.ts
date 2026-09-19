@@ -245,6 +245,7 @@ export function taskInputForQueue(
     time: input.time,
     recurrence: input.recurrence as Recurrence,
     reminderEnabled: input.reminderEnabled,
+    photoRequired: !!input.photoRequired,
     onceDate: input.onceDate,
     startDate: input.startDate,
     endDate: input.endDate,

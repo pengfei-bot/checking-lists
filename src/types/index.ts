@@ -26,6 +26,8 @@ export interface Task {
   startDate?: string;
   /** ISO YYYY-MM-DD inclusive end for recurring types */
   endDate?: string;
+  /** When true, child should attach a proof photo */
+  photoRequired?: boolean;
   createdAt: string;
   updatedAt: string;
 }

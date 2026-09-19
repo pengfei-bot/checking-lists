@@ -143,6 +143,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
   const [timePickerOpen, setTimePickerOpen] = useState(false);
   const [recurrence, setRecurrence] = useState<Recurrence>(existing?.recurrence ?? "daily");
   const [reminderEnabled, setReminderEnabled] = useState(existing?.reminderEnabled ?? true);
+  const [photoRequired, setPhotoRequired] = useState(existing?.photoRequired ?? false);
   const [onceDate, setOnceDate] = useState(existing?.onceDate ?? todayISO());
   const [startDate, setStartDate] = useState(existing?.startDate ?? todayISO());
   const [endDate, setEndDate] = useState(existing?.endDate ?? "");
@@ -209,6 +210,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         time,
         recurrence,
         reminderEnabled,
+        photoRequired,
         onceDate: recurrence === "once" ? onceDate : undefined,
         startDate: isRecurring ? startDate : undefined,
         endDate: isRecurring && endDate.trim() ? endDate.trim() : undefined,
@@ -508,6 +510,14 @@ export function TaskFormScreen({ navigation, route }: Props) {
         <Switch value={reminderEnabled} onValueChange={setReminderEnabled} />
       </View>
 
+      <View style={styles.switchRow}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.labelInline}>{t("photoRequired.toggle")}</Text>
+          <Text style={styles.help}>{t("photoRequired.help")}</Text>
+        </View>
+        <Switch value={photoRequired} onValueChange={setPhotoRequired} />
+      </View>
+
       {attempted && !isValid ? (
         <View style={styles.errorBox}>
           <Text style={styles.errorBoxTitle}>{t("taskForm.toComplete")}</Text>
@@ -601,6 +611,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: "800", color: colors.text, marginBottom: 12 },
   label: { fontWeight: "700", color: colors.textMuted, marginTop: 12, marginBottom: 6 },
   labelInline: { fontWeight: "700", color: colors.text },
+  hint: { marginTop: 4, fontSize: 12, color: colors.textMuted, lineHeight: 16 },
   help: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
   input: {
     backgroundColor: colors.card,

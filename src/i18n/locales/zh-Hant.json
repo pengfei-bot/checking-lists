@@ -354,7 +354,9 @@
     "webDownloaded": "{{count}} 個任務已就緒。開啟 .ics 檔案以加入日曆。"
   },
   "webBanner": {
-    "text": "Web 演示模式: UI + 本地資料 OK 。 通知取消。 照片 = 檔案拾取器( 已顯示 ) 。"
+    "demo": "Web 演示模式: UI + 本地資料 OK 。 通知取消。 照片 = 檔案拾取器( 已顯示 ) 。",
+    "cloud": "Web 演示模式: UI + 本地資料 OK 。 通知取消。 照片 = 檔案拾取器( 已顯示 ) 。",
+    "guest": "Web 演示模式: UI + 本地資料 OK 。 通知取消。 照片 = 檔案拾取器( 已顯示 ) 。"
   },
   "language": {
     "title": "語言",
@@ -417,5 +419,14 @@
   "demoEscape": {
     "message": "Demo mode — local data only (no cloud sync).",
     "cta": "Create an account / Sign in"
+  },
+  "photoRequired": {
+    "badge": "Photo required",
+    "toggle": "Require proof photo",
+    "help": "The child must add a photo to complete this task.",
+    "addToValidate": "Add a photo to complete",
+    "ctaPhoto": "Photo 📷",
+    "requiredA11y": "Photo required",
+    "receivedA11y": "Photo received"
   }
 }

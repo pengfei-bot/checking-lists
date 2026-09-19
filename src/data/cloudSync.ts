@@ -43,6 +43,7 @@ export interface DbTask {
   interval_weeks: number | null;
   start_date: string | null;
   end_date: string | null;
+  photo_required: boolean | null;
 }
 
 export interface DbTaskCompletion {
@@ -107,6 +108,7 @@ function mapTask(row: DbTask): Task {
     startDate: recurrence === "once" ? undefined : startDate,
     endDate,
     intervalWeeks,
+    photoRequired: !!row.photo_required,
     createdAt: row.created_at,
     updatedAt: row.created_at,
   };
@@ -306,6 +308,7 @@ export async function cloudUpsertTask(
       time_of_day: input.time,
       recurrence: input.recurrence,
       reminder_enabled: input.reminderEnabled,
+      photo_required: !!input.photoRequired,
       active: true,
       interval_weeks: dates.interval_weeks,
       start_date: dates.start_date,

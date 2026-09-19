@@ -144,7 +144,12 @@ export function TaskDetailScreen({ navigation, route }: Props) {
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.statusEmoji}>{done ? "⭐" : "○"}</Text>
         <Text style={styles.childEmoji}>{child?.emoji ?? "✅"}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
         <Text style={styles.childTitle}>{task.title}</Text>
+        {task.photoRequired ? (
+          <Text style={styles.meta}>{done?.photoUri ? "✓📷" : "📷"} {t("photoRequired.badge")}</Text>
+        ) : null}
+      </View>
         <Text style={styles.childTime}>{task.time}</Text>
         <Text style={styles.meta}>{dayLabel}</Text>
 
@@ -175,23 +180,36 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         ) : null}
 
         {isToday && !done ? (
-          <>
-            <PrimaryButton
-              label={t("taskDetail.childMarkDone")}
-              onPress={() => void markDone(false)}
-              loading={busy}
-              large
-              style={{ marginTop: 24 }}
-            />
-            <PrimaryButton
-              label={t("taskDetail.childDonePhoto")}
-              variant="secondary"
-              onPress={() => void markDone(true)}
-              loading={busy}
-              large
-              style={{ marginTop: 12 }}
-            />
-          </>
+          task.photoRequired ? (
+            <>
+              <Text style={[styles.help, { marginTop: 20 }]}>{t("photoRequired.addToValidate")}</Text>
+              <PrimaryButton
+                label={t("photoRequired.ctaPhoto")}
+                onPress={() => void markDone(true)}
+                loading={busy}
+                large
+                style={{ marginTop: 12 }}
+              />
+            </>
+          ) : (
+            <>
+              <PrimaryButton
+                label={t("taskDetail.childMarkDone")}
+                onPress={() => void markDone(false)}
+                loading={busy}
+                large
+                style={{ marginTop: 24 }}
+              />
+              <PrimaryButton
+                label={t("taskDetail.childDonePhoto")}
+                variant="secondary"
+                onPress={() => void markDone(true)}
+                loading={busy}
+                large
+                style={{ marginTop: 12 }}
+              />
+            </>
+          )
         ) : null}
         {isToday && done ? (
           <PrimaryButton
@@ -219,7 +237,12 @@ export function TaskDetailScreen({ navigation, route }: Props) {
     <>
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.emoji}>{child?.emoji ?? "✅"}</Text>
-      <Text style={styles.title}>{task.title}</Text>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+        <Text style={styles.title}>{task.title}</Text>
+        {task.photoRequired ? (
+          <Text style={styles.meta}>{done?.photoUri ? "✓📷" : "📷"} {t("photoRequired.badge")}</Text>
+        ) : null}
+      </View>
       <Text style={styles.meta}>
         {child?.name ?? t("taskDetail.childFallback")} · {task.time} · {recurrenceLabel(task.recurrence, task.intervalWeeks)}
       </Text>

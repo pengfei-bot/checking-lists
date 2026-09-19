@@ -419,5 +419,14 @@
   "demoEscape": {
     "message": "Mode démo — données locales uniquement (pas de sync cloud).",
     "cta": "Créer un compte / Se connecter"
+  },
+  "photoRequired": {
+    "badge": "Photo obligatoire",
+    "toggle": "Preuve photo obligatoire",
+    "help": "L’enfant devra ajouter une photo pour valider.",
+    "addToValidate": "Ajoute une photo pour valider",
+    "ctaPhoto": "Photo 📷",
+    "requiredA11y": "Photo requise",
+    "receivedA11y": "Photo reçue"
   }
 }

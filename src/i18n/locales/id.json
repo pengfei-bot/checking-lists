@@ -354,7 +354,9 @@
     "webDownloaded": "{{count}} task(s) ready. Open the .ics file to add them to your calendar."
   },
   "webBanner": {
-    "text": "Mode demo web: UI + data lokal OK. Pemberitahuan off. Foto = picker berkas (umpan balik ditampilkan)."
+    "demo": "Mode demo web: UI + data lokal OK. Pemberitahuan off. Foto = picker berkas (umpan balik ditampilkan).",
+    "cloud": "Mode demo web: UI + data lokal OK. Pemberitahuan off. Foto = picker berkas (umpan balik ditampilkan).",
+    "guest": "Mode demo web: UI + data lokal OK. Pemberitahuan off. Foto = picker berkas (umpan balik ditampilkan)."
   },
   "language": {
     "title": "Bahasa",
@@ -417,5 +419,14 @@
   "demoEscape": {
     "message": "Demo mode — local data only (no cloud sync).",
     "cta": "Create an account / Sign in"
+  },
+  "photoRequired": {
+    "badge": "Photo required",
+    "toggle": "Require proof photo",
+    "help": "The child must add a photo to complete this task.",
+    "addToValidate": "Add a photo to complete",
+    "ctaPhoto": "Photo 📷",
+    "requiredA11y": "Photo required",
+    "receivedA11y": "Photo received"
   }
 }

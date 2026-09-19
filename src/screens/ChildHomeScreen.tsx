@@ -144,6 +144,7 @@ export function ChildHomeScreen({ navigation }: Props) {
                 key={task.id}
                 task={task}
                 done={done}
+                hasPhoto={!!completionFor(task.id)?.photoUri}
                 onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                 rightAccessory={
                   <View style={styles.actions}>
@@ -155,7 +156,15 @@ export function ChildHomeScreen({ navigation }: Props) {
                       <Text style={styles.miniText}>{done ? "↩️" : "○"}</Text>
                     </Pressable>
                     {!done && (
-                      <Pressable style={styles.miniBtn} onPress={() => void doneWithPhoto(task.id)}>
+                      <Pressable
+                        style={styles.miniBtn}
+                        onPress={() => void doneWithPhoto(task.id)}
+                        accessibilityLabel={
+                          task.photoRequired
+                            ? t("photoRequired.addToValidate")
+                            : t("taskDetail.childDonePhoto")
+                        }
+                      >
                         <Text style={styles.miniText}>📷</Text>
                       </Pressable>
                     )}
