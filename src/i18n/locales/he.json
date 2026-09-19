@@ -39,7 +39,8 @@
     "childForm": "ילד",
     "language": "שפה",
     "rewards": "Rewards",
-    "rewardsChild": "Balance"
+    "rewardsChild": "Balance",
+    "parentSettings": ""
   },
   "roles": {
     "parentRequired": "פרופיל ההורים נדרש",
@@ -516,6 +517,11 @@
     "soldeLabel": "Balance",
     "currentBalanceLabel": "Current balance",
     "validatedBy": "Validated by {{name}}",
-    "validatedByParent": "Validated by a parent"
+    "validatedByParent": "Validated by a parent",
+    "soldeHistoryLabel": ""
+  },
+  "parentSettings": {
+    "title": "",
+    "subtitle": ""
   }
 }

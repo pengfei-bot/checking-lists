@@ -39,7 +39,8 @@
     "childForm": "이름 *",
     "language": "* 이름",
     "rewards": "Rewards",
-    "rewardsChild": "Balance"
+    "rewardsChild": "Balance",
+    "parentSettings": ""
   },
   "roles": {
     "parentRequired": "자주 묻는 질문",
@@ -516,6 +517,11 @@
     "soldeLabel": "Balance",
     "currentBalanceLabel": "Current balance",
     "validatedBy": "Validated by {{name}}",
-    "validatedByParent": "Validated by a parent"
+    "validatedByParent": "Validated by a parent",
+    "soldeHistoryLabel": ""
+  },
+  "parentSettings": {
+    "title": "",
+    "subtitle": ""
   }
 }

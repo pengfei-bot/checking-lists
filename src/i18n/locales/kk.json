@@ -39,7 +39,8 @@
     "childForm": "Çocuk Çocuk",
     "language": "Dil Dili",
     "rewards": "Rewards",
-    "rewardsChild": "Balance"
+    "rewardsChild": "Balance",
+    "parentSettings": ""
   },
   "roles": {
     "parentRequired": "Ebeveyn profili gerekli.",
@@ -516,6 +517,11 @@
     "soldeLabel": "Balance",
     "currentBalanceLabel": "Current balance",
     "validatedBy": "Validated by {{name}}",
-    "validatedByParent": "Validated by a parent"
+    "validatedByParent": "Validated by a parent",
+    "soldeHistoryLabel": ""
+  },
+  "parentSettings": {
+    "title": "",
+    "subtitle": ""
   }
 }

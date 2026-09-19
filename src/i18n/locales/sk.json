@@ -39,7 +39,8 @@
     "childForm": "Dieťa",
     "language": "Jazyk",
     "rewards": "Rewards",
-    "rewardsChild": "Balance"
+    "rewardsChild": "Balance",
+    "parentSettings": ""
   },
   "roles": {
     "parentRequired": "Rodičovský profil požadovaný.",
@@ -516,6 +517,11 @@
     "soldeLabel": "Balance",
     "currentBalanceLabel": "Current balance",
     "validatedBy": "Validated by {{name}}",
-    "validatedByParent": "Validated by a parent"
+    "validatedByParent": "Validated by a parent",
+    "soldeHistoryLabel": ""
+  },
+  "parentSettings": {
+    "title": "",
+    "subtitle": ""
   }
 }

@@ -1,9 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
-  Alert,
   Image,
-  Modal,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -23,10 +20,7 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { PhotoLightbox } from "../components/PhotoLightbox";
 import { formatCompletionTime, formatLocalizedDate, todayISO } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
-import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
-import { confirmUser, notifyUser } from "../utils/feedback";
 import { unitShortKey } from "../utils/rewards";
-import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
 import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
 import { BuildStamp } from "../components/BuildStamp";
 
@@ -41,17 +35,14 @@ export function ParentDashboardScreen({ navigation }: Props) {
     state,
     completionFor,
     setCurrentProfileId,
-    refreshReminders,
     pendingEarnCount,
     isRewardsActiveForChild,
     pointsFor,
     unitKindFor,
     balanceFor,
   } = useApp();
-  const { isAuthenticated, family, deleteAccount } = useAuth();
-  const [deletingAccount, setDeletingAccount] = useState(false);
+  const { isAuthenticated, family } = useAuth();
   const [filterChildId, setFilterChildId] = useState<string | "all">("all");
-  const [moreOpen, setMoreOpen] = useState(false);
   const [lightbox, setLightbox] = useState<{
     uri: string;
     title?: string;
@@ -73,7 +64,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
           label={t("common.changeProfile")}
           onPress={() => {
             setCurrentProfileId(null);
-            navigation.replace("ProfilePicker");
+            navigation.replace("ProfilePicker", { mode: "switch" });
           }}
           style={{ marginTop: 12 }}
         />
@@ -96,66 +87,12 @@ export function ParentDashboardScreen({ navigation }: Props) {
   const visibleStats =
     filterChildId === "all" ? stats : stats.filter(({ child }) => child.id === filterChildId);
 
-  const onCalendar = async () => {
-    const result = await addTodayTasksToCalendar(
-      state.tasks,
-      state.profiles,
-      filterChildId === "all" ? undefined : filterChildId
-    );
-    Alert.alert(t("deviceCalendar.title"), result.message);
-  };
 
-  const onReminders = async () => {
-    if (!notificationsSupported()) {
-      Alert.alert(t("notifications.title"), t("notifications.webUnavailableParent"));
-      return;
-    }
-    const ok = await ensureNotificationPermissions();
-    if (!ok) {
-      Alert.alert(t("notifications.deniedTitle"), t("notifications.deniedBodyShort"));
-      return;
-    }
-    const n = await refreshReminders();
-    Alert.alert(t("notifications.remindersTitle"), t("notifications.remindersScheduledShort", { count: n }));
-  };
 
-  const closeAnd = (fn: () => void) => {
-    setMoreOpen(false);
-    fn();
-  };
 
   const goNewTask = () => navigation.navigate("TaskForm", {});
 
 
-  const onDeleteAccount = () => {
-    void (async () => {
-      const step1 = await confirmUser(
-        t("account.deleteTitle"),
-        t("account.deleteBody"),
-        t("account.deleteConfirm")
-      );
-      if (!step1) return;
-      const step2 = await confirmUser(
-        t("account.deleteFinalTitle"),
-        t("account.deleteFinalBody"),
-        t("account.deleteFinalConfirm")
-      );
-      if (!step2) return;
-      setDeletingAccount(true);
-      setMoreOpen(false);
-      try {
-        await deleteAccount();
-        navigation.reset({ index: 0, routes: [{ name: "Welcome" }] });
-      } catch (e) {
-        notifyUser(
-          t("common.error"),
-          e instanceof Error ? e.message : t("account.deleteFailed")
-        );
-      } finally {
-        setDeletingAccount(false);
-      }
-    })();
-  };
 
   const shareLabel = family?.inviteCode
     ? t("parentDash.shareFamilyCode", { code: family.inviteCode })
@@ -169,14 +106,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
             <Text style={styles.title}>{t("parentDash.title")}</Text>
             <Text style={styles.sub}>{formatLocalizedDate(todayISO(), i18n.language)}</Text>
           </View>
-          <Pressable
-            onPress={() => setMoreOpen(true)}
-            accessibilityRole="button"
-            accessibilityLabel={t("common.settings")}
-            style={({ pressed }) => [styles.menuBtn, { opacity: pressed ? 0.7 : 1 }]}
-          >
-            <Text style={styles.menuDots}>⋯</Text>
-          </Pressable>
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsScroll}>
@@ -448,76 +377,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
         <Text style={styles.fabPlus}>+</Text>
       </Pressable>
 
-      <Modal
-        visible={moreOpen}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setMoreOpen(false)}
-      >
-        <Pressable style={styles.menuBackdrop} onPress={() => setMoreOpen(false)}>
-          <View style={styles.menuSheet}>
-            <Text style={styles.menuTitle}>{t("common.settings")}</Text>
-            <PrimaryButton
-              label={t("parentDash.openRewards")}
-              variant="secondary"
-              onPress={() => closeAnd(() => navigation.navigate("Rewards"))}
-              style={{ marginTop: 8 }}
-            />
-            <PrimaryButton
-              label={t("common.language")}
-              variant="secondary"
-              onPress={() => closeAnd(() => navigation.navigate("LanguageSettings"))}
-              style={{ marginTop: 8 }}
-            />
-            <PrimaryButton
-              label={t("common.changeProfile")}
-              variant="ghost"
-              onPress={() =>
-                closeAnd(() => {
-                  setCurrentProfileId(null);
-                  navigation.replace("ProfilePicker");
-                })
-              }
-              style={{ marginTop: 8 }}
-            />
-            <PrimaryButton
-              label={t("parentDash.reminders")}
-              variant="ghost"
-              onPress={() => {
-                setMoreOpen(false);
-                void onReminders();
-              }}
-              style={{ marginTop: 8 }}
-            />
-            {calendarSupported() ? (
-              <PrimaryButton
-                label={t("parentDash.addCalendar")}
-                variant="ghost"
-                onPress={() => {
-                  setMoreOpen(false);
-                  void onCalendar();
-                }}
-                style={{ marginTop: 8 }}
-              />
-            ) : null}
-            {isAuthenticated ? (
-              <PrimaryButton
-                label={t("account.delete")}
-                variant="ghost"
-                loading={deletingAccount}
-                onPress={onDeleteAccount}
-                style={{ marginTop: 8 }}
-              />
-            ) : null}
-            <PrimaryButton
-              label={t("common.cancel")}
-              variant="ghost"
-              onPress={() => setMoreOpen(false)}
-              style={{ marginTop: 12 }}
-            />
-          </View>
-        </Pressable>
-      </Modal>
       <BuildStamp />
       <ParentRewardsBottomNav navigation={navigation} active="dashboard" />
 
@@ -545,17 +404,8 @@ const styles = StyleSheet.create({
   headerText: { flex: 1 },
   title: { fontSize: 26, fontWeight: "800", color: colors.text },
   sub: { color: colors.textMuted, textTransform: "capitalize", marginTop: 2 },
-  menuBtn: {
-    minWidth: 44,
-    minHeight: 44,
-    borderRadius: 12,
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.border,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  menuDots: { fontSize: 22, fontWeight: "800", color: colors.text, marginTop: -4 },
+
+
   chipsScroll: { marginVertical: 8, flexGrow: 0 },
   chip: {
     paddingHorizontal: 14,
@@ -726,22 +576,7 @@ const styles = StyleSheet.create({
     lineHeight: 34,
     marginTop: -2,
   },
-  menuBackdrop: {
-    flex: 1,
-    backgroundColor: "#00000066",
-    justifyContent: "flex-end",
-  },
-  menuSheet: {
-    backgroundColor: colors.card,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    paddingBottom: 32,
-  },
-  menuTitle: {
-    fontSize: 18,
-    fontWeight: "800",
-    color: colors.text,
-    marginBottom: 4,
-  },
+
+
+
 });

@@ -39,7 +39,8 @@
     "childForm": "बच्चे",
     "language": "भाषा",
     "rewards": "Rewards",
-    "rewardsChild": "Balance"
+    "rewardsChild": "Balance",
+    "parentSettings": ""
   },
   "roles": {
     "parentRequired": "अभिभावक प्रोफ़ाइल की आवश्यकता है।",
@@ -516,6 +517,11 @@
     "soldeLabel": "Balance",
     "currentBalanceLabel": "Current balance",
     "validatedBy": "Validated by {{name}}",
-    "validatedByParent": "Validated by a parent"
+    "validatedByParent": "Validated by a parent",
+    "soldeHistoryLabel": ""
+  },
+  "parentSettings": {
+    "title": "",
+    "subtitle": ""
   }
 }

@@ -39,7 +39,8 @@
     "childForm": "Enfant",
     "language": "Langue",
     "rewards": "Récompenses",
-    "rewardsChild": "Mon historique"
+    "rewardsChild": "Mon historique",
+    "parentSettings": "Réglages"
   },
   "roles": {
     "parentRequired": "Profil parent requis.",
@@ -516,6 +517,11 @@
     "soldeLabel": "Solde",
     "currentBalanceLabel": "Solde actuel",
     "validatedBy": "Validé par {{name}}",
-    "validatedByParent": "Validé par un parent"
+    "validatedByParent": "Validé par un parent",
+    "soldeHistoryLabel": "Mon solde / historique"
+  },
+  "parentSettings": {
+    "title": "Réglages",
+    "subtitle": "Langue, profil, rappels et compte."
   }
 }

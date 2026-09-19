@@ -16,6 +16,7 @@ export type RootStackParamList = {
   TaskDetail: { taskId: string; date?: string };
   ChildForm: { childId?: string };
   LanguageSettings: undefined;
+  ParentSettings: undefined;
   Rewards: undefined;
   RewardsChild: { childId: string };
 };

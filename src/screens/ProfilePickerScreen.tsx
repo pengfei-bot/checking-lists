@@ -50,16 +50,13 @@ export function ProfilePickerScreen({ navigation, route }: Props) {
     if (isChildDevice && singleChildId) {
       didAutoEnter.current = true;
       if (state.currentProfileId !== singleChildId) setCurrentProfileId(singleChildId);
-      navigation.reset({ index: 0, routes: [{ name: "ChildHome" }] });
+      navigation.replace("ChildHome");
       return;
     }
     const remembered = state.profiles.find((p) => p.id === state.currentProfileId);
     if (!remembered) return;
     didAutoEnter.current = true;
-    navigation.reset({
-      index: 0,
-      routes: [{ name: remembered.role === "parent" ? "ParentDashboard" : "ChildHome" }],
-    });
+    navigation.replace(remembered.role === "parent" ? "ParentDashboard" : "ChildHome");
   }, [
     ready,
     isChildDevice,
@@ -98,10 +95,8 @@ export function ProfilePickerScreen({ navigation, route }: Props) {
   const enter = (id: string, role: "parent" | "child") => {
     if (isChildDevice && role === "parent") return;
     setCurrentProfileId(id);
-    navigation.reset({
-      index: 0,
-      routes: [{ name: role === "parent" ? "ParentDashboard" : "ChildHome" }],
-    });
+    // replace (not reset) keeps switch snappy — no full nav-tree remount.
+    navigation.replace(role === "parent" ? "ParentDashboard" : "ChildHome");
   };
 
   const onReset = () => {

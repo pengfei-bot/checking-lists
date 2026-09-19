@@ -43,7 +43,7 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
           label={t("common.changeProfile")}
           onPress={() => {
             setCurrentProfileId(null);
-            navigation.replace("ProfilePicker");
+            navigation.replace("ProfilePicker", { mode: "switch" });
           }}
           style={{ marginTop: 12 }}
         />

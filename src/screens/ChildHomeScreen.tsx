@@ -55,7 +55,7 @@ export function ChildHomeScreen({ navigation }: Props) {
           label={t("common.changeProfile")}
           onPress={() => {
             setCurrentProfileId(null);
-            navigation.replace("ProfilePicker");
+            navigation.replace("ProfilePicker", { mode: "switch" });
           }}
           style={{ marginTop: 12 }}
         />
@@ -181,7 +181,7 @@ export function ChildHomeScreen({ navigation }: Props) {
                 <Text style={rewardsStyles.soldeStar}>⭐</Text>
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={rewardsStyles.soldeLabel}>{t("rewards.soldeLabel")}</Text>
+                <Text style={rewardsStyles.soldeLabel}>{t("rewards.soldeHistoryLabel")}</Text>
                 <Text style={rewardsStyles.soldeValue}>
                   {balance} <Text style={styles.soldeStarInline}>⭐</Text>
                 </Text>
@@ -312,7 +312,7 @@ export function ChildHomeScreen({ navigation }: Props) {
               onPress={() =>
                 closeAnd(() => {
                   setCurrentProfileId(null);
-                  navigation.replace("ProfilePicker");
+                  navigation.replace("ProfilePicker", { mode: "switch" });
                 })
               }
               style={{ marginTop: 8 }}

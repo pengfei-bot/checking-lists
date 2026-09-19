@@ -39,7 +39,8 @@
     "childForm": "Child",
     "language": "Language",
     "rewards": "Rewards",
-    "rewardsChild": "My history"
+    "rewardsChild": "My history",
+    "parentSettings": "Settings"
   },
   "roles": {
     "parentRequired": "Parent profile required.",
@@ -516,6 +517,11 @@
     "soldeLabel": "Balance",
     "currentBalanceLabel": "Current balance",
     "validatedBy": "Validated by {{name}}",
-    "validatedByParent": "Validated by a parent"
+    "validatedByParent": "Validated by a parent",
+    "soldeHistoryLabel": "My balance / history"
+  },
+  "parentSettings": {
+    "title": "Settings",
+    "subtitle": "Language, profile, reminders, and account."
   }
 }

@@ -16,7 +16,7 @@ type Navigate = {
   }) => void;
 };
 
-type ChildTab = "home" | "tasks" | "rewards" | "history";
+type ChildTab = "home" | "tasks" | "history";
 type ParentTab = "dashboard" | "tasks" | "rewards" | "profile";
 
 export function ChildRewardsBottomNav({
@@ -67,9 +67,7 @@ export function ChildRewardsBottomNav({
     <View style={[rewardsStyles.fakeNav, styles.navBar]}>
       {item("home", "🏠", t("childHome.navHome"), () => navigation.navigate("ChildHome"))}
       {item("tasks", "📋", t("childHome.navTasks"), () => navigation.navigate("ChildHistory"))}
-      {rewardsActive
-        ? item("rewards", "⭐", t("childHome.navRewards"), () => navigation.navigate("ChildHome"))
-        : null}
+      {/* No Récompenses tab — Accueil solde card opens RewardsChild. */}
       {rewardsActive
         ? item("history", "📜", t("childHome.navHistory"), () => {
             if (childId) navigation.navigate("RewardsChild", { childId });
@@ -131,7 +129,7 @@ export function ParentRewardsBottomNav({
         navigation.navigate("Rewards")
       )}
       {item("profile", "👤", t("parentDash.navProfile"), () =>
-        navigation.navigate("LanguageSettings")
+        navigation.navigate("ParentSettings")
       )}
     </View>
   );

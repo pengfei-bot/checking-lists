@@ -16,6 +16,7 @@ import { RewardsChildScreen } from "../screens/RewardsChildScreen";
 import { RewardsScreen } from "../screens/RewardsScreen";
 import { ParentCalendarScreen } from "../screens/ParentCalendarScreen";
 import { ParentDashboardScreen } from "../screens/ParentDashboardScreen";
+import { ParentSettingsScreen } from "../screens/ParentSettingsScreen";
 import { ParentDayDetailScreen } from "../screens/ParentDayDetailScreen";
 import { ProfilePickerScreen } from "../screens/ProfilePickerScreen";
 import { TaskDetailScreen } from "../screens/TaskDetailScreen";
@@ -76,18 +77,19 @@ export function RootNavigator() {
           <Stack.Screen name="RedeemInvite" component={RedeemInviteScreen} options={{ title: t("nav.redeemInvite") }} />
           <Stack.Screen name="FamilyShare" component={FamilyShareScreen} options={{ title: t("nav.familyShare") }} />
           <Stack.Screen name="ProfilePicker" component={ProfilePickerScreen} options={{ title: t("nav.whoAreYou"), headerShown: false }} />
-          <Stack.Screen name="ChildHome" component={ChildHomeScreen} options={{ title: t("nav.childHome"), headerBackVisible: false }} />
-          <Stack.Screen name="ChildHistory" component={ChildHistoryScreen} options={{ title: t("nav.childHistory"), headerBackVisible: false }} />
+          <Stack.Screen name="ChildHome" component={ChildHomeScreen} options={{ title: t("nav.childHome"), headerBackVisible: false, headerLeft: () => null }} />
+          <Stack.Screen name="ChildHistory" component={ChildHistoryScreen} options={{ title: t("nav.childHistory"), headerBackVisible: false, headerLeft: () => null }} />
           <Stack.Screen name="ChildDayDetail" component={ChildDayDetailScreen} options={{ title: t("nav.childDay") }} />
-          <Stack.Screen name="ParentDashboard" component={ParentDashboardScreen} options={{ title: t("nav.parentDashboard"), headerBackVisible: false }} />
-          <Stack.Screen name="ParentCalendar" component={ParentCalendarScreen} options={{ title: t("nav.parentCalendar"), headerBackVisible: false }} />
+          <Stack.Screen name="ParentDashboard" component={ParentDashboardScreen} options={{ title: t("nav.parentDashboard"), headerBackVisible: false, headerLeft: () => null }} />
+          <Stack.Screen name="ParentCalendar" component={ParentCalendarScreen} options={{ title: t("nav.parentCalendar"), headerBackVisible: false, headerLeft: () => null }} />
           <Stack.Screen name="ParentDayDetail" component={ParentDayDetailScreen} options={{ title: t("nav.parentDay") }} />
           <Stack.Screen name="TaskForm" component={TaskFormScreen} options={{ title: t("nav.taskForm"), presentation: "modal" }} />
           <Stack.Screen name="TaskDetail" component={TaskDetailScreen} options={{ title: t("nav.taskDetail") }} />
           <Stack.Screen name="ChildForm" component={ChildFormScreen} options={{ title: t("nav.childForm"), presentation: "modal" }} />
           <Stack.Screen name="LanguageSettings" component={LanguageSettingsScreen} options={{ title: t("nav.language") }} />
-          <Stack.Screen name="Rewards" component={RewardsScreen} options={{ title: t("nav.rewards"), headerBackVisible: false }} />
-          <Stack.Screen name="RewardsChild" component={RewardsChildScreen} options={{ title: t("nav.rewardsChild"), headerBackVisible: false }} />
+          <Stack.Screen name="Rewards" component={RewardsScreen} options={{ title: t("nav.rewards"), headerBackVisible: false, headerLeft: () => null }} />
+          <Stack.Screen name="RewardsChild" component={RewardsChildScreen} options={{ title: t("nav.rewardsChild"), headerBackVisible: false, headerLeft: () => null }} />
+          <Stack.Screen name="ParentSettings" component={ParentSettingsScreen} options={{ title: t("nav.parentSettings"), headerBackVisible: false, headerLeft: () => null }} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

@@ -382,10 +382,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const currentProfile = useMemo(() => state.profiles.find((p) => p.id === state.currentProfileId) ?? null, [state.profiles, state.currentProfileId]);
   const childrenProfiles = useMemo(() => state.profiles.filter((p) => p.role === "child"), [state.profiles]);
   const parentProfile = useMemo(() => state.profiles.find((p) => p.role === "parent") ?? null, [state.profiles]);
+  /** Profile switch must stay local+instant: never trigger cloud reload. */
   const setCurrentProfileId = useCallback((id: string | null) => {
     void saveLastProfileId(id);
-    void persistLocal({ ...state, currentProfileId: id });
-  }, [persistLocal, state]);
+    setState((prev) => {
+      if (prev.currentProfileId === id) return prev;
+      const next = { ...prev, currentProfileId: id };
+      stateRef.current = next;
+      // Local/demo only: persist roster. Cloud keeps currentProfileId in lastProfile + memory.
+      if (!familyId) void saveAppState(next);
+      return next;
+    });
+  }, [familyId]);
   const tasksForChildToday = useCallback((childId: string) => state.tasks.filter((t) => t.childId === childId && isTaskForDate(t)).sort((a, b) => a.time.localeCompare(b.time)), [state.tasks]);
   const completionFor = useCallback((taskId: string, date = todayISO()) => state.completions.find((c) => c.taskId === taskId && c.date === date), [state.completions]);
 
