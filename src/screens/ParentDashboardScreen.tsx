@@ -549,8 +549,9 @@ const styles = StyleSheet.create({
   },
   statCardCompact: { paddingVertical: 8 },
   statCardSelected: {
-    borderWidth: 2,
-    borderColor: rewardsUi.filterOrange,
+    // M2 mockup: selected child = raised white card, no coral outline
+    borderWidth: 0,
+    backgroundColor: "#FFF8F0",
     minWidth: "100%",
     flexBasis: "100%",
   },
