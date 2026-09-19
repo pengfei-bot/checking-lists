@@ -24,7 +24,7 @@
         "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.pengfeibot.famlist",
-      "buildNumber": "8"
+      "buildNumber": "9"
     },
     "android": {
       "adaptiveIcon": {
