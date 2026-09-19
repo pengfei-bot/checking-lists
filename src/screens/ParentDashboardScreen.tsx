@@ -146,20 +146,23 @@ export function ParentDashboardScreen({ navigation }: Props) {
           })}
         </ScrollView>
 
-        {/* M2: tasks-first — only show cream selected-child card when filtered */}
-        {selectedChild ? (
+        {/* M5: summary/stat cards always softTinted per child (all or filtered) */}
+        {visibleStats.length > 0 ? (
           <View style={styles.statsRow}>
-            {visibleStats.map(({ child, total, done }) => (
+            {visibleStats.map(({ child, total, done }) => {
+              const tint = child.color || colors.primary;
+              const selected = filterChildId === child.id;
+              return (
               <Pressable
                 key={child.id}
-                onPress={() => setFilterChildId("all")}
+                onPress={() => setFilterChildId(selected ? "all" : child.id)}
                 style={({ pressed }) => [
                   styles.statCard,
-                  styles.statCardSelected,
+                  selected && styles.statCardSelected,
                   {
-                    backgroundColor: softTint(child.color || colors.primary, 0.18),
-                    borderWidth: 2,
-                    borderColor: child.color || colors.primary,
+                    backgroundColor: softTint(tint, selected ? 0.22 : 0.14),
+                    borderWidth: selected ? 2 : 1.5,
+                    borderColor: tint,
                   },
                   pressed ? { opacity: 0.92 } : null,
                   { outlineWidth: 0, outlineStyle: "solid", outlineColor: "transparent" } as object,
@@ -169,8 +172,8 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   style={[
                     styles.childAvatar,
                     {
-                      backgroundColor: softTint(child.color || colors.primary, 0.35),
-                      borderColor: child.color || colors.primary,
+                      backgroundColor: softTint(tint, 0.35),
+                      borderColor: tint,
                     },
                   ]}
                 >
@@ -184,7 +187,8 @@ export function ParentDashboardScreen({ navigation }: Props) {
                 </Text>
                 <Text style={styles.statLabel}>{t("common.done")}</Text>
               </Pressable>
-            ))}
+              );
+            })}
           </View>
         ) : null}
 
@@ -206,6 +210,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   completedAt={done?.completedAt}
                   hasPhoto={!!done?.photoUri}
                   childName={child?.name}
+                  accentColor={child?.color || colors.primary}
                   pointsLabel={
                     isRewardsActiveForChild(task.childId) && pointsFor(task.id) != null
                       ? `+${pointsFor(task.id)} ${unitKindFor(task.childId) === "money" ? "€" : "⭐"}`
@@ -254,7 +259,13 @@ export function ParentDashboardScreen({ navigation }: Props) {
         {selectedChild && isRewardsActiveForChild(selectedChild.id) ? (
           <Pressable
             onPress={() => navigation.navigate("RewardsChild", { childId: selectedChild.id })}
-            style={styles.balanceCard}
+            style={[
+              styles.balanceCard,
+              {
+                backgroundColor: softTint(selectedChild.color || colors.primary, 0.14),
+                borderColor: softTint(selectedChild.color || colors.primary, 0.45),
+              },
+            ]}
             accessibilityRole="button"
             accessibilityLabel={t("parentDash.openRewards")}
           >
@@ -284,17 +295,37 @@ export function ParentDashboardScreen({ navigation }: Props) {
           </Pressable>
         </View>
         <View style={styles.kidsManage}>
-          {childrenProfiles.map((child) => (
+          {childrenProfiles.map((child) => {
+            const tint = child.color || colors.primary;
+            return (
             <Pressable
               key={`manage-${child.id}`}
               onPress={() => navigation.navigate("ChildForm", { childId: child.id })}
-              style={styles.kidManageCard}
+              style={[
+                styles.kidManageCard,
+                {
+                  backgroundColor: softTint(tint, 0.14),
+                  borderWidth: 1.5,
+                  borderColor: tint,
+                },
+              ]}
             >
-              <Text style={styles.statEmoji}>{child.emoji}</Text>
+              <View
+                style={[
+                  styles.manageAvatar,
+                  {
+                    backgroundColor: softTint(tint, 0.35),
+                    borderColor: tint,
+                  },
+                ]}
+              >
+                <Text style={styles.manageAvatarEmoji}>{child.emoji}</Text>
+              </View>
               <Text style={styles.kidManageName}>{child.name}</Text>
               <Text style={styles.kidManageEdit}>{t("common.edit")}</Text>
             </Pressable>
-          ))}
+            );
+          })}
         </View>
 
         {/* Spacer so last cards clear the FAB */}
@@ -442,6 +473,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     ...rewardsUi.shadow,
   },
+  manageAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+  },
+  manageAvatarEmoji: { fontSize: 18 },
   kidManageName: { fontWeight: "700", color: colors.text },
   kidManageEdit: { color: colors.primary, fontWeight: "600", fontSize: 12 },
   editBtn: {

@@ -2,7 +2,7 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Task } from "../types";
-import { colors } from "../theme/colors";
+import { colors, softTint } from "../theme/colors";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { recurrenceLabel } from "../utils/recurrence";
 import { formatCompletionTime } from "../utils/dates";
@@ -22,6 +22,8 @@ interface Props {
   compact?: boolean;
   /** Optional left emoji icon circle (M2 mockup). */
   iconEmoji?: string | null;
+  /** Child color — soft fill + left accent border (M5). */
+  accentColor?: string | null;
 }
 
 function defaultIcon(title: string): string {
@@ -44,6 +46,7 @@ export function TaskCard({
   rightAccessory,
   compact,
   iconEmoji,
+  accentColor,
 }: Props) {
   const { t, i18n } = useTranslation();
   const doneTime = done && completedAt ? formatCompletionTime(completedAt, i18n.language) : null;
@@ -60,6 +63,14 @@ export function TaskCard({
     : "";
 
   const icon = iconEmoji === null ? null : iconEmoji || defaultIcon(task.title);
+  const accent = accentColor?.trim() || null;
+  const accentStyles = accent
+    ? {
+        borderLeftWidth: 4,
+        borderLeftColor: accent,
+        backgroundColor: done ? colors.successSoft : softTint(accent, 0.1),
+      }
+    : null;
 
   return (
     <Pressable
@@ -68,11 +79,18 @@ export function TaskCard({
         styles.card,
         compact && styles.cardCompact,
         done && styles.cardDone,
+        accentStyles,
         pressed && { opacity: 0.9 },
       ]}
     >
       {icon ? (
-        <View style={[styles.iconCircle, done && styles.iconCircleDone]}>
+        <View
+          style={[
+            styles.iconCircle,
+            accent && !done ? { backgroundColor: softTint(accent, 0.22) } : null,
+            done && styles.iconCircleDone,
+          ]}
+        >
           <Text style={styles.iconEmoji}>{icon}</Text>
         </View>
       ) : null}

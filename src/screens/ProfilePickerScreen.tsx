@@ -12,7 +12,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
-import { colors } from "../theme/colors";
+import { colors, softTint } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { formatLocalizedDate, todayISO } from "../utils/dates";
@@ -211,11 +211,25 @@ export function ProfilePickerScreen({ navigation, route }: Props) {
             key={p.id}
             style={({ pressed }) => [
               styles.card,
-              { borderColor: p.color, opacity: pressed ? 0.85 : 1 },
+              {
+                borderColor: p.color,
+                backgroundColor: softTint(p.color || colors.primary, 0.14),
+                opacity: pressed ? 0.85 : 1,
+              },
             ]}
             onPress={() => enter(p.id, "child")}
           >
-            <Text style={styles.cardEmoji}>{p.emoji}</Text>
+            <View
+              style={[
+                styles.pickerAvatar,
+                {
+                  backgroundColor: softTint(p.color || colors.primary, 0.35),
+                  borderColor: p.color || colors.primary,
+                },
+              ]}
+            >
+              <Text style={styles.cardEmoji}>{p.emoji}</Text>
+            </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.cardTitle}>{p.name}</Text>
               <Text style={styles.cardMeta}>{t("profiles.childMeta")}</Text>
@@ -306,7 +320,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
-  cardEmoji: { fontSize: 32 },
+  pickerAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+  },
+  cardEmoji: { fontSize: 28 },
   cardTitle: { fontSize: 17, fontWeight: "800", color: colors.text },
   cardMeta: { color: colors.textMuted, marginTop: 2, fontSize: 13 },
   offlineBox: {

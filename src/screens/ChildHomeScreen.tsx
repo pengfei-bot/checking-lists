@@ -173,10 +173,12 @@ export function ChildHomeScreen({ navigation }: Props) {
     })();
   };
 
-  const headerTint = softTint(currentProfile.color || rewardsUi.peach, 0.28);
+  const childColor = currentProfile.color || rewardsUi.peach;
+  const headerTint = softTint(childColor, 0.28);
+  const rowTint = softTint(childColor, 0.1);
 
   return (
-    <View style={[styles.root, { backgroundColor: softTint(currentProfile.color || rewardsUi.peach, 0.08) }]}>
+    <View style={[styles.root, { backgroundColor: softTint(childColor, 0.08) }]}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Soft tint header band from child color — M5 */}
         <View style={[styles.peachHeader, { backgroundColor: headerTint }]}>
@@ -249,7 +251,18 @@ export function ChildHomeScreen({ navigation }: Props) {
               const done = !!completionFor(task.id);
               const pts = rewardsActive ? pointsFor(task.id) : null;
               return (
-                <View key={task.id} style={[styles.taskRow, done && styles.taskRowDone]}>
+                <View
+                  key={task.id}
+                  style={[
+                    styles.taskRow,
+                    {
+                      borderLeftWidth: 4,
+                      borderLeftColor: childColor,
+                      backgroundColor: done ? colors.successSoft : rowTint,
+                    },
+                    done && styles.taskRowDone,
+                  ]}
+                >
                   <View style={styles.checkboxWrap}>
                     <Pressable
                       style={[styles.checkbox, done && styles.checkboxDone]}

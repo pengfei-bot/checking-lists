@@ -3,7 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
-import { colors } from "../theme/colors";
+import { colors, softTint } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { unitShortKey } from "../utils/rewards";
@@ -63,8 +63,19 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
         ) : (
           overview.children.map((childDay) => {
             if (childDay.total === 0) return null;
+            const tint = childDay.child.color || colors.primary;
             return (
-              <View key={childDay.child.id} style={styles.childCard}>
+              <View
+                key={childDay.child.id}
+                style={[
+                  styles.childCard,
+                  {
+                    backgroundColor: softTint(tint, 0.12),
+                    borderColor: tint,
+                    borderWidth: 1.5,
+                  },
+                ]}
+              >
                 <View style={styles.childHeader}>
                   <Text style={styles.childTitle}>
                     {childDay.child.emoji} {childDay.child.name}
@@ -89,7 +100,18 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
                     <Pressable
                       key={task.id}
                       onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date })}
-                      style={[styles.taskRow, done && styles.taskDone]}
+                      style={[
+                        styles.taskRow,
+                        done && styles.taskDone,
+                        {
+                          borderLeftWidth: 4,
+                          borderLeftColor: tint,
+                          backgroundColor: done ? colors.successSoft : softTint(tint, 0.08),
+                          paddingHorizontal: 8,
+                          borderRadius: 10,
+                          marginTop: 4,
+                        },
+                      ]}
                     >
                       <Text style={styles.taskCheck}>{done ? "✅" : "⬜"}</Text>
                       <View style={{ flex: 1 }}>
