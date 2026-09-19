@@ -488,12 +488,13 @@
     "perChild": "Par enfant",
     "activated": "Activé",
     "deactivated": "Désactivé",
-    "parentOnlyActivate": "Seul le parent active. L'enfant voit son solde s'il est activé.",
+    "parentOnlyActivate": "Seul le parent peut activer. L’enfant voit son solde seulement si c’est activé pour lui.",
     "unitMoneyChip": "€",
     "myHistory": "Mon historique",
     "currentBalance": "Solde actuel · {{amount}} {{unit}}",
     "soldeChip": "Solde {{amount}} {{unit}}",
     "openHistory": "Mon historique",
-    "disabledHintChild": "Les récompenses ne sont pas encore activées pour toi. Demande à un parent."
+    "disabledHintChild": "Les récompenses ne sont pas encore activées pour toi. Demande à un parent.",
+    "noChildrenHelp": "Ajoute un enfant (ou ouvre la démo) pour configurer les récompenses."
   }
 }

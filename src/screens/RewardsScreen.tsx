@@ -176,7 +176,7 @@ export function RewardsScreen({ navigation }: Props) {
 
       <Text style={styles.section}>{t("rewards.perChild")}</Text>
       {childrenProfiles.length === 0 ? (
-        <Text style={[styles.help, { marginTop: 8 }]}>{t("rewards.noChildren")}</Text>
+        <Text style={[styles.help, { marginTop: 8 }]}>{t("rewards.noChildrenHelp")}</Text>
       ) : (
         childrenProfiles.map((child) => {
           const active = isRewardsActiveForChild(child.id);

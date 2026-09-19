@@ -488,12 +488,13 @@
     "perChild": "Per child",
     "activated": "Enabled",
     "deactivated": "Disabled",
-    "parentOnlyActivate": "Only a parent can enable rewards. The child sees their balance when enabled for them.",
+    "parentOnlyActivate": "Only a parent can turn rewards on. The child sees their balance only when enabled for them.",
     "unitMoneyChip": "€",
     "myHistory": "My history",
     "currentBalance": "Current balance · {{amount}} {{unit}}",
     "soldeChip": "Balance {{amount}} {{unit}}",
     "openHistory": "My history",
-    "disabledHintChild": "Rewards are not enabled for you yet. Ask a parent."
+    "disabledHintChild": "Rewards are not enabled for you yet. Ask a parent.",
+    "noChildrenHelp": "Add a child (or open the demo) to configure rewards."
   }
 }
