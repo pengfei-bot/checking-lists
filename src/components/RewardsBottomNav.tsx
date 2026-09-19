@@ -1,7 +1,6 @@
 import React from "react";
 import { Pressable, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useApp } from "../context/AppContext";
 import { RootStackParamList } from "../navigation/types";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 
@@ -24,6 +23,7 @@ export function ChildRewardsBottomNav({
   navigation,
   active,
   childId,
+  rewardsActive = true,
 }: {
   navigation: Navigate;
   active: ChildTab;
@@ -67,10 +67,14 @@ export function ChildRewardsBottomNav({
     <View style={[rewardsStyles.fakeNav, styles.navBar]}>
       {item("home", "🏠", t("childHome.navHome"), () => navigation.navigate("ChildHome"))}
       {item("tasks", "📋", t("childHome.navTasks"), () => navigation.navigate("ChildHistory"))}
-      {item("rewards", "⭐", t("childHome.navRewards"), () => navigation.navigate("ChildHome"))}
-      {item("history", "📜", t("childHome.navHistory"), () => {
-        if (childId) navigation.navigate("RewardsChild", { childId });
-      })}
+      {rewardsActive
+        ? item("rewards", "⭐", t("childHome.navRewards"), () => navigation.navigate("ChildHome"))
+        : null}
+      {rewardsActive
+        ? item("history", "📜", t("childHome.navHistory"), () => {
+            if (childId) navigation.navigate("RewardsChild", { childId });
+          })
+        : null}
     </View>
   );
 }
@@ -83,7 +87,6 @@ export function ParentRewardsBottomNav({
   active: ParentTab;
 }) {
   const { t } = useTranslation();
-  const { setCurrentProfileId } = useApp();
   const item = (
     key: ParentTab,
     icon: string,
@@ -127,17 +130,9 @@ export function ParentRewardsBottomNav({
       {item("rewards", "🏆", t("parentDash.navRewards"), () =>
         navigation.navigate("Rewards")
       )}
-      {item("profile", "👤", t("parentDash.navProfile"), () => {
-        setCurrentProfileId(null);
-        if (navigation.reset) {
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "ProfilePicker", params: { mode: "switch" } }],
-          });
-        } else {
-          navigation.navigate("ProfilePicker", { mode: "switch" });
-        }
-      })}
+      {item("profile", "👤", t("parentDash.navProfile"), () =>
+        navigation.navigate("LanguageSettings")
+      )}
     </View>
   );
 }

@@ -434,13 +434,19 @@ export function ParentDashboardScreen({ navigation }: Props) {
           ))}
         </View>
 
-        {/* Spacer for sticky CTA */}
-        <View style={{ height: 96 }} />
+        {/* Spacer so last cards clear the FAB */}
+        <View style={{ height: 72 }} />
       </ScrollView>
 
-      <View style={styles.stickyBar}>
-        <PrimaryButton label={t("parentDash.newTask")} onPress={goNewTask} />
-      </View>
+      <Pressable
+        style={styles.fab}
+        onPress={goNewTask}
+        accessibilityRole="button"
+        accessibilityLabel={t("parentDash.newTask")}
+        hitSlop={8}
+      >
+        <Text style={styles.fabPlus}>+</Text>
+      </Pressable>
 
       <Modal
         visible={moreOpen}
@@ -696,13 +702,29 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     backgroundColor: colors.border,
   },
-  stickyBar: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
-    backgroundColor: rewardsUi.cream,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
+  fab: {
+    position: "absolute",
+    right: 16,
+    bottom: 86,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 25,
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+  },
+  fabPlus: {
+    color: "#fff",
+    fontSize: 32,
+    fontWeight: "700",
+    lineHeight: 34,
+    marginTop: -2,
   },
   menuBackdrop: {
     flex: 1,
