@@ -195,7 +195,8 @@
     "addCalendar": "เพิ่มไปยังปฏิทิน",
     "edit": "Edit",
     "todayFor": "วันนี้ · {{name}}",
-    "rewards": "Rewards"
+    "rewards": "Rewards",
+    "openRewards": "⭐ Open Rewards"
   },
   "calendar": {
     "legend": "ตํานาน",
@@ -473,6 +474,15 @@
     "validateDone": "Credited +{{amount}} {{unit}}.",
     "validateFailed": "Could not credit points.",
     "alreadyValidated": "Validated (+{{amount}} {{unit}})",
-    "noPointsConfigured": "No points configured for this task."
+    "noPointsConfigured": "No points configured for this task.",
+    "unitKind": "Unit",
+    "unitPoints": "Points",
+    "unitPointsShort": "pts",
+    "unitMoney": "Money (€)",
+    "unitMoneyShort": "€",
+    "unitPerChildHelp": "Choose Points or € for each child.",
+    "toValidate": "To validate",
+    "toValidateEmpty": "Nothing waiting for validation.",
+    "validatePendingCta": "Validate"
   }
 }

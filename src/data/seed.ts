@@ -1,4 +1,5 @@
-import { AppState, Profile, RewardLedgerEntry, RewardTask, Task, TaskCompletion } from "../types";
+import { AppState, Profile, RewardChildSettings,
+  RewardLedgerEntry, RewardTask, Task, TaskCompletion } from "../types";
 import { addDaysISO, todayISO } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
 
@@ -314,6 +315,20 @@ export function createSeedState(now = new Date()): AppState {
       unitLabel: "⭐",
       updatedAt: createdAt,
     },
+    rewardChildSettings: [
+      {
+        childProfileId: CHILD_LEO_ID,
+        familyId: "local",
+        unitKind: "points",
+        updatedAt: createdAt,
+      },
+      {
+        childProfileId: CHILD_MIA_ID,
+        familyId: "local",
+        unitKind: "money",
+        updatedAt: createdAt,
+      },
+    ],
     rewardTasks,
     rewardLedger,
     seeded: true,

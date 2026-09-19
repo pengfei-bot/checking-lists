@@ -15,6 +15,7 @@ import { RootStackParamList } from "../navigation/types";
 import { TaskCard } from "../components/TaskCard";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { formatLocalizedDate, todayISO } from "../utils/dates";
+import { unitShortKey } from "../utils/rewards";
 import { notifyUser } from "../utils/feedback";
 import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
 import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
@@ -34,7 +35,7 @@ export function ChildHomeScreen({ navigation }: Props) {
     state,
     refreshReminders,
     rewardsEnabled,
-    unitLabel,
+    unitKindFor,
     balanceFor,
   } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -59,6 +60,7 @@ export function ChildHomeScreen({ navigation }: Props) {
   const doneCount = tasks.filter((task) => completionFor(task.id)).length;
   const progress = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
   const balance = balanceFor(currentProfile.id);
+  const unitLabel = t(unitShortKey(unitKindFor(currentProfile.id)));
 
   const header = useMemo(
     () => (

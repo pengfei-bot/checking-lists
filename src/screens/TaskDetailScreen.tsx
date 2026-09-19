@@ -23,6 +23,7 @@ import {
   todayISO,
 } from "../utils/dates";
 import { frenchCloudError } from "../utils/cloudTimeout";
+import { unitShortKey } from "../utils/rewards";
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { openPhotoReportMail } from "../utils/reportPhoto";
 import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
@@ -49,7 +50,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
     pointsFor,
     isEarnValidated,
     validateEarn,
-    unitLabel,
+    unitKindFor,
   } = useApp();
   const { family } = useAuth();
   const task = getTask(route.params.taskId);
@@ -69,6 +70,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
   const doneAtTime = done ? formatCompletionTime(done.completedAt, i18n.language) : null;
   const child = task ? getProfile(task.childId) : undefined;
   const rewardPoints = task ? pointsFor(task.id) : null;
+  const unitLabel = task ? t(unitShortKey(unitKindFor(task.childId))) : t("rewards.unitPointsShort");
   const earnDone = done?.id ? isEarnValidated(done.id) : false;
 
   const openPhoto = (uri: string) => {

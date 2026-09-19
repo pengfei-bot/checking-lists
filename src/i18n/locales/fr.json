@@ -195,7 +195,8 @@
     "addCalendar": "Ajouter au calendrier",
     "edit": "Modifier",
     "todayFor": "Aujourd'hui · {{name}}",
-    "rewards": "Récompenses"
+    "rewards": "Récompenses",
+    "openRewards": "⭐ Ouvrir Récompenses"
   },
   "calendar": {
     "legend": "Légende",
@@ -473,6 +474,15 @@
     "validateDone": "Crédité +{{amount}} {{unit}}.",
     "validateFailed": "Impossible de créditer les points.",
     "alreadyValidated": "Validé (+{{amount}} {{unit}})",
-    "noPointsConfigured": "Aucun point configuré pour cette tâche."
+    "noPointsConfigured": "Aucun point configuré pour cette tâche.",
+    "unitKind": "Unité",
+    "unitPoints": "Points",
+    "unitPointsShort": "pts",
+    "unitMoney": "Argent (€)",
+    "unitMoneyShort": "€",
+    "unitPerChildHelp": "Choisissez Points ou € pour chaque enfant.",
+    "toValidate": "À valider",
+    "toValidateEmpty": "Rien à valider pour le moment.",
+    "validatePendingCta": "Valider"
   }
 }

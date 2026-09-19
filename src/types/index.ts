@@ -47,7 +47,17 @@ export type RewardLedgerKind = "earn" | "reset" | "adjust";
 export interface RewardSettings {
   familyId: string;
   enabled: boolean;
+  /** Legacy family-wide label; UI uses per-child unitKind instead. */
   unitLabel: string;
+  updatedAt: string;
+}
+
+export type RewardUnitKind = "points" | "money";
+
+export interface RewardChildSettings {
+  childProfileId: string;
+  familyId: string;
+  unitKind: RewardUnitKind;
   updatedAt: string;
 }
 
@@ -79,6 +89,7 @@ export interface AppState {
   completions: TaskCompletion[];
   /** Family rewards settings (null = not loaded / never enabled). */
   rewardSettings: RewardSettings | null;
+  rewardChildSettings: RewardChildSettings[];
   rewardTasks: RewardTask[];
   rewardLedger: RewardLedgerEntry[];
   seeded: boolean;

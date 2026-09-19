@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
@@ -9,6 +9,8 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { frenchCloudError } from "../utils/cloudTimeout";
 import { formatCompletionTime, formatLocalizedDate } from "../utils/dates";
 import { confirmUser, notifyUser } from "../utils/feedback";
+import { RewardUnitKind } from "../types";
+import { unitShortKey } from "../utils/rewards";
 
 type Props = NativeStackScreenProps<RootStackParamList, "RewardsChild">;
 
@@ -20,7 +22,8 @@ export function RewardsChildScreen({ navigation, route }: Props) {
     getTask,
     balanceFor,
     ledgerByChild,
-    unitLabel,
+    unitKindFor,
+    setChildUnitKind,
     rewardsEnabled,
     resetChildBalance,
     currentProfile,
@@ -32,6 +35,8 @@ export function RewardsChildScreen({ navigation, route }: Props) {
   const entries = useMemo(() => ledgerByChild(childId), [ledgerByChild, childId]);
   const isParent = currentProfile?.role === "parent";
   const isOwnChild = currentProfile?.role === "child" && currentProfile.id === childId;
+  const unitKind = unitKindFor(childId);
+  const unitLabel = t(unitShortKey(unitKind));
 
   if (!child || child.role !== "child") {
     return (
@@ -90,6 +95,43 @@ export function RewardsChildScreen({ navigation, route }: Props) {
       </Text>
       {!rewardsEnabled ? (
         <Text style={styles.help}>{t("rewards.disabledHint")}</Text>
+      ) : null}
+
+      {isParent ? (
+        <View style={styles.unitBlock}>
+          <Text style={styles.unitLabel}>{t("rewards.unitKind")}</Text>
+          <View style={styles.chips}>
+            {(["points", "money"] as RewardUnitKind[]).map((kind) => (
+              <Pressable
+                key={kind}
+                disabled={busy}
+                onPress={() => {
+                  void (async () => {
+                    if (unitKind === kind) return;
+                    setBusy(true);
+                    try {
+                      await setChildUnitKind(childId, kind);
+                    } catch (e) {
+                      notifyUser(t("common.error"), frenchCloudError(e, t("rewards.saveFailed")));
+                    } finally {
+                      setBusy(false);
+                    }
+                  })();
+                }}
+                style={[styles.unitChip, unitKind === kind && styles.unitChipActive]}
+              >
+                <Text
+                  style={[
+                    styles.unitChipText,
+                    unitKind === kind && styles.unitChipTextActive,
+                  ]}
+                >
+                  {kind === "points" ? t("rewards.unitPoints") : t("rewards.unitMoney")}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
       ) : null}
 
       {isParent ? (
@@ -177,4 +219,18 @@ const styles = StyleSheet.create({
   amount: { fontWeight: "800", fontSize: 15 },
   amountPos: { color: colors.success },
   amountNeg: { color: colors.danger },
+  unitBlock: { marginTop: 14, alignItems: "center", gap: 6 },
+  unitLabel: { fontWeight: "700", fontSize: 12, color: colors.textMuted },
+  chips: { flexDirection: "row", gap: 8 },
+  unitChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  unitChipActive: { backgroundColor: colors.primarySoft, borderColor: colors.primary },
+  unitChipText: { fontWeight: "700", color: colors.text, fontSize: 13 },
+  unitChipTextActive: { color: colors.primary },
 });

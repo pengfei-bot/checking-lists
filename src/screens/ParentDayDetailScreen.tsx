@@ -7,6 +7,7 @@ import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { frenchCloudError } from "../utils/cloudTimeout";
+import { unitShortKey } from "../utils/rewards";
 import { formatCompletionTime, formatLocalizedDate } from "../utils/dates";
 import { buildDayOverview, statusColor } from "../utils/calendarStatus";
 import { notifyUser } from "../utils/feedback";
@@ -25,7 +26,7 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
     pointsFor,
     isEarnValidated,
     validateEarn,
-    unitLabel,
+    unitKindFor,
   } = useApp();
   const [busyId, setBusyId] = useState<string | null>(null);
 
@@ -88,6 +89,7 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
                     metaParts.push(t("common.doneAt", { time: doneTime }));
                   }
                   const pts = pointsFor(task.id);
+                  const unitLabel = t(unitShortKey(unitKindFor(childDay.child.id)));
                   const validated = completion?.id ? isEarnValidated(completion.id) : false;
                   const canValidate =
                     !!done &&

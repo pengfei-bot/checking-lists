@@ -26,6 +26,9 @@ export async function loadAppState(): Promise<AppState> {
         unitLabel: "⭐",
         updatedAt: new Date().toISOString(),
       },
+      rewardChildSettings: Array.isArray(parsed.rewardChildSettings)
+        ? parsed.rewardChildSettings
+        : [],
       rewardTasks: Array.isArray(parsed.rewardTasks) ? parsed.rewardTasks : [],
       rewardLedger: Array.isArray(parsed.rewardLedger) ? parsed.rewardLedger : [],
     };

@@ -38,6 +38,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
     completionFor,
     setCurrentProfileId,
     refreshReminders,
+    pendingEarnCount,
   } = useApp();
   const { isAuthenticated, family, deleteAccount } = useAuth();
   const [deletingAccount, setDeletingAccount] = useState(false);
@@ -243,6 +244,13 @@ export function ParentDashboardScreen({ navigation }: Props) {
             <Text style={styles.compactLabel} numberOfLines={1}>
               {t("parentDash.rewards")}
             </Text>
+            {pendingEarnCount > 0 ? (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>
+                  {pendingEarnCount > 99 ? "99+" : String(pendingEarnCount)}
+                </Text>
+              </View>
+            ) : null}
           </Pressable>
           {isAuthenticated ? (
             <Pressable
@@ -360,7 +368,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
           <View style={styles.menuSheet}>
             <Text style={styles.menuTitle}>{t("common.settings")}</Text>
             <PrimaryButton
-              label={t("parentDash.rewards")}
+              label={t("parentDash.openRewards")}
               variant="secondary"
               onPress={() => closeAnd(() => navigation.navigate("Rewards"))}
               style={{ marginTop: 8 }}
@@ -500,6 +508,16 @@ const styles = StyleSheet.create({
   },
   compactEmoji: { fontSize: 18 },
   compactLabel: { flex: 1, fontWeight: "700", color: colors.primary, fontSize: 13 },
+  badge: {
+    minWidth: 20,
+    height: 20,
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    backgroundColor: colors.danger,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  badgeText: { color: "#fff", fontWeight: "800", fontSize: 11 },
   section: { fontWeight: "800", fontSize: 16, marginBottom: 8, color: colors.text },
   emptyBox: {
     backgroundColor: colors.card,
