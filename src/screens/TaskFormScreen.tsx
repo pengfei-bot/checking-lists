@@ -21,6 +21,9 @@ import { frenchCloudError } from "../utils/cloudTimeout";
 import { todayISO } from "../utils/dates";
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { recurrenceLabel } from "../utils/recurrence";
+import { unitShortKey } from "../utils/rewards";
+
+const REWARD_POINT_CHIPS = [0, 1, 2, 5, 10] as const;
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskForm">;
 
@@ -124,7 +127,7 @@ function validateForm(input: {
 export function TaskFormScreen({ navigation, route }: Props) {
   const { t } = useTranslation();
   const blocked = useParentOnlyGuard(navigation);
-  const { getTask, childrenProfiles, upsertTask, deleteTask, state, setTaskPoints, pointsFor, isRewardsActiveForChild } = useApp();
+  const { getTask, childrenProfiles, upsertTask, deleteTask, state, setTaskPoints, pointsFor, isRewardsActiveForChild, unitKindFor } = useApp();
   const existing = route.params.taskId ? getTask(route.params.taskId) : undefined;
 
   const [title, setTitle] = useState(existing?.title ?? "");
@@ -145,8 +148,8 @@ export function TaskFormScreen({ navigation, route }: Props) {
   const [reminderEnabled, setReminderEnabled] = useState(existing?.reminderEnabled ?? true);
   const [photoRequired, setPhotoRequired] = useState(existing?.photoRequired ?? false);
   const existingPoints = existing ? pointsFor(existing.id) : null;
-  const [rewardPoints, setRewardPoints] = useState(
-    existingPoints != null ? String(existingPoints) : ""
+  const [rewardPoints, setRewardPoints] = useState<number>(
+    existingPoints != null && existingPoints > 0 ? existingPoints : 0
   );
   const [onceDate, setOnceDate] = useState(existing?.onceDate ?? todayISO());
   const [startDate, setStartDate] = useState(existing?.startDate ?? todayISO());
@@ -159,6 +162,13 @@ export function TaskFormScreen({ navigation, route }: Props) {
   const [formError, setFormError] = useState<string | null>(null);
 
   const isEdit = !!existing;
+
+  const rewardsActiveForSelection = childIds.some((id) => isRewardsActiveForChild(id));
+  const rewardUnitChildId =
+    childIds.find((id) => isRewardsActiveForChild(id)) ?? childIds[0] ?? null;
+  const rewardUnitLabel = rewardUnitChildId
+    ? t(unitShortKey(unitKindFor(rewardUnitChildId)))
+    : "";
 
   const fieldErrors = useMemo(
     () =>
@@ -269,12 +279,10 @@ export function TaskFormScreen({ navigation, route }: Props) {
 
       const applyPoints = selectedIds.some((id) => isRewardsActiveForChild(id));
       if (applyPoints) {
-        const raw = rewardPoints.trim();
-        const n = raw === "" ? null : Number(raw);
-        if (n != null && (!Number.isFinite(n) || n < 0 || Math.floor(n) !== n)) {
+        if (!Number.isFinite(rewardPoints) || rewardPoints < 0 || Math.floor(rewardPoints) !== rewardPoints) {
           throw new Error(t("rewards.pointsInvalid"));
         }
-        const pointsValue = n === 0 || n == null ? null : Math.floor(n);
+        const pointsValue = rewardPoints <= 0 ? null : rewardPoints;
         for (const tid of savedTaskIds) {
           await setTaskPoints(tid, pointsValue);
         }
@@ -541,19 +549,56 @@ export function TaskFormScreen({ navigation, route }: Props) {
         <Switch value={photoRequired} onValueChange={setPhotoRequired} />
       </View>
 
-      {childIds.some((id) => isRewardsActiveForChild(id)) ? (
-        <>
-          <Text style={styles.label}>{t("rewards.taskPoints")}</Text>
-          <Text style={styles.help}>{t("rewards.taskPointsHelp")}</Text>
-          <TextInput
-            value={rewardPoints}
-            onChangeText={setRewardPoints}
-            keyboardType="number-pad"
-            placeholder="0"
-            style={styles.input}
-            placeholderTextColor={colors.textMuted}
-          />
-        </>
+      {childIds.length > 0 ? (
+        rewardsActiveForSelection ? (
+          <View style={styles.rewardBlock}>
+            <Text style={styles.label}>{t("rewards.taskPoints")}</Text>
+            <Text style={styles.help}>{t("rewards.taskPointsHelp")}</Text>
+            <View style={styles.stepperRow}>
+              <Pressable
+                onPress={() => setRewardPoints((n) => Math.max(0, n - 1))}
+                style={styles.stepperBtn}
+                accessibilityRole="button"
+                accessibilityLabel="−"
+              >
+                <Text style={styles.stepperBtnText}>−</Text>
+              </Pressable>
+              <View style={styles.stepperValue}>
+                <Text style={styles.stepperValueText}>
+                  {rewardPoints} {rewardUnitLabel}
+                </Text>
+              </View>
+              <Pressable
+                onPress={() => setRewardPoints((n) => n + 1)}
+                style={styles.stepperBtn}
+                accessibilityRole="button"
+                accessibilityLabel="+"
+              >
+                <Text style={styles.stepperBtnText}>+</Text>
+              </Pressable>
+            </View>
+            <View style={[styles.rowWrap, { marginTop: 8 }]}>
+              {REWARD_POINT_CHIPS.map((n) => {
+                const active = rewardPoints === n;
+                return (
+                  <Pressable
+                    key={n}
+                    onPress={() => setRewardPoints(n)}
+                    style={[styles.chip, active && styles.chipActive]}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: active }}
+                  >
+                    <Text style={[styles.chipText, active && styles.chipTextActive]}>
+                      {n === 0 ? "0" : `+${n}`}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        ) : (
+          <Text style={styles.rewardMuted}>{t("rewards.activateForChild")}</Text>
+        )
       ) : null}
 
       {attempted && !isValid ? (
@@ -744,4 +789,57 @@ const styles = StyleSheet.create({
   modalRowActive: { backgroundColor: colors.primarySoft },
   modalRowText: { fontSize: 17, fontWeight: "600", color: colors.text, textAlign: "center" },
   modalRowTextActive: { color: colors.primary, fontWeight: "800" },
+  rewardBlock: {
+    marginTop: 8,
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 12,
+  },
+  rewardMuted: {
+    marginTop: 16,
+    color: colors.textMuted,
+    fontSize: 13,
+    fontWeight: "600",
+    fontStyle: "italic",
+  },
+  stepperRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginTop: 8,
+  },
+  stepperBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: colors.primarySoft,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  stepperBtnText: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: colors.primary,
+    lineHeight: 26,
+  },
+  stepperValue: {
+    flex: 1,
+    minHeight: 44,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.bg,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 12,
+  },
+  stepperValueText: {
+    fontSize: 18,
+    fontWeight: "800",
+    color: colors.text,
+  },
 });

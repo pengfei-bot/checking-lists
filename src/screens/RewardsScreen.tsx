@@ -1,12 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Switch,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -25,7 +23,6 @@ import { unitShortKey } from "../utils/rewards";
 import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Rewards">;
-type ChildFilter = string | "all";
 
 export function RewardsScreen({ navigation }: Props) {
   const { t } = useTranslation();
@@ -39,30 +36,16 @@ export function RewardsScreen({ navigation }: Props) {
     ensureMissingChildRewardSettings,
     isRewardsActiveForChild,
     unitKindFor,
-    state,
-    pointsFor,
-    setTaskPoints,
   } = useApp();
 
   const [saving, setSaving] = useState(false);
-  const [pointsDraft, setPointsDraft] = useState<Record<string, string>>({});
-  const [filterChildId, setFilterChildId] = useState<ChildFilter>("all");
   /** Per-child accordion — collapsed by default so the header affordance is obvious. */
   const [expandedByChild, setExpandedByChild] = useState<Record<string, boolean>>({});
-  const scrollRef = useRef<ScrollView>(null);
-  const pointsYRef = useRef(0);
 
   // Heal missing per-child rows when opening Rewards (new kids / pre-backfill families).
   useEffect(() => {
     void ensureMissingChildRewardSettings();
   }, [ensureMissingChildRewardSettings, childrenProfiles.length]);
-
-  const tasksSorted = useMemo(() => {
-    return state.tasks
-      .filter((task) => filterChildId === "all" || task.childId === filterChildId)
-      .slice()
-      .sort((a, b) => a.title.localeCompare(b.title) || a.time.localeCompare(b.time));
-  }, [state.tasks, filterChildId]);
 
   if (blocked || !currentProfile || currentProfile.role !== "parent") {
     return (
@@ -80,26 +63,8 @@ export function RewardsScreen({ navigation }: Props) {
     );
   }
 
-  const unitLabelFor = (childId: string) => t(unitShortKey(unitKindFor(childId)));
-
-  const setChildExpanded = (childId: string, open: boolean) => {
-    setExpandedByChild((prev) => ({ ...prev, [childId]: open }));
-  };
-
   const toggleChildExpanded = (childId: string) => {
     setExpandedByChild((prev) => ({ ...prev, [childId]: !prev[childId] }));
-  };
-
-  /** Expand card + filter task points to this child + scroll to config list. */
-  const onConfigureChild = (childId: string) => {
-    setChildExpanded(childId, true);
-    setFilterChildId(childId);
-    requestAnimationFrame(() => {
-      scrollRef.current?.scrollTo({
-        y: Math.max(0, pointsYRef.current - 12),
-        animated: true,
-      });
-    });
   };
 
   const onToggleChild = async (childId: string, enabled: boolean) => {
@@ -125,94 +90,9 @@ export function RewardsScreen({ navigation }: Props) {
     }
   };
 
-  const onSavePoints = async (taskId: string) => {
-    const raw = pointsDraft[taskId];
-    const n = raw === undefined || raw.trim() === "" ? null : Number(raw);
-    if (n != null && (!Number.isFinite(n) || n < 0 || Math.floor(n) !== n)) {
-      notifyUser(t("common.error"), t("rewards.pointsInvalid"));
-      return;
-    }
-    setSaving(true);
-    try {
-      await setTaskPoints(taskId, n === 0 ? null : n);
-      setPointsDraft((prev) => {
-        const next = { ...prev };
-        delete next[taskId];
-        return next;
-      });
-    } catch (e) {
-      notifyUser(t("common.error"), frenchCloudError(e, t("rewards.saveFailed")));
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const onSaveAll = async () => {
-    const ids = Object.keys(pointsDraft);
-    setSaving(true);
-    try {
-      for (const taskId of ids) {
-        const raw = pointsDraft[taskId];
-        const n = raw === undefined || raw.trim() === "" ? null : Number(raw);
-        if (n != null && (!Number.isFinite(n) || n < 0 || Math.floor(n) !== n)) {
-          notifyUser(t("common.error"), t("rewards.pointsInvalid"));
-          return;
-        }
-        await setTaskPoints(taskId, n === 0 || n == null ? null : n);
-      }
-      setPointsDraft({});
-      notifyUser(t("rewards.savedTitle"), t("rewards.savedBody"));
-    } catch (e) {
-      notifyUser(t("common.error"), frenchCloudError(e, t("rewards.saveFailed")));
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const filterChips = (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsScroll}>
-      <Pressable
-        onPress={() => setFilterChildId("all")}
-        style={[
-          rewardsStyles.filterChip,
-          filterChildId === "all" && rewardsStyles.filterChipActive,
-        ]}
-      >
-        <Text
-          style={[
-            rewardsStyles.filterChipText,
-            filterChildId === "all" && rewardsStyles.filterChipTextActive,
-          ]}
-        >
-          {t("common.all")}
-        </Text>
-      </Pressable>
-      {childrenProfiles.map((c) => (
-        <Pressable
-          key={c.id}
-          onPress={() => setFilterChildId(c.id)}
-          style={[
-            rewardsStyles.filterChip,
-            filterChildId === c.id && rewardsStyles.filterChipActive,
-          ]}
-        >
-          <Text
-            style={[
-              rewardsStyles.filterChipText,
-              filterChildId === c.id && rewardsStyles.filterChipTextActive,
-            ]}
-          >
-            {c.emoji} {c.name}
-          </Text>
-        </Pressable>
-      ))}
-    </ScrollView>
-  );
-
   return (
     <View style={styles.root}>
       <ScrollView
-        ref={scrollRef}
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
       >
@@ -290,15 +170,10 @@ export function RewardsScreen({ navigation }: Props) {
                   />
                 </View>
 
-                <Pressable
-                  onPress={() => onConfigureChild(child.id)}
-                  style={styles.configureCta}
-                  accessibilityRole="button"
-                  accessibilityLabel={t("rewards.configureCta")}
-                >
-                  <Text style={styles.configureCtaIcon}>⚙️</Text>
-                  <Text style={styles.configureCtaText}>{t("rewards.configureCta")}</Text>
-                </Pressable>
+                <View style={styles.tipBanner}>
+                  <Text style={styles.tipBannerIcon}>💡</Text>
+                  <Text style={styles.tipBannerText}>{t("rewards.pointsOnTaskTip")}</Text>
+                </View>
 
                 {expanded ? (
                   <View style={styles.childBody}>
@@ -366,76 +241,15 @@ export function RewardsScreen({ navigation }: Props) {
           <Text style={rewardsStyles.infoBannerText}>{t("rewards.parentOnlyActivate")}</Text>
         </View>
 
-        {filterChips}
-
-        <View
-          onLayout={(e) => {
-            pointsYRef.current = e.nativeEvent.layout.y;
-          }}
-        >
+        <View style={styles.pointsTipCard}>
           <Text style={styles.section}>{t("rewards.configurePoints")}</Text>
           <Text style={styles.help}>{t("rewards.configurePointsHelp")}</Text>
-          {tasksSorted.length === 0 ? (
-            <Text style={styles.help}>{t("rewards.noTasks")}</Text>
-          ) : (
-            tasksSorted.map((task) => {
-              const child = childrenProfiles.find((c) => c.id === task.childId);
-              const current = pointsFor(task.id);
-              const draft =
-                pointsDraft[task.id] !== undefined
-                  ? pointsDraft[task.id]
-                  : current != null
-                    ? String(current)
-                    : "";
-              const childActive = child ? isRewardsActiveForChild(child.id) : false;
-              return (
-                <View key={task.id} style={[styles.taskRow, !childActive && styles.taskRowMuted]}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.taskTitle}>{task.title}</Text>
-                    <Text style={styles.childMeta}>
-                      {child ? `${child.emoji} ${child.name}` : "—"} · {task.time}
-                      {!childActive ? ` · ${t("rewards.deactivated")}` : ""}
-                    </Text>
-                  </View>
-                  {current != null && childActive ? (
-                    <View style={[rewardsStyles.pointsPill, { marginRight: 4 }]}>
-                      <Text style={rewardsStyles.pointsPillText}>+{current} ⭐</Text>
-                    </View>
-                  ) : null}
-                  <TextInput
-                    value={draft}
-                    onChangeText={(v) => setPointsDraft((p) => ({ ...p, [task.id]: v }))}
-                    keyboardType="number-pad"
-                    style={styles.pointsInput}
-                    placeholder="0"
-                    placeholderTextColor={colors.textMuted}
-                    editable={childActive}
-                  />
-                  <Pressable
-                    onPress={() => void onSavePoints(task.id)}
-                    style={styles.savePts}
-                    disabled={saving || !childActive}
-                  >
-                    <Text style={styles.savePtsText}>{t("common.save")}</Text>
-                  </Pressable>
-                </View>
-              );
-            })
-          )}
         </View>
 
         <BuildStamp />
         <View style={{ height: 72 }} />
       </ScrollView>
 
-      <View style={styles.stickyBar}>
-        <PrimaryButton
-          label={t("rewards.saveSettings")}
-          onPress={() => void onSaveAll()}
-          loading={saving}
-          style={styles.saveBtn}
-        />
-      </View>
       <ParentRewardsBottomNav navigation={navigation} active="rewards" />
     </View>
   );
@@ -447,11 +261,6 @@ const styles = StyleSheet.create({
   container: {
     ...rewardsStyles.screenParent,
     backgroundColor: rewardsUi.cream,
-  },
-  stickyBar: {
-    ...rewardsStyles.stickyBar,
-    backgroundColor: rewardsUi.cream,
-    paddingBottom: Platform.OS === "ios" ? 20 : 12,
   },
   section: {
     fontWeight: "800",
@@ -500,25 +309,25 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: rewardsUi.navyMuted,
   },
-  configureCta: {
+  tipBanner: {
     marginTop: 10,
-    alignSelf: "stretch",
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: "flex-start",
     gap: 8,
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: rewardsUi.pillRadius,
-    borderWidth: 1.5,
-    borderColor: colors.primary,
-    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#F0E0D0",
+    backgroundColor: "#FFF9F3",
   },
-  configureCtaIcon: { fontSize: 14 },
-  configureCtaText: {
-    fontWeight: "800",
-    color: colors.primary,
-    fontSize: 14,
+  tipBannerIcon: { fontSize: 14, marginTop: 1 },
+  tipBannerText: {
+    flex: 1,
+    fontWeight: "600",
+    color: rewardsUi.navyMuted,
+    fontSize: 13,
+    lineHeight: 18,
   },
   childBody: {
     marginTop: 12,
@@ -544,39 +353,14 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 13,
   },
-  childMeta: { color: colors.textMuted, fontSize: 12, marginTop: 1 },
-  chipsScroll: { marginBottom: 10, flexGrow: 0 },
-  taskRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    backgroundColor: colors.card,
-    borderRadius: 14,
-    borderWidth: 0,
-    padding: 10,
+  pointsTipCard: {
     marginTop: 8,
+    marginBottom: 4,
+    backgroundColor: colors.card,
+    borderRadius: rewardsUi.cardRadius,
+    borderWidth: 1,
+    borderColor: "#F0E0D0",
+    padding: 14,
     ...rewardsUi.shadow,
   },
-  taskRowMuted: { opacity: 0.55 },
-  taskTitle: { fontWeight: "700", color: colors.text },
-  pointsInput: {
-    width: 52,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 7,
-    textAlign: "center",
-    backgroundColor: colors.bg,
-    color: colors.text,
-    fontWeight: "700",
-  },
-  savePts: {
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    borderRadius: 10,
-    backgroundColor: colors.primarySoft,
-  },
-  savePtsText: { fontWeight: "700", color: colors.primary, fontSize: 12 },
-  saveBtn: { borderRadius: 16 },
 });
