@@ -159,11 +159,6 @@ export function ParentSettingsScreen({ navigation }: Props) {
 
         <View style={styles.group}>
           <SettingsRow
-            label={t("parentDash.openRewards")}
-            onPress={() => navigation.navigate("Rewards")}
-          />
-          <View style={styles.sep} />
-          <SettingsRow
             label={t("parentDash.reminders")}
             onPress={() => {
               void onReminders();
