@@ -79,6 +79,7 @@ export interface DbRewardChildSettings {
   child_profile_id: string;
   family_id: string;
   unit_kind: string;
+  enabled: boolean;
   updated_at: string;
 }
 
@@ -224,6 +225,7 @@ function mapRewardChildSettings(row: DbRewardChildSettings): RewardChildSettings
     childProfileId: row.child_profile_id,
     familyId: row.family_id,
     unitKind: kind,
+    enabled: !!row.enabled,
     updatedAt: row.updated_at,
   };
 }
@@ -789,32 +791,47 @@ export async function cloudInsertRewardLedger(
 export async function cloudUpsertRewardChildSettings(
   familyId: string,
   childProfileId: string,
-  unitKind: RewardUnitKind
+  input: { unitKind?: RewardUnitKind; enabled?: boolean }
 ): Promise<RewardChildSettings> {
   const fid = requireFamilyId(familyId);
   const supabase = getSupabase();
-  const kind: RewardUnitKind = unitKind === "money" ? "money" : "points";
   const now = new Date().toISOString();
-  const row = {
-    child_profile_id: childProfileId,
-    family_id: fid,
-    unit_kind: kind,
-    updated_at: now,
-  };
 
   const run = async (): Promise<RewardChildSettings> => {
+    const { data: existing, error: readErr } = await supabase
+      .from("reward_child_settings")
+      .select("*")
+      .eq("child_profile_id", childProfileId)
+      .maybeSingle();
+    if (readErr) throwCloud(readErr, "Impossible de lire les réglages enfant.");
+
+    const prevKind: RewardUnitKind =
+      (existing as DbRewardChildSettings | null)?.unit_kind === "money" ? "money" : "points";
+    const prevEnabled = !!(existing as DbRewardChildSettings | null)?.enabled;
+    const kind: RewardUnitKind =
+      input.unitKind === "money" || input.unitKind === "points" ? input.unitKind : prevKind;
+    const enabled = typeof input.enabled === "boolean" ? input.enabled : prevEnabled;
+
+    const row = {
+      child_profile_id: childProfileId,
+      family_id: fid,
+      unit_kind: kind,
+      enabled,
+      updated_at: now,
+    };
+
     const { data, error } = await supabase
       .from("reward_child_settings")
       .upsert(row, { onConflict: "child_profile_id" })
       .select("*")
       .single();
-    if (error) throwCloud(error, "Impossible d'enregistrer l'unité enfant.");
+    if (error) throwCloud(error, "Impossible d'enregistrer les réglages récompenses enfant.");
     return mapRewardChildSettings(data as DbRewardChildSettings);
   };
 
   try {
-    return await withCloudTimeout(run(), 15_000, "Unité enfant");
+    return await withCloudTimeout(run(), 15_000, "Réglages enfant");
   } catch (e) {
-    throwCloud(e, "Impossible d'enregistrer l'unité enfant.");
+    throwCloud(e, "Impossible d'enregistrer les réglages récompenses enfant.");
   }
 }

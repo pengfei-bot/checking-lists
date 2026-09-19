@@ -34,7 +34,10 @@ export async function loadCloudStateCache(familyId: string): Promise<CachedCloud
     if (!parsed?.state?.profiles || !Array.isArray(parsed.state.profiles)) return null;
     parsed.state.rewardSettings = parsed.state.rewardSettings ?? null;
     parsed.state.rewardChildSettings = Array.isArray(parsed.state.rewardChildSettings)
-      ? parsed.state.rewardChildSettings
+      ? parsed.state.rewardChildSettings.map((s) => ({
+          ...s,
+          enabled: !!(s as { enabled?: boolean }).enabled,
+        }))
       : [];
     parsed.state.rewardTasks = Array.isArray(parsed.state.rewardTasks)
       ? parsed.state.rewardTasks

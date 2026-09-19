@@ -24,7 +24,7 @@ export function RewardsChildScreen({ navigation, route }: Props) {
     ledgerByChild,
     unitKindFor,
     setChildUnitKind,
-    rewardsEnabled,
+    isRewardsActiveForChild,
     resetChildBalance,
     currentProfile,
   } = useApp();
@@ -37,6 +37,7 @@ export function RewardsChildScreen({ navigation, route }: Props) {
   const isOwnChild = currentProfile?.role === "child" && currentProfile.id === childId;
   const unitKind = unitKindFor(childId);
   const unitLabel = t(unitShortKey(unitKind));
+  const childActive = isRewardsActiveForChild(childId);
 
   if (!child || child.role !== "child") {
     return (
@@ -51,6 +52,15 @@ export function RewardsChildScreen({ navigation, route }: Props) {
     return (
       <View style={styles.center}>
         <Text>{t("roles.parentOnly")}</Text>
+        <PrimaryButton label={t("common.back")} onPress={() => navigation.goBack()} style={{ marginTop: 12 }} />
+      </View>
+    );
+  }
+
+  if (isOwnChild && !childActive) {
+    return (
+      <View style={styles.center}>
+        <Text style={{ textAlign: "center" }}>{t("rewards.disabledHintChild")}</Text>
         <PrimaryButton label={t("common.back")} onPress={() => navigation.goBack()} style={{ marginTop: 12 }} />
       </View>
     );
@@ -89,11 +99,13 @@ export function RewardsChildScreen({ navigation, route }: Props) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.emoji}>{child.emoji}</Text>
-      <Text style={styles.title}>{child.name}</Text>
-      <Text style={styles.balance}>
-        {t("rewards.balanceLabel", { amount: balance, unit: unitLabel })}
+      <Text style={styles.title}>
+        {isOwnChild ? t("rewards.myHistory") : child.name}
       </Text>
-      {!rewardsEnabled ? (
+      <Text style={styles.balance}>
+        {t("rewards.currentBalance", { amount: balance, unit: unitLabel })}
+      </Text>
+      {!childActive && isParent ? (
         <Text style={styles.help}>{t("rewards.disabledHint")}</Text>
       ) : null}
 
@@ -144,7 +156,7 @@ export function RewardsChildScreen({ navigation, route }: Props) {
         />
       ) : null}
 
-      <Text style={styles.section}>{t("rewards.history")}</Text>
+      <Text style={styles.section}>{isOwnChild ? t("rewards.history") : t("rewards.history")}</Text>
       {entries.length === 0 ? (
         <Text style={styles.help}>{t("rewards.historyEmpty")}</Text>
       ) : (

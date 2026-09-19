@@ -22,7 +22,7 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
     state,
     currentProfile,
     setCurrentProfileId,
-    rewardsEnabled,
+    isRewardsActiveForChild,
     pointsFor,
     isEarnValidated,
     validateEarn,
@@ -90,11 +90,15 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
                   }
                   const pts = pointsFor(task.id);
                   const unitLabel = t(unitShortKey(unitKindFor(childDay.child.id)));
+                  const childRewardsOn = isRewardsActiveForChild(childDay.child.id);
+                  if (childRewardsOn && pts != null) {
+                    metaParts.push(`+${pts} ${unitLabel}`);
+                  }
                   const validated = completion?.id ? isEarnValidated(completion.id) : false;
                   const canValidate =
                     !!done &&
                     !!completion?.id &&
-                    rewardsEnabled &&
+                    isRewardsActiveForChild(childDay.child.id) &&
                     pts != null &&
                     !validated;
                   return (

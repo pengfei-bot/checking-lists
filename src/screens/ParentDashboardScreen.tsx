@@ -24,6 +24,7 @@ import { formatCompletionTime, formatLocalizedDate, todayISO } from "../utils/da
 import { isTaskForDate } from "../utils/recurrence";
 import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
 import { confirmUser, notifyUser } from "../utils/feedback";
+import { unitShortKey } from "../utils/rewards";
 import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParentDashboard">;
@@ -39,6 +40,9 @@ export function ParentDashboardScreen({ navigation }: Props) {
     setCurrentProfileId,
     refreshReminders,
     pendingEarnCount,
+    isRewardsActiveForChild,
+    pointsFor,
+    unitKindFor,
   } = useApp();
   const { isAuthenticated, family, deleteAccount } = useAuth();
   const [deletingAccount, setDeletingAccount] = useState(false);
@@ -298,12 +302,22 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   childName={child?.name}
                   onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                   rightAccessory={
-                    <Pressable
-                      onPress={() => navigation.navigate("TaskForm", { taskId: task.id })}
-                      style={styles.editBtn}
-                    >
-                      <Text style={styles.editBtnText}>{t("common.edit")}</Text>
-                    </Pressable>
+                    <View style={styles.taskRight}>
+                      {isRewardsActiveForChild(task.childId) && pointsFor(task.id) != null ? (
+                        <View style={styles.pointsBadge}>
+                          <Text style={styles.pointsBadgeText}>
+                            +{pointsFor(task.id)}{" "}
+                            {t(unitShortKey(unitKindFor(task.childId)))}
+                          </Text>
+                        </View>
+                      ) : null}
+                      <Pressable
+                        onPress={() => navigation.navigate("TaskForm", { taskId: task.id })}
+                        style={styles.editBtn}
+                      >
+                        <Text style={styles.editBtnText}>{t("common.edit")}</Text>
+                      </Pressable>
+                    </View>
                   }
                 />
                 {done?.photoUri ? (
@@ -553,6 +567,16 @@ const styles = StyleSheet.create({
   },
   kidManageName: { fontWeight: "700", color: colors.text },
   kidManageEdit: { color: colors.primary, fontWeight: "600", fontSize: 12 },
+  taskRight: { flexDirection: "row", alignItems: "center", gap: 6 },
+  pointsBadge: {
+    backgroundColor: "#E3F2FD",
+    borderColor: "#64B5F6",
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  pointsBadgeText: { fontWeight: "800", color: colors.primary, fontSize: 12 },
   editBtn: {
     minWidth: 44,
     height: 40,

@@ -46,7 +46,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
     unmarkTaskDone,
     clearCompletionPhoto,
     currentProfile,
-    rewardsEnabled,
+    isRewardsActiveForChild,
     pointsFor,
     isEarnValidated,
     validateEarn,
@@ -72,6 +72,8 @@ export function TaskDetailScreen({ navigation, route }: Props) {
   const rewardPoints = task ? pointsFor(task.id) : null;
   const unitLabel = task ? t(unitShortKey(unitKindFor(task.childId))) : t("rewards.unitPointsShort");
   const earnDone = done?.id ? isEarnValidated(done.id) : false;
+  const showTaskPoints =
+    !!task && isRewardsActiveForChild(task.childId) && rewardPoints != null;
 
   const openPhoto = (uri: string) => {
     if (!task) return;
@@ -321,7 +323,13 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         </View>
       )}
 
-      {done && rewardsEnabled && rewardPoints != null ? (
+      {showTaskPoints ? (
+        <Text style={[styles.meta, { marginTop: 10, fontWeight: "800", color: colors.primary }]}>
+          +{rewardPoints} {unitLabel}
+        </Text>
+      ) : null}
+
+      {done && showTaskPoints ? (
         earnDone ? (
           <Text style={[styles.meta, { marginTop: 12 }]}>
             {t("rewards.alreadyValidated", { amount: rewardPoints, unit: unitLabel })}

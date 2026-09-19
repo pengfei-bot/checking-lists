@@ -39,7 +39,7 @@
     "childForm": "Enfant",
     "language": "Langue",
     "rewards": "Récompenses",
-    "rewardsChild": "Solde"
+    "rewardsChild": "Mon historique"
   },
   "roles": {
     "parentRequired": "Profil parent requis.",
@@ -477,12 +477,23 @@
     "noPointsConfigured": "Aucun point configuré pour cette tâche.",
     "unitKind": "Unité",
     "unitPoints": "Points",
-    "unitPointsShort": "pts",
+    "unitPointsShort": "⭐",
     "unitMoney": "Argent (€)",
     "unitMoneyShort": "€",
     "unitPerChildHelp": "Choisissez Points ou € pour chaque enfant.",
     "toValidate": "À valider",
     "toValidateEmpty": "Rien à valider pour le moment.",
-    "validatePendingCta": "Valider"
+    "validatePendingCta": "Valider",
+    "subtitleV2": "Activez les récompenses par enfant, choisissez Points ou €, configurez les points par tâche.",
+    "perChild": "Par enfant",
+    "activated": "Activé",
+    "deactivated": "Désactivé",
+    "parentOnlyActivate": "Seul le parent active. L'enfant voit son solde s'il est activé.",
+    "unitMoneyChip": "€",
+    "myHistory": "Mon historique",
+    "currentBalance": "Solde actuel · {{amount}} {{unit}}",
+    "soldeChip": "Solde {{amount}} {{unit}}",
+    "openHistory": "Mon historique",
+    "disabledHintChild": "Les récompenses ne sont pas encore activées pour toi. Demande à un parent."
   }
 }

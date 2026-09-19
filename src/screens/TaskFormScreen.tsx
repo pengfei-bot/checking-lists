@@ -124,7 +124,7 @@ function validateForm(input: {
 export function TaskFormScreen({ navigation, route }: Props) {
   const { t } = useTranslation();
   const blocked = useParentOnlyGuard(navigation);
-  const { getTask, childrenProfiles, upsertTask, deleteTask, state, setTaskPoints, pointsFor, rewardsEnabled } = useApp();
+  const { getTask, childrenProfiles, upsertTask, deleteTask, state, setTaskPoints, pointsFor, isRewardsActiveForChild } = useApp();
   const existing = route.params.taskId ? getTask(route.params.taskId) : undefined;
 
   const [title, setTitle] = useState(existing?.title ?? "");
@@ -267,7 +267,8 @@ export function TaskFormScreen({ navigation, route }: Props) {
         }
       }
 
-      if (rewardsEnabled) {
+      const applyPoints = selectedIds.some((id) => isRewardsActiveForChild(id));
+      if (applyPoints) {
         const raw = rewardPoints.trim();
         const n = raw === "" ? null : Number(raw);
         if (n != null && (!Number.isFinite(n) || n < 0 || Math.floor(n) !== n)) {
@@ -540,7 +541,7 @@ export function TaskFormScreen({ navigation, route }: Props) {
         <Switch value={photoRequired} onValueChange={setPhotoRequired} />
       </View>
 
-      {rewardsEnabled ? (
+      {childIds.some((id) => isRewardsActiveForChild(id)) ? (
         <>
           <Text style={styles.label}>{t("rewards.taskPoints")}</Text>
           <Text style={styles.help}>{t("rewards.taskPointsHelp")}</Text>

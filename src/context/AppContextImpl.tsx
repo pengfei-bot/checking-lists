@@ -43,6 +43,7 @@ import {
 import {
   balanceForChild,
   emptyRewardsState,
+  isRewardsActiveForChild as isRewardsActiveForChildUtil,
   ledgerForChild,
   ledgerHasEarnForCompletion,
   listPendingEarns,
@@ -108,6 +109,8 @@ interface AppContextValue {
   rewardsEnabled: boolean;
   /** @deprecated Prefer unitKindFor / display via i18n short keys. */
   unitLabel: string;
+  /** True when this child has rewards enabled (and family master not off). */
+  isRewardsActiveForChild: (childId: string) => boolean;
   balanceFor: (childId: string) => number;
   ledgerByChild: (childId: string) => RewardLedgerEntry[];
   pointsFor: (taskId: string) => number | null;
@@ -117,6 +120,11 @@ interface AppContextValue {
   pendingEarnCount: number;
   updateRewardSettings: (input: { enabled: boolean; unitLabel?: string }) => Promise<RewardSettings>;
   setChildUnitKind: (childId: string, unitKind: RewardUnitKind) => Promise<RewardChildSettings>;
+  setChildRewardsEnabled: (childId: string, enabled: boolean) => Promise<RewardChildSettings>;
+  upsertChildRewardSettings: (
+    childId: string,
+    input: { unitKind?: RewardUnitKind; enabled?: boolean }
+  ) => Promise<RewardChildSettings>;
   setTaskPoints: (taskId: string, points: number | null) => Promise<void>;
   validateEarn: (taskId: string, childId: string, completionId: string) => Promise<RewardLedgerEntry | null>;
   resetChildBalance: (childId: string, note?: string) => Promise<RewardLedgerEntry | null>;
@@ -774,16 +782,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const rewardsEnabled = !!(rewardSettings?.enabled);
   const unitLabel = rewardSettings?.unitLabel || "⭐";
 
+  const isRewardsActiveForChild = useCallback(
+    (childId: string) =>
+      isRewardsActiveForChildUtil(
+        childId,
+        state.rewardChildSettings ?? [],
+        state.rewardSettings
+      ),
+    [state.rewardChildSettings, state.rewardSettings]
+  );
+
   const pendingEarns = useMemo(
     () =>
       listPendingEarns(
-        rewardsEnabled,
+        rewardChildSettings,
+        rewardSettings,
         state.completions ?? [],
         state.tasks ?? [],
         rewardTasks,
         rewardLedger
       ),
-    [rewardsEnabled, state.completions, state.tasks, rewardTasks, rewardLedger]
+    [rewardChildSettings, rewardSettings, state.completions, state.tasks, rewardTasks, rewardLedger]
   );
   const pendingEarnCount = pendingEarns.length;
 
@@ -843,14 +862,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [familyId, persistLocal, cacheCloudSnapshot]
   );
 
-  const setChildUnitKind = useCallback(
-    async (childId: string, unitKind: RewardUnitKind): Promise<RewardChildSettings> => {
-      const kind: RewardUnitKind = unitKind === "money" ? "money" : "points";
+  const upsertChildRewardSettings = useCallback(
+    async (
+      childId: string,
+      input: { unitKind?: RewardUnitKind; enabled?: boolean }
+    ): Promise<RewardChildSettings> => {
       if (familyId) {
         const online = await probeOnline(2_000);
         if (!online) throw new Error("Cette action nécessite une connexion Internet.");
         await cloudEnsureRewardSettings(familyId);
-        const saved = await cloudUpsertRewardChildSettings(familyId, childId, kind);
+        const saved = await cloudUpsertRewardChildSettings(familyId, childId, input);
         setState((prev) => {
           const list = prev.rewardChildSettings ?? [];
           const rewardChildSettings = list.some((s) => s.childProfileId === childId)
@@ -865,14 +886,24 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
       const prev = stateRef.current;
       const fid = prev.rewardSettings?.familyId || "local";
+      const list = prev.rewardChildSettings ?? [];
+      const existing = list.find((s) => s.childProfileId === childId);
+      const kind: RewardUnitKind =
+        input.unitKind === "money" || input.unitKind === "points"
+          ? input.unitKind
+          : existing?.unitKind === "money"
+            ? "money"
+            : "points";
+      const enabled =
+        typeof input.enabled === "boolean" ? input.enabled : !!existing?.enabled;
       const saved: RewardChildSettings = {
         childProfileId: childId,
         familyId: fid,
         unitKind: kind,
+        enabled,
         updatedAt: new Date().toISOString(),
       };
-      const list = prev.rewardChildSettings ?? [];
-      const rewardChildSettings = list.some((s) => s.childProfileId === childId)
+      const rewardChildSettings = existing
         ? list.map((s) => (s.childProfileId === childId ? saved : s))
         : [...list, saved];
       const next = {
@@ -885,6 +916,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       return saved;
     },
     [familyId, persistLocal, cacheCloudSnapshot]
+  );
+
+  const setChildUnitKind = useCallback(
+    async (childId: string, unitKind: RewardUnitKind): Promise<RewardChildSettings> => {
+      return upsertChildRewardSettings(childId, { unitKind });
+    },
+    [upsertChildRewardSettings]
+  );
+
+  const setChildRewardsEnabled = useCallback(
+    async (childId: string, enabled: boolean): Promise<RewardChildSettings> => {
+      return upsertChildRewardSettings(childId, { enabled });
+    },
+    [upsertChildRewardSettings]
   );
 
   const setTaskPoints = useCallback(
@@ -971,9 +1016,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       completionId: string
     ): Promise<RewardLedgerEntry | null> => {
       const prev = stateRef.current;
-      const settings = prev.rewardSettings;
-      if (settings && !settings.enabled) {
-        throw new Error("Les récompenses sont désactivées.");
+      if (
+        !isRewardsActiveForChildUtil(
+          childId,
+          prev.rewardChildSettings ?? [],
+          prev.rewardSettings
+        )
+      ) {
+        throw new Error("Les récompenses sont désactivées pour cet enfant.");
       }
       const pts = pointsForTask(prev.rewardTasks ?? [], taskId);
       if (pts == null) return null;
@@ -1125,8 +1175,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     tasksForChildToday, completionFor, markTaskDone, unmarkTaskDone, clearCompletionPhoto, upsertTask, deleteTask,
     addChild, updateChild, deleteChild, getTask, getProfile, resetDemo, refreshReminders, reloadFromCloud,
     rewardSettings, rewardChildSettings, rewardTasks, rewardLedger, rewardsEnabled, unitLabel,
+    isRewardsActiveForChild,
     balanceFor, ledgerByChild, pointsFor, isEarnValidated, unitKindFor, pendingEarns, pendingEarnCount,
-    updateRewardSettings, setChildUnitKind, setTaskPoints, validateEarn, resetChildBalance,
+    updateRewardSettings, setChildUnitKind, setChildRewardsEnabled, upsertChildRewardSettings,
+    setTaskPoints, validateEarn, resetChildBalance,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

@@ -34,9 +34,10 @@ export function ChildHomeScreen({ navigation }: Props) {
     setCurrentProfileId,
     state,
     refreshReminders,
-    rewardsEnabled,
+    isRewardsActiveForChild,
     unitKindFor,
     balanceFor,
+    pointsFor,
   } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -61,6 +62,7 @@ export function ChildHomeScreen({ navigation }: Props) {
   const progress = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
   const balance = balanceFor(currentProfile.id);
   const unitLabel = t(unitShortKey(unitKindFor(currentProfile.id)));
+  const rewardsActive = isRewardsActiveForChild(currentProfile.id);
 
   const header = useMemo(
     () => (
@@ -81,19 +83,21 @@ export function ChildHomeScreen({ navigation }: Props) {
         <Text style={styles.progress}>
           {t("childHome.progress", { done: doneCount, total: tasks.length, percent: progress })}
         </Text>
-        {rewardsEnabled ? (
+        {rewardsActive ? (
           <Pressable
             onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
             style={styles.balanceChip}
+            accessibilityRole="button"
+            accessibilityLabel={t("rewards.openHistory")}
           >
             <Text style={styles.balanceChipText}>
-              {t("rewards.balanceLabel", { amount: balance, unit: unitLabel })}
+              {t("rewards.soldeChip", { amount: balance, unit: unitLabel })}
             </Text>
           </Pressable>
         ) : null}
       </View>
     ),
-    [currentProfile, doneCount, tasks.length, progress, balance, rewardsEnabled, unitLabel, t, i18n.language, navigation]
+    [currentProfile, doneCount, tasks.length, progress, balance, rewardsActive, unitLabel, t, i18n.language, navigation]
   );
 
   const quickDone = async (taskId: string) => {
@@ -155,6 +159,7 @@ export function ChildHomeScreen({ navigation }: Props) {
         ) : (
           tasks.map((task) => {
             const done = !!completionFor(task.id);
+            const pts = rewardsActive ? pointsFor(task.id) : null;
             return (
               <TaskCard
                 key={task.id}
@@ -164,6 +169,13 @@ export function ChildHomeScreen({ navigation }: Props) {
                 onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                 rightAccessory={
                   <View style={styles.actions}>
+                    {pts != null ? (
+                      <View style={styles.pointsBadge}>
+                        <Text style={styles.pointsBadgeText}>
+                          +{pts} {unitLabel}
+                        </Text>
+                      </View>
+                    ) : null}
                     <Pressable
                       style={styles.miniBtn}
                       onPress={() => void quickDone(task.id)}
@@ -191,6 +203,14 @@ export function ChildHomeScreen({ navigation }: Props) {
           })
         )}
 
+        {rewardsActive ? (
+          <Pressable
+            style={styles.historyChip}
+            onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
+          >
+            <Text style={styles.historyChipText}>⭐ {t("rewards.openHistory")}</Text>
+          </Pressable>
+        ) : null}
         <Pressable
           style={styles.historyChip}
           onPress={() => navigation.navigate("ChildHistory")}
@@ -276,7 +296,16 @@ const styles = StyleSheet.create({
   },
   balanceChipText: { fontWeight: "800", color: colors.primary, fontSize: 15 },
   empty: { textAlign: "center", color: colors.textMuted, marginVertical: 24, fontSize: 16 },
-  actions: { flexDirection: "row", gap: 6 },
+  actions: { flexDirection: "row", alignItems: "center", gap: 6 },
+  pointsBadge: {
+    backgroundColor: "#FFF3E0",
+    borderColor: "#FFB74D",
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  pointsBadgeText: { fontWeight: "800", color: "#E65100", fontSize: 12 },
   miniBtn: {
     minWidth: 48,
     height: 48,

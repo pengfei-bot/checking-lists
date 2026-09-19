@@ -71,6 +71,28 @@ export function unitKindForChild(
   return row?.unitKind === "money" ? "money" : "points";
 }
 
+export function childSettingsFor(
+  settings: RewardChildSettings[],
+  childProfileId: string
+): RewardChildSettings | undefined {
+  return settings.find((s) => s.childProfileId === childProfileId);
+}
+
+/**
+ * Per-child gate (M1). Family reward_settings.enabled is an optional master:
+ * if a family row exists and is explicitly disabled, everything is off.
+ * Missing child row ⇒ not enabled.
+ */
+export function isRewardsActiveForChild(
+  childProfileId: string,
+  childSettings: RewardChildSettings[],
+  familySettings: RewardSettings | null | undefined
+): boolean {
+  if (familySettings && familySettings.enabled === false) return false;
+  const row = childSettings.find((s) => s.childProfileId === childProfileId);
+  return !!row?.enabled;
+}
+
 /** Short display unit for balances / CTAs (i18n keys resolved by caller). */
 export function unitShortKey(kind: RewardUnitKind): "rewards.unitPointsShort" | "rewards.unitMoneyShort" {
   return kind === "money" ? "rewards.unitMoneyShort" : "rewards.unitPointsShort";
@@ -87,17 +109,17 @@ export interface PendingEarnItem {
 }
 
 /**
- * Pending = completions where rewards are enabled, the task has active
- * reward_tasks.points, and no ledger earn row exists yet for that completion_id.
+ * Pending = completions where rewards are active for that child, the task has
+ * active reward_tasks.points, and no ledger earn row exists yet for completion_id.
  */
 export function listPendingEarns(
-  rewardsEnabled: boolean,
+  childSettings: RewardChildSettings[],
+  familySettings: RewardSettings | null | undefined,
   completions: TaskCompletion[],
   tasks: Task[],
   rewardTasks: RewardTask[],
   ledger: RewardLedgerEntry[]
 ): PendingEarnItem[] {
-  if (!rewardsEnabled) return [];
   const taskById = new Map(tasks.map((t) => [t.id, t]));
   const earned = new Set(
     ledger
@@ -106,6 +128,7 @@ export function listPendingEarns(
   );
   const out: PendingEarnItem[] = [];
   for (const c of completions) {
+    if (!isRewardsActiveForChild(c.childId, childSettings, familySettings)) continue;
     if (earned.has(c.id)) continue;
     const pts = pointsForTask(rewardTasks, c.taskId);
     if (pts == null) continue;

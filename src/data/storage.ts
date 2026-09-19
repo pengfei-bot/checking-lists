@@ -27,7 +27,10 @@ export async function loadAppState(): Promise<AppState> {
         updatedAt: new Date().toISOString(),
       },
       rewardChildSettings: Array.isArray(parsed.rewardChildSettings)
-        ? parsed.rewardChildSettings
+        ? parsed.rewardChildSettings.map((s) => ({
+            ...s,
+            enabled: !!(s as { enabled?: boolean }).enabled,
+          }))
         : [],
       rewardTasks: Array.isArray(parsed.rewardTasks) ? parsed.rewardTasks : [],
       rewardLedger: Array.isArray(parsed.rewardLedger) ? parsed.rewardLedger : [],
