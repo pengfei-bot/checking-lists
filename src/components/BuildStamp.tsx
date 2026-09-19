@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 import { rewardsUi } from "../theme/rewardsUi";
 
 /** Visible QA marker so smoke tests know which Pages bundle is live. */
-export const BUILD_STAMP = "91a4f0a";
+export const BUILD_STAMP = "7fef30c";
 
 export function BuildStamp() {
   return (

@@ -88,7 +88,7 @@ export function RootNavigator() {
           <Stack.Screen name="ChildForm" component={ChildFormScreen} options={{ title: t("nav.childForm"), presentation: "modal" }} />
           <Stack.Screen name="LanguageSettings" component={LanguageSettingsScreen} options={{ title: t("nav.language") }} />
           <Stack.Screen name="Rewards" component={RewardsScreen} options={{ title: t("nav.rewards"), headerBackVisible: false, headerLeft: () => null }} />
-          <Stack.Screen name="RewardsChild" component={RewardsChildScreen} options={{ title: t("nav.rewardsChild"), headerBackVisible: false, headerLeft: () => null }} />
+          <Stack.Screen name="RewardsChild" component={RewardsChildScreen} options={{ title: t("nav.rewardsChild") }} />
           <Stack.Screen name="ParentSettings" component={ParentSettingsScreen} options={{ title: t("nav.parentSettings"), headerBackVisible: false, headerLeft: () => null }} />
         </Stack.Navigator>
       </NavigationContainer>
