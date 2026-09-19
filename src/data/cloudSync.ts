@@ -1,6 +1,16 @@
 import * as Crypto from "expo-crypto";
 import { getSupabase } from "../lib/supabase";
-import { AppState, Profile, Recurrence, Task, TaskCompletion } from "../types";
+import {
+  AppState,
+  Profile,
+  Recurrence,
+  RewardLedgerEntry,
+  RewardLedgerKind,
+  RewardSettings,
+  RewardTask,
+  Task,
+  TaskCompletion,
+} from "../types";
 import { colors, childColors } from "../theme/colors";
 import { frenchCloudError, withCloudTimeout } from "../utils/cloudTimeout";
 import {
@@ -53,6 +63,35 @@ export interface DbTaskCompletion {
   family_id: string;
   completed_on: string;
   photo_url: string | null;
+  created_at: string;
+}
+
+export interface DbRewardSettings {
+  family_id: string;
+  enabled: boolean;
+  unit_label: string;
+  updated_at: string;
+}
+
+export interface DbRewardTask {
+  id: string;
+  family_id: string;
+  task_id: string;
+  points: number;
+  active: boolean;
+  created_at: string;
+}
+
+export interface DbRewardLedger {
+  id: string;
+  family_id: string;
+  child_profile_id: string;
+  amount: number;
+  kind: string;
+  task_id: string | null;
+  completion_id: string | null;
+  note: string | null;
+  created_by: string | null;
   created_at: string;
 }
 
@@ -161,6 +200,41 @@ function mapCompletion(row: DbTaskCompletion): TaskCompletion {
   };
 }
 
+function mapRewardSettings(row: DbRewardSettings): RewardSettings {
+  return {
+    familyId: row.family_id,
+    enabled: !!row.enabled,
+    unitLabel: row.unit_label || "⭐",
+    updatedAt: row.updated_at,
+  };
+}
+
+function mapRewardTask(row: DbRewardTask): RewardTask {
+  return {
+    id: row.id,
+    familyId: row.family_id,
+    taskId: row.task_id,
+    points: row.points,
+    active: !!row.active,
+    createdAt: row.created_at,
+  };
+}
+
+function mapRewardLedger(row: DbRewardLedger): RewardLedgerEntry {
+  return {
+    id: row.id,
+    familyId: row.family_id,
+    childProfileId: row.child_profile_id,
+    amount: row.amount,
+    kind: row.kind as RewardLedgerKind,
+    taskId: row.task_id ?? undefined,
+    completionId: row.completion_id ?? undefined,
+    note: row.note ?? undefined,
+    createdBy: row.created_by ?? undefined,
+    createdAt: row.created_at,
+  };
+}
+
 export function synthesizeParentProfile(displayName: string): Profile {
   return {
     id: "parent_cloud",
@@ -180,17 +254,28 @@ export async function loadCloudAppState(
   const supabase = getSupabase();
 
   const run = async (): Promise<AppState> => {
-    const [kidsRes, tasksRes, compsRes] = await Promise.all([
-      supabase.from("child_profiles").select("*").eq("family_id", fid).order("created_at"),
-      supabase.from("tasks").select("*").eq("family_id", fid).eq("active", true).order("time_of_day"),
-      supabase.from("task_completions").select("*").eq("family_id", fid).order("completed_on", {
-        ascending: false,
-      }),
-    ]);
+    const [kidsRes, tasksRes, compsRes, settingsRes, rewardTasksRes, ledgerRes] =
+      await Promise.all([
+        supabase.from("child_profiles").select("*").eq("family_id", fid).order("created_at"),
+        supabase.from("tasks").select("*").eq("family_id", fid).eq("active", true).order("time_of_day"),
+        supabase.from("task_completions").select("*").eq("family_id", fid).order("completed_on", {
+          ascending: false,
+        }),
+        supabase.from("reward_settings").select("*").eq("family_id", fid).maybeSingle(),
+        supabase.from("reward_tasks").select("*").eq("family_id", fid).order("created_at"),
+        supabase
+          .from("reward_ledger")
+          .select("*")
+          .eq("family_id", fid)
+          .order("created_at", { ascending: false }),
+      ]);
 
     if (kidsRes.error) throwCloud(kidsRes.error, "Chargement des enfants impossible.");
     if (tasksRes.error) throwCloud(tasksRes.error, "Chargement des tâches impossible.");
     if (compsRes.error) throwCloud(compsRes.error, "Chargement des complétions impossible.");
+    if (settingsRes.error) throwCloud(settingsRes.error, "Chargement des récompenses impossible.");
+    if (rewardTasksRes.error) throwCloud(rewardTasksRes.error, "Chargement des points tâches impossible.");
+    if (ledgerRes.error) throwCloud(ledgerRes.error, "Chargement du journal récompenses impossible.");
 
     const kids = (kidsRes.data as DbChildProfile[]).map(mapChild);
     const parent = synthesizeParentProfile(parentDisplayName);
@@ -206,10 +291,19 @@ export async function loadCloudAppState(
       return { ...base, photoUri: display ?? base.photoUri };
     });
 
+    const rewardSettings = settingsRes.data
+      ? mapRewardSettings(settingsRes.data as DbRewardSettings)
+      : null;
+    const rewardTasks = ((rewardTasksRes.data as DbRewardTask[]) || []).map(mapRewardTask);
+    const rewardLedger = ((ledgerRes.data as DbRewardLedger[]) || []).map(mapRewardLedger);
+
     return {
       profiles: [parent, ...kids],
       tasks,
       completions,
+      rewardSettings,
+      rewardTasks,
+      rewardLedger,
       seeded: true,
       currentProfileId: null,
     };
@@ -489,5 +583,170 @@ export async function cloudClearCompletionPhoto(completionId: string): Promise<v
     await withCloudTimeout(run(), 20_000, "Retrait de la photo");
   } catch (e) {
     throwCloud(e, "Impossible de retirer la photo.");
+  }
+}
+
+export async function cloudUpsertRewardSettings(
+  familyId: string,
+  input: { enabled: boolean; unitLabel?: string }
+): Promise<RewardSettings> {
+  const fid = requireFamilyId(familyId);
+  const supabase = getSupabase();
+  const now = new Date().toISOString();
+  const row = {
+    family_id: fid,
+    enabled: !!input.enabled,
+    unit_label: (input.unitLabel ?? "⭐").trim() || "⭐",
+    updated_at: now,
+  };
+
+  const run = async (): Promise<RewardSettings> => {
+    const { data, error } = await supabase
+      .from("reward_settings")
+      .upsert(row, { onConflict: "family_id" })
+      .select("*")
+      .single();
+    if (error) throwCloud(error, "Impossible d'enregistrer les récompenses.");
+    return mapRewardSettings(data as DbRewardSettings);
+  };
+
+  try {
+    return await withCloudTimeout(run(), 15_000, "Récompenses");
+  } catch (e) {
+    throwCloud(e, "Impossible d'enregistrer les récompenses.");
+  }
+}
+
+/** Ensure a settings row exists (defaults: enabled, ⭐). */
+export async function cloudEnsureRewardSettings(familyId: string): Promise<RewardSettings> {
+  const fid = requireFamilyId(familyId);
+  const supabase = getSupabase();
+
+  const run = async (): Promise<RewardSettings> => {
+    const existing = await supabase
+      .from("reward_settings")
+      .select("*")
+      .eq("family_id", fid)
+      .maybeSingle();
+    if (existing.error) throwCloud(existing.error, "Impossible de lire les récompenses.");
+    if (existing.data) return mapRewardSettings(existing.data as DbRewardSettings);
+    const { data, error } = await supabase
+      .from("reward_settings")
+      .insert({ family_id: fid, enabled: true, unit_label: "⭐" })
+      .select("*")
+      .single();
+    if (error) throwCloud(error, "Impossible d'activer les récompenses.");
+    return mapRewardSettings(data as DbRewardSettings);
+  };
+
+  try {
+    return await withCloudTimeout(run(), 15_000, "Activation récompenses");
+  } catch (e) {
+    throwCloud(e, "Impossible d'activer les récompenses.");
+  }
+}
+
+export async function cloudUpsertRewardTask(
+  familyId: string,
+  input: { taskId: string; points: number; active?: boolean; id?: string }
+): Promise<RewardTask> {
+  const fid = requireFamilyId(familyId);
+  const supabase = getSupabase();
+  const points = Math.floor(input.points);
+  if (!(points > 0)) {
+    throw new Error("Les points doivent être un entier positif.");
+  }
+
+  const run = async (): Promise<RewardTask> => {
+    const existing = await supabase
+      .from("reward_tasks")
+      .select("*")
+      .eq("task_id", input.taskId)
+      .maybeSingle();
+    if (existing.error) throwCloud(existing.error, "Impossible de lire les points.");
+
+    const id = input.id || (existing.data as DbRewardTask | null)?.id || newId();
+    const row = {
+      id,
+      family_id: fid,
+      task_id: input.taskId,
+      points,
+      active: input.active !== undefined ? !!input.active : true,
+    };
+    const { data, error } = await supabase
+      .from("reward_tasks")
+      .upsert(row, { onConflict: "task_id" })
+      .select("*")
+      .single();
+    if (error) throwCloud(error, "Impossible d'enregistrer les points.");
+    return mapRewardTask(data as DbRewardTask);
+  };
+
+  try {
+    return await withCloudTimeout(run(), 15_000, "Points tâche");
+  } catch (e) {
+    throwCloud(e, "Impossible d'enregistrer les points.");
+  }
+}
+
+export async function cloudDeleteRewardTask(taskId: string): Promise<void> {
+  const supabase = getSupabase();
+  const run = async (): Promise<void> => {
+    const { error } = await supabase.from("reward_tasks").delete().eq("task_id", taskId);
+    if (error) throwCloud(error, "Impossible de retirer les points.");
+  };
+  try {
+    await withCloudTimeout(run(), 15_000, "Suppression points");
+  } catch (e) {
+    throwCloud(e, "Impossible de retirer les points.");
+  }
+}
+
+export async function cloudInsertRewardLedger(
+  familyId: string,
+  input: {
+    childProfileId: string;
+    amount: number;
+    kind: RewardLedgerKind;
+    taskId?: string;
+    completionId?: string;
+    note?: string;
+    id?: string;
+  }
+): Promise<RewardLedgerEntry> {
+  const fid = requireFamilyId(familyId);
+  const supabase = getSupabase();
+
+  const run = async (): Promise<RewardLedgerEntry> => {
+    if (input.kind === "earn" && input.completionId) {
+      const existing = await supabase
+        .from("reward_ledger")
+        .select("*")
+        .eq("completion_id", input.completionId)
+        .eq("kind", "earn")
+        .maybeSingle();
+      if (existing.error) throwCloud(existing.error, "Impossible de vérifier le journal.");
+      if (existing.data) return mapRewardLedger(existing.data as DbRewardLedger);
+    }
+
+    const row = {
+      id: input.id || newId(),
+      family_id: fid,
+      child_profile_id: input.childProfileId,
+      amount: input.amount,
+      kind: input.kind,
+      task_id: input.taskId ?? null,
+      completion_id: input.completionId ?? null,
+      note: input.note ?? null,
+    };
+    const { data, error } = await supabase.from("reward_ledger").insert(row).select("*").single();
+    if (error) throwCloud(error, "Impossible d'écrire dans le journal récompenses.");
+    return mapRewardLedger(data as DbRewardLedger);
+  };
+
+  try {
+    return await withCloudTimeout(run(), 15_000, "Journal récompenses");
+  } catch (e) {
+    throwCloud(e, "Impossible d'écrire dans le journal récompenses.");
   }
 }

@@ -22,6 +22,7 @@ import {
   formatLocalizedDate,
   todayISO,
 } from "../utils/dates";
+import { frenchCloudError } from "../utils/cloudTimeout";
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { openPhotoReportMail } from "../utils/reportPhoto";
 import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
@@ -44,6 +45,11 @@ export function TaskDetailScreen({ navigation, route }: Props) {
     unmarkTaskDone,
     clearCompletionPhoto,
     currentProfile,
+    rewardsEnabled,
+    pointsFor,
+    isEarnValidated,
+    validateEarn,
+    unitLabel,
   } = useApp();
   const { family } = useAuth();
   const task = getTask(route.params.taskId);
@@ -62,6 +68,8 @@ export function TaskDetailScreen({ navigation, route }: Props) {
   const isChild = currentProfile?.role === "child";
   const doneAtTime = done ? formatCompletionTime(done.completedAt, i18n.language) : null;
   const child = task ? getProfile(task.childId) : undefined;
+  const rewardPoints = task ? pointsFor(task.id) : null;
+  const earnDone = done?.id ? isEarnValidated(done.id) : false;
 
   const openPhoto = (uri: string) => {
     if (!task) return;
@@ -123,6 +131,28 @@ export function TaskDetailScreen({ navigation, route }: Props) {
           t("common.error"),
           e instanceof Error ? e.message : t("photoReport.failed")
         );
+      } finally {
+        setBusy(false);
+      }
+    })();
+  };
+
+  const onValidateEarn = () => {
+    if (!task || !done?.id) return;
+    void (async () => {
+      setBusy(true);
+      try {
+        const entry = await validateEarn(task.id, task.childId, done.id);
+        if (!entry) {
+          notifyUser(t("rewards.validateTitle"), t("rewards.noPointsConfigured"));
+        } else {
+          notifyUser(
+            t("rewards.validateTitle"),
+            t("rewards.validateDone", { amount: entry.amount, unit: unitLabel })
+          );
+        }
+      } catch (e) {
+        notifyUser(t("common.error"), frenchCloudError(e, t("rewards.validateFailed")));
       } finally {
         setBusy(false);
       }
@@ -288,6 +318,21 @@ export function TaskDetailScreen({ navigation, route }: Props) {
           <Text style={styles.webNoteText}>{t("taskDetail.webNote")}</Text>
         </View>
       )}
+
+      {done && rewardsEnabled && rewardPoints != null ? (
+        earnDone ? (
+          <Text style={[styles.meta, { marginTop: 12 }]}>
+            {t("rewards.alreadyValidated", { amount: rewardPoints, unit: unitLabel })}
+          </Text>
+        ) : (
+          <PrimaryButton
+            label={t("rewards.validateCta", { amount: rewardPoints, unit: unitLabel })}
+            onPress={onValidateEarn}
+            loading={busy}
+            style={{ marginTop: 12 }}
+          />
+        )
+      ) : null}
 
       {done && (
         <PrimaryButton

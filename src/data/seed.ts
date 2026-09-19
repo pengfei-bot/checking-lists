@@ -1,4 +1,4 @@
-import { AppState, Profile, Task, TaskCompletion } from "../types";
+import { AppState, Profile, RewardLedgerEntry, RewardTask, Task, TaskCompletion } from "../types";
 import { addDaysISO, todayISO } from "../utils/dates";
 import { isTaskForDate } from "../utils/recurrence";
 
@@ -265,10 +265,57 @@ export function buildDemoCompletions(
 
 export function createSeedState(now = new Date()): AppState {
   const tasks = buildDemoTasks(now);
+  const createdAt = now.toISOString();
+  const rewardTasks: RewardTask[] = [
+    {
+      id: "reward_task_leo_brush",
+      familyId: "local",
+      taskId: DEMO_TASK_IDS.leoBrush,
+      points: 2,
+      active: true,
+      createdAt,
+    },
+    {
+      id: "reward_task_mia_hands",
+      familyId: "local",
+      taskId: DEMO_TASK_IDS.miaHands,
+      points: 1,
+      active: true,
+      createdAt,
+    },
+    {
+      id: "reward_task_sam_bed",
+      familyId: "local",
+      taskId: DEMO_TASK_IDS.samBed,
+      points: 3,
+      active: true,
+      createdAt,
+    },
+  ];
+  const rewardLedger: RewardLedgerEntry[] = [
+    {
+      id: "reward_ledger_demo_1",
+      familyId: "local",
+      childProfileId: CHILD_LEO_ID,
+      amount: 2,
+      kind: "earn",
+      taskId: DEMO_TASK_IDS.leoBrush,
+      note: "Demo",
+      createdAt,
+    },
+  ];
   return {
     profiles: buildDemoProfiles(),
     tasks,
     completions: buildDemoCompletions(tasks, now),
+    rewardSettings: {
+      familyId: "local",
+      enabled: true,
+      unitLabel: "⭐",
+      updatedAt: createdAt,
+    },
+    rewardTasks,
+    rewardLedger,
     seeded: true,
     currentProfileId: null,
   };

@@ -18,7 +18,17 @@ export async function loadAppState(): Promise<AppState> {
       await saveAppState(seeded);
       return seeded;
     }
-    return parsed;
+    return {
+      ...parsed,
+      rewardSettings: parsed.rewardSettings ?? {
+        familyId: "local",
+        enabled: true,
+        unitLabel: "⭐",
+        updatedAt: new Date().toISOString(),
+      },
+      rewardTasks: Array.isArray(parsed.rewardTasks) ? parsed.rewardTasks : [],
+      rewardLedger: Array.isArray(parsed.rewardLedger) ? parsed.rewardLedger : [],
+    };
   } catch {
     const seeded = createSeedState();
     await saveAppState(seeded);

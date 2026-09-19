@@ -42,10 +42,45 @@ export interface TaskCompletion {
   photoUri?: string;
 }
 
+export type RewardLedgerKind = "earn" | "reset" | "adjust";
+
+export interface RewardSettings {
+  familyId: string;
+  enabled: boolean;
+  unitLabel: string;
+  updatedAt: string;
+}
+
+export interface RewardTask {
+  id: string;
+  familyId: string;
+  taskId: string;
+  points: number;
+  active: boolean;
+  createdAt: string;
+}
+
+export interface RewardLedgerEntry {
+  id: string;
+  familyId: string;
+  childProfileId: string;
+  amount: number;
+  kind: RewardLedgerKind;
+  taskId?: string;
+  completionId?: string;
+  note?: string;
+  createdBy?: string;
+  createdAt: string;
+}
+
 export interface AppState {
   profiles: Profile[];
   tasks: Task[];
   completions: TaskCompletion[];
+  /** Family rewards settings (null = not loaded / never enabled). */
+  rewardSettings: RewardSettings | null;
+  rewardTasks: RewardTask[];
+  rewardLedger: RewardLedgerEntry[];
   seeded: boolean;
   currentProfileId: string | null;
 }

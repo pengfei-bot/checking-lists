@@ -235,6 +235,15 @@ export function ParentDashboardScreen({ navigation }: Props) {
               {t("parentDash.calendar")}
             </Text>
           </Pressable>
+          <Pressable
+            onPress={() => navigation.navigate("Rewards")}
+            style={({ pressed }) => [styles.compactBtn, { opacity: pressed ? 0.85 : 1 }]}
+          >
+            <Text style={styles.compactEmoji}>⭐</Text>
+            <Text style={styles.compactLabel} numberOfLines={1}>
+              {t("parentDash.rewards")}
+            </Text>
+          </Pressable>
           {isAuthenticated ? (
             <Pressable
               onPress={() => navigation.navigate("FamilyShare")}
@@ -350,6 +359,12 @@ export function ParentDashboardScreen({ navigation }: Props) {
         <Pressable style={styles.menuBackdrop} onPress={() => setMoreOpen(false)}>
           <View style={styles.menuSheet}>
             <Text style={styles.menuTitle}>{t("common.settings")}</Text>
+            <PrimaryButton
+              label={t("parentDash.rewards")}
+              variant="secondary"
+              onPress={() => closeAnd(() => navigation.navigate("Rewards"))}
+              style={{ marginTop: 8 }}
+            />
             <PrimaryButton
               label={t("common.language")}
               variant="secondary"

@@ -32,6 +32,13 @@ export async function loadCloudStateCache(familyId: string): Promise<CachedCloud
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CachedCloudState;
     if (!parsed?.state?.profiles || !Array.isArray(parsed.state.profiles)) return null;
+    parsed.state.rewardSettings = parsed.state.rewardSettings ?? null;
+    parsed.state.rewardTasks = Array.isArray(parsed.state.rewardTasks)
+      ? parsed.state.rewardTasks
+      : [];
+    parsed.state.rewardLedger = Array.isArray(parsed.state.rewardLedger)
+      ? parsed.state.rewardLedger
+      : [];
     return parsed;
   } catch {
     return null;
@@ -46,6 +53,9 @@ export async function saveCloudStateCache(familyId: string, state: AppState): Pr
         profiles: state.profiles,
         tasks: state.tasks,
         completions: state.completions,
+        rewardSettings: state.rewardSettings ?? null,
+        rewardTasks: state.rewardTasks ?? [],
+        rewardLedger: state.rewardLedger ?? [],
         seeded: state.seeded,
         currentProfileId: state.currentProfileId,
       },

@@ -124,7 +124,7 @@ function validateForm(input: {
 export function TaskFormScreen({ navigation, route }: Props) {
   const { t } = useTranslation();
   const blocked = useParentOnlyGuard(navigation);
-  const { getTask, childrenProfiles, upsertTask, deleteTask, state } = useApp();
+  const { getTask, childrenProfiles, upsertTask, deleteTask, state, setTaskPoints, pointsFor, rewardsEnabled } = useApp();
   const existing = route.params.taskId ? getTask(route.params.taskId) : undefined;
 
   const [title, setTitle] = useState(existing?.title ?? "");
@@ -144,6 +144,10 @@ export function TaskFormScreen({ navigation, route }: Props) {
   const [recurrence, setRecurrence] = useState<Recurrence>(existing?.recurrence ?? "daily");
   const [reminderEnabled, setReminderEnabled] = useState(existing?.reminderEnabled ?? true);
   const [photoRequired, setPhotoRequired] = useState(existing?.photoRequired ?? false);
+  const existingPoints = existing ? pointsFor(existing.id) : null;
+  const [rewardPoints, setRewardPoints] = useState(
+    existingPoints != null ? String(existingPoints) : ""
+  );
   const [onceDate, setOnceDate] = useState(existing?.onceDate ?? todayISO());
   const [startDate, setStartDate] = useState(existing?.startDate ?? todayISO());
   const [endDate, setEndDate] = useState(existing?.endDate ?? "");
@@ -218,17 +222,19 @@ export function TaskFormScreen({ navigation, route }: Props) {
       };
       const selectedIds = childIds;
 
+      const savedTaskIds: string[] = [];
       if (isEdit && existing) {
         // Prefer keeping current child if still selected; else first selected.
         const finalChildId = selectedIds.includes(existing.childId)
           ? existing.childId
           : selectedIds[0];
 
-        await upsertTask({
+        const primary = await upsertTask({
           id: existing.id,
           ...payload,
           childId: finalChildId,
         });
+        savedTaskIds.push(primary.id);
 
         // Upsert same attributes for every other selected child.
         const oldAttrs = {
@@ -242,21 +248,37 @@ export function TaskFormScreen({ navigation, route }: Props) {
             findSiblingForChild(state.tasks, cid, payload, existing.id) ??
             findSiblingForChild(state.tasks, cid, oldAttrs, existing.id);
           if (sibling) {
-            await upsertTask({
+            const saved = await upsertTask({
               id: sibling.id,
               ...payload,
               childId: cid,
             });
+            savedTaskIds.push(saved.id);
           } else {
-            await upsertTask({ ...payload, childId: cid });
+            const saved = await upsertTask({ ...payload, childId: cid });
+            savedTaskIds.push(saved.id);
           }
         }
       } else {
         // One tasks row per selected child (same title/time/recurrence/reminder)
         for (const cid of selectedIds) {
-          await upsertTask({ ...payload, childId: cid });
+          const saved = await upsertTask({ ...payload, childId: cid });
+          savedTaskIds.push(saved.id);
         }
       }
+
+      if (rewardsEnabled) {
+        const raw = rewardPoints.trim();
+        const n = raw === "" ? null : Number(raw);
+        if (n != null && (!Number.isFinite(n) || n < 0 || Math.floor(n) !== n)) {
+          throw new Error(t("rewards.pointsInvalid"));
+        }
+        const pointsValue = n === 0 || n == null ? null : Math.floor(n);
+        for (const tid of savedTaskIds) {
+          await setTaskPoints(tid, pointsValue);
+        }
+      }
+
       navigation.goBack();
     } catch (e) {
       const msg = frenchCloudError(e, "Impossible d'enregistrer la tâche.");
@@ -517,6 +539,21 @@ export function TaskFormScreen({ navigation, route }: Props) {
         </View>
         <Switch value={photoRequired} onValueChange={setPhotoRequired} />
       </View>
+
+      {rewardsEnabled ? (
+        <>
+          <Text style={styles.label}>{t("rewards.taskPoints")}</Text>
+          <Text style={styles.help}>{t("rewards.taskPointsHelp")}</Text>
+          <TextInput
+            value={rewardPoints}
+            onChangeText={setRewardPoints}
+            keyboardType="number-pad"
+            placeholder="0"
+            style={styles.input}
+            placeholderTextColor={colors.textMuted}
+          />
+        </>
+      ) : null}
 
       {attempted && !isValid ? (
         <View style={styles.errorBox}>

@@ -37,7 +37,9 @@
     "taskForm": "Naloga",
     "taskDetail": "Podrobnosti",
     "childForm": "Otrok",
-    "language": "Jezik"
+    "language": "Jezik",
+    "rewards": "Rewards",
+    "rewardsChild": "Balance"
   },
   "roles": {
     "parentRequired": "Potreben je profil staršev.",
@@ -192,7 +194,8 @@
     "reminders": "Današnji opomini",
     "addCalendar": "Dodaj v koledar",
     "edit": "Edit",
-    "todayFor": "Danas · {{name}}"
+    "todayFor": "Danas · {{name}}",
+    "rewards": "Rewards"
   },
   "calendar": {
     "legend": "Legenda",
@@ -428,5 +431,48 @@
     "ctaPhoto": "Photo 📷",
     "requiredA11y": "Photo required",
     "receivedA11y": "Photo received"
+  },
+  "rewards": {
+    "title": "Rewards",
+    "subtitle": "Child balances, task points, and parent validation. No shop in this version.",
+    "enabled": "Enable rewards",
+    "enabledHelp": "When on, parents can credit points for completed tasks.",
+    "unitLabel": "Unit label",
+    "saveSettings": "Save settings",
+    "savedTitle": "Saved",
+    "savedBody": "Reward settings updated.",
+    "saveFailed": "Could not save rewards.",
+    "balances": "Balances",
+    "noChildren": "No children yet.",
+    "tapHistory": "Tap for history / reset",
+    "configurePoints": "Points per task",
+    "configurePointsHelp": "Set how many points a task is worth (0 or empty = none).",
+    "noTasks": "No tasks to configure.",
+    "pointsInvalid": "Points must be a whole number ≥ 0.",
+    "pointsSaved": "Task points updated.",
+    "taskPoints": "Reward points",
+    "taskPointsHelp": "Optional. Parent validates after the child completes the task.",
+    "childNotFound": "Child not found.",
+    "balanceLabel": "{{amount}} {{unit}}",
+    "disabledHint": "Rewards are currently disabled.",
+    "resetButton": "Reset balance",
+    "resetTitle": "Reset balance?",
+    "resetBody": "Set {{name}}’s balance ({{balance}} {{unit}}) back to 0 by adding a reset entry.",
+    "resetConfirm": "Reset",
+    "resetEmpty": "Balance is already 0.",
+    "resetDoneTitle": "Balance reset",
+    "resetDoneBody": "A reset entry was added to the ledger.",
+    "resetFailed": "Could not reset the balance.",
+    "history": "History",
+    "historyEmpty": "No reward entries yet.",
+    "kindEarn": "Earned",
+    "kindReset": "Reset",
+    "kindAdjust": "Adjustment",
+    "validateCta": "Validate +{{amount}} {{unit}}",
+    "validateTitle": "Rewards",
+    "validateDone": "Credited +{{amount}} {{unit}}.",
+    "validateFailed": "Could not credit points.",
+    "alreadyValidated": "Validated (+{{amount}} {{unit}})",
+    "noPointsConfigured": "No points configured for this task."
   }
 }

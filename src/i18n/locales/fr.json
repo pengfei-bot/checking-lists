@@ -37,7 +37,9 @@
     "taskForm": "Tâche",
     "taskDetail": "Détail",
     "childForm": "Enfant",
-    "language": "Langue"
+    "language": "Langue",
+    "rewards": "Récompenses",
+    "rewardsChild": "Solde"
   },
   "roles": {
     "parentRequired": "Profil parent requis.",
@@ -192,7 +194,8 @@
     "reminders": "Rappels du jour",
     "addCalendar": "Ajouter au calendrier",
     "edit": "Modifier",
-    "todayFor": "Aujourd'hui · {{name}}"
+    "todayFor": "Aujourd'hui · {{name}}",
+    "rewards": "Récompenses"
   },
   "calendar": {
     "legend": "Légende",
@@ -428,5 +431,48 @@
     "ctaPhoto": "Photo 📷",
     "requiredA11y": "Photo requise",
     "receivedA11y": "Photo reçue"
+  },
+  "rewards": {
+    "title": "Récompenses",
+    "subtitle": "Soldes enfants, points par tâche et validation parent. Pas de boutique dans cette version.",
+    "enabled": "Activer les récompenses",
+    "enabledHelp": "Quand c’est activé, le parent peut créditer des points pour les tâches terminées.",
+    "unitLabel": "Unité",
+    "saveSettings": "Enregistrer",
+    "savedTitle": "Enregistré",
+    "savedBody": "Paramètres des récompenses mis à jour.",
+    "saveFailed": "Impossible d’enregistrer les récompenses.",
+    "balances": "Soldes",
+    "noChildren": "Aucun enfant pour le moment.",
+    "tapHistory": "Appuyer pour l’historique / reset",
+    "configurePoints": "Points par tâche",
+    "configurePointsHelp": "Indiquez combien de points vaut une tâche (0 ou vide = aucun).",
+    "noTasks": "Aucune tâche à configurer.",
+    "pointsInvalid": "Les points doivent être un entier ≥ 0.",
+    "pointsSaved": "Points de la tâche mis à jour.",
+    "taskPoints": "Points de récompense",
+    "taskPointsHelp": "Optionnel. Le parent valide après que l’enfant a terminé la tâche.",
+    "childNotFound": "Enfant introuvable.",
+    "balanceLabel": "{{amount}} {{unit}}",
+    "disabledHint": "Les récompenses sont désactivées.",
+    "resetButton": "Remettre à zéro",
+    "resetTitle": "Remettre le solde à zéro ?",
+    "resetBody": "Remettre le solde de {{name}} ({{balance}} {{unit}}) à 0 en ajoutant une entrée de reset.",
+    "resetConfirm": "Remettre à zéro",
+    "resetEmpty": "Le solde est déjà à 0.",
+    "resetDoneTitle": "Solde remis à zéro",
+    "resetDoneBody": "Une entrée de reset a été ajoutée au journal.",
+    "resetFailed": "Impossible de remettre le solde à zéro.",
+    "history": "Historique",
+    "historyEmpty": "Aucune entrée de récompense pour le moment.",
+    "kindEarn": "Gagné",
+    "kindReset": "Reset",
+    "kindAdjust": "Ajustement",
+    "validateCta": "Valider +{{amount}} {{unit}}",
+    "validateTitle": "Récompenses",
+    "validateDone": "Crédité +{{amount}} {{unit}}.",
+    "validateFailed": "Impossible de créditer les points.",
+    "alreadyValidated": "Validé (+{{amount}} {{unit}})",
+    "noPointsConfigured": "Aucun point configuré pour cette tâche."
   }
 }

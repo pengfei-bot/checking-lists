@@ -12,6 +12,8 @@ import { ChildFormScreen } from "../screens/ChildFormScreen";
 import { ChildHistoryScreen } from "../screens/ChildHistoryScreen";
 import { ChildHomeScreen } from "../screens/ChildHomeScreen";
 import { LanguageSettingsScreen } from "../screens/LanguageSettingsScreen";
+import { RewardsChildScreen } from "../screens/RewardsChildScreen";
+import { RewardsScreen } from "../screens/RewardsScreen";
 import { ParentCalendarScreen } from "../screens/ParentCalendarScreen";
 import { ParentDashboardScreen } from "../screens/ParentDashboardScreen";
 import { ParentDayDetailScreen } from "../screens/ParentDayDetailScreen";
@@ -84,6 +86,8 @@ export function RootNavigator() {
           <Stack.Screen name="TaskDetail" component={TaskDetailScreen} options={{ title: t("nav.taskDetail") }} />
           <Stack.Screen name="ChildForm" component={ChildFormScreen} options={{ title: t("nav.childForm"), presentation: "modal" }} />
           <Stack.Screen name="LanguageSettings" component={LanguageSettingsScreen} options={{ title: t("nav.language") }} />
+          <Stack.Screen name="Rewards" component={RewardsScreen} options={{ title: t("nav.rewards") }} />
+          <Stack.Screen name="RewardsChild" component={RewardsChildScreen} options={{ title: t("nav.rewardsChild") }} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

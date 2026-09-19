@@ -33,6 +33,9 @@ export function ChildHomeScreen({ navigation }: Props) {
     setCurrentProfileId,
     state,
     refreshReminders,
+    rewardsEnabled,
+    unitLabel,
+    balanceFor,
   } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -55,6 +58,7 @@ export function ChildHomeScreen({ navigation }: Props) {
   const tasks = tasksForChildToday(currentProfile.id);
   const doneCount = tasks.filter((task) => completionFor(task.id)).length;
   const progress = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
+  const balance = balanceFor(currentProfile.id);
 
   const header = useMemo(
     () => (
@@ -75,9 +79,19 @@ export function ChildHomeScreen({ navigation }: Props) {
         <Text style={styles.progress}>
           {t("childHome.progress", { done: doneCount, total: tasks.length, percent: progress })}
         </Text>
+        {rewardsEnabled ? (
+          <Pressable
+            onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
+            style={styles.balanceChip}
+          >
+            <Text style={styles.balanceChipText}>
+              {t("rewards.balanceLabel", { amount: balance, unit: unitLabel })}
+            </Text>
+          </Pressable>
+        ) : null}
       </View>
     ),
-    [currentProfile, doneCount, tasks.length, progress, t, i18n.language]
+    [currentProfile, doneCount, tasks.length, progress, balance, rewardsEnabled, unitLabel, t, i18n.language, navigation]
   );
 
   const quickDone = async (taskId: string) => {
@@ -250,6 +264,15 @@ const styles = StyleSheet.create({
   heroTitle: { fontSize: 24, fontWeight: "800", color: colors.text, marginTop: 4 },
   heroSub: { color: colors.textMuted, textTransform: "capitalize", marginTop: 2 },
   progress: { marginTop: 10, fontWeight: "700", color: colors.primary },
+  balanceChip: {
+    marginTop: 10,
+    alignSelf: "flex-start",
+    backgroundColor: "#ffffffcc",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  balanceChipText: { fontWeight: "800", color: colors.primary, fontSize: 15 },
   empty: { textAlign: "center", color: colors.textMuted, marginVertical: 24, fontSize: 16 },
   actions: { flexDirection: "row", gap: 6 },
   miniBtn: {
