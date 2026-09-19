@@ -128,7 +128,7 @@ export function ParentRewardsBottomNav({
       {item("rewards", "🏆", t("parentDash.navRewards"), () =>
         navigation.navigate("Rewards")
       )}
-      {item("profile", "👤", t("parentDash.navProfile"), () =>
+      {item("profile", "⚙️", t("parentDash.navProfile"), () =>
         navigation.navigate("ParentSettings")
       )}
     </View>
