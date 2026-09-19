@@ -13,6 +13,8 @@ interface Props {
   /** Proof photo already received (Storage URL / local) */
   hasPhoto?: boolean;
   childName?: string;
+  /** e.g. "+5 ⭐" shown next to the title when rewards are active for the child */
+  pointsLabel?: string | null;
   onPress?: () => void;
   rightAccessory?: React.ReactNode;
 }
@@ -23,6 +25,7 @@ export function TaskCard({
   completedAt,
   hasPhoto,
   childName,
+  pointsLabel,
   onPress,
   rightAccessory,
 }: Props) {
@@ -54,6 +57,11 @@ export function TaskCard({
         <View style={{ flex: 1 }}>
           <View style={styles.titleRow}>
             <Text style={[styles.title, done && styles.titleDone]}>{task.title}</Text>
+            {pointsLabel ? (
+              <View style={styles.pointsBadge}>
+                <Text style={styles.pointsBadgeText}>{pointsLabel}</Text>
+              </View>
+            ) : null}
             {task.photoRequired ? (
               <Text
                 style={styles.photoPill}
@@ -106,6 +114,15 @@ const styles = StyleSheet.create({
   titleRow: { flexDirection: "row", alignItems: "center", gap: 6, flexWrap: "wrap" },
   title: { fontSize: 16, fontWeight: "700", color: colors.text, flexShrink: 1 },
   titleDone: { textDecorationLine: "line-through", color: colors.textMuted },
+  pointsBadge: {
+    backgroundColor: "#FFF3E0",
+    borderColor: "#FFB74D",
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  pointsBadgeText: { fontWeight: "800", color: "#E65100", fontSize: 12 },
   photoPill: { fontSize: 14 },
   meta: { marginTop: 2, fontSize: 12, color: colors.textMuted },
   muted: { color: colors.textMuted },

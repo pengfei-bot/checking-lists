@@ -81,7 +81,9 @@ export function childSettingsFor(
 /**
  * Per-child gate (M1). Family reward_settings.enabled is an optional master:
  * if a family row exists and is explicitly disabled, everything is off.
- * Missing child row ⇒ not enabled.
+ * Missing child row ⇒ not enabled (do not soft-default). Prefer
+ * ensureMissingChildRewardSettings / SQL backfill to create enabled:true rows
+ * so UX stays single-path.
  */
 export function isRewardsActiveForChild(
   childProfileId: string,

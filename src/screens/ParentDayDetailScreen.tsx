@@ -91,9 +91,7 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
                   const pts = pointsFor(task.id);
                   const unitLabel = t(unitShortKey(unitKindFor(childDay.child.id)));
                   const childRewardsOn = isRewardsActiveForChild(childDay.child.id);
-                  if (childRewardsOn && pts != null) {
-                    metaParts.push(`+${pts} ${unitLabel}`);
-                  }
+                  // Points badge renders next to the title (visible before validate CTA).
                   const validated = completion?.id ? isEarnValidated(completion.id) : false;
                   const canValidate =
                     !!done &&
@@ -109,7 +107,16 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
                       >
                         <Text style={styles.taskCheck}>{done ? "✅" : "⬜"}</Text>
                         <View style={{ flex: 1 }}>
-                          <Text style={[styles.taskTitle, done && styles.taskTitleDone]}>{task.title}</Text>
+                          <View style={styles.titleRow}>
+                            <Text style={[styles.taskTitle, done && styles.taskTitleDone]}>{task.title}</Text>
+                            {childRewardsOn && pts != null ? (
+                              <View style={styles.pointsBadge}>
+                                <Text style={styles.pointsBadgeText}>
+                                  +{pts} {unitLabel}
+                                </Text>
+                              </View>
+                            ) : null}
+                          </View>
                           <Text style={styles.taskMeta}>{metaParts.join(" · ")}</Text>
                           {done && validated && pts != null ? (
                             <Text style={styles.validated}>
@@ -216,7 +223,17 @@ const styles = StyleSheet.create({
   },
   taskDone: { opacity: 0.85 },
   taskCheck: { fontSize: 16 },
+  titleRow: { flexDirection: "row", alignItems: "center", gap: 6, flexWrap: "wrap" },
   taskTitle: { fontWeight: "700", color: colors.text },
+  pointsBadge: {
+    backgroundColor: "#FFF3E0",
+    borderColor: "#FFB74D",
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  pointsBadgeText: { fontWeight: "800", color: "#E65100", fontSize: 12 },
   taskTitleDone: { textDecorationLine: "line-through", color: colors.textMuted },
   taskMeta: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
   taskLink: { color: colors.primary, fontWeight: "700", fontSize: 12 },

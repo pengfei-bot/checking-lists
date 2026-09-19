@@ -300,17 +300,14 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   completedAt={done?.completedAt}
                   hasPhoto={!!done?.photoUri}
                   childName={child?.name}
+                  pointsLabel={
+                    isRewardsActiveForChild(task.childId) && pointsFor(task.id) != null
+                      ? `+${pointsFor(task.id)} ${t(unitShortKey(unitKindFor(task.childId)))}`
+                      : null
+                  }
                   onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                   rightAccessory={
                     <View style={styles.taskRight}>
-                      {isRewardsActiveForChild(task.childId) && pointsFor(task.id) != null ? (
-                        <View style={styles.pointsBadge}>
-                          <Text style={styles.pointsBadgeText}>
-                            +{pointsFor(task.id)}{" "}
-                            {t(unitShortKey(unitKindFor(task.childId)))}
-                          </Text>
-                        </View>
-                      ) : null}
                       <Pressable
                         onPress={() => navigation.navigate("TaskForm", { taskId: task.id })}
                         style={styles.editBtn}

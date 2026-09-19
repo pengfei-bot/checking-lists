@@ -485,7 +485,7 @@
     "toValidateEmpty": "Rien à valider pour le moment.",
     "validatePendingCta": "Valider",
     "subtitleV2": "Activez les récompenses par enfant, choisissez Points ou €, configurez les points par tâche.",
-    "perChild": "Par enfant",
+    "perChild": "Activation par enfant",
     "activated": "Activé",
     "deactivated": "Désactivé",
     "parentOnlyActivate": "Seul le parent peut activer. L’enfant voit son solde seulement si c’est activé pour lui.",

@@ -84,16 +84,26 @@ export function ChildHomeScreen({ navigation }: Props) {
           {t("childHome.progress", { done: doneCount, total: tasks.length, percent: progress })}
         </Text>
         {rewardsActive ? (
-          <Pressable
-            onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
-            style={styles.balanceChip}
-            accessibilityRole="button"
-            accessibilityLabel={t("rewards.openHistory")}
-          >
-            <Text style={styles.balanceChipText}>
-              {t("rewards.soldeChip", { amount: balance, unit: unitLabel })}
-            </Text>
-          </Pressable>
+          <>
+            <Pressable
+              onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
+              style={styles.balanceChip}
+              accessibilityRole="button"
+              accessibilityLabel={t("rewards.soldeChip", { amount: balance, unit: unitLabel })}
+            >
+              <Text style={styles.balanceChipText}>
+                {t("rewards.soldeChip", { amount: balance, unit: unitLabel })}
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
+              style={styles.myHistoryBtn}
+              accessibilityRole="button"
+              accessibilityLabel={t("rewards.myHistory")}
+            >
+              <Text style={styles.myHistoryBtnText}>{t("rewards.myHistory")}</Text>
+            </Pressable>
+          </>
         ) : null}
       </View>
     ),
@@ -166,16 +176,10 @@ export function ChildHomeScreen({ navigation }: Props) {
                 task={task}
                 done={done}
                 hasPhoto={!!completionFor(task.id)?.photoUri}
+                pointsLabel={pts != null ? `+${pts} ${unitLabel}` : null}
                 onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                 rightAccessory={
                   <View style={styles.actions}>
-                    {pts != null ? (
-                      <View style={styles.pointsBadge}>
-                        <Text style={styles.pointsBadgeText}>
-                          +{pts} {unitLabel}
-                        </Text>
-                      </View>
-                    ) : null}
                     <Pressable
                       style={styles.miniBtn}
                       onPress={() => void quickDone(task.id)}
@@ -207,8 +211,10 @@ export function ChildHomeScreen({ navigation }: Props) {
           <Pressable
             style={styles.historyChip}
             onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
+            accessibilityRole="button"
+            accessibilityLabel={t("rewards.myHistory")}
           >
-            <Text style={styles.historyChipText}>⭐ {t("rewards.openHistory")}</Text>
+            <Text style={styles.historyChipText}>⭐ {t("rewards.myHistory")}</Text>
           </Pressable>
         ) : null}
         <Pressable
@@ -295,6 +301,17 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   balanceChipText: { fontWeight: "800", color: colors.primary, fontSize: 15 },
+  myHistoryBtn: {
+    marginTop: 8,
+    alignSelf: "flex-start",
+    paddingVertical: 4,
+  },
+  myHistoryBtnText: {
+    fontWeight: "800",
+    color: colors.primary,
+    fontSize: 15,
+    textDecorationLine: "underline",
+  },
   empty: { textAlign: "center", color: colors.textMuted, marginVertical: 24, fontSize: 16 },
   actions: { flexDirection: "row", alignItems: "center", gap: 6 },
   pointsBadge: {

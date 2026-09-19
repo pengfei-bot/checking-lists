@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Pressable,
   ScrollView,
@@ -32,6 +32,7 @@ export function RewardsScreen({ navigation }: Props) {
     setCurrentProfileId,
     balanceFor,
     upsertChildRewardSettings,
+    ensureMissingChildRewardSettings,
     isRewardsActiveForChild,
     unitKindFor,
     state,
@@ -46,6 +47,11 @@ export function RewardsScreen({ navigation }: Props) {
   const [validatingId, setValidatingId] = useState<string | null>(null);
   const [pointsDraft, setPointsDraft] = useState<Record<string, string>>({});
   const [filterChildId, setFilterChildId] = useState<ChildFilter>("all");
+
+  // Heal missing per-child rows when opening Rewards (new kids / pre-backfill families).
+  useEffect(() => {
+    void ensureMissingChildRewardSettings();
+  }, [ensureMissingChildRewardSettings, childrenProfiles.length]);
 
   const tasksSorted = useMemo(() => {
     return state.tasks
@@ -175,6 +181,7 @@ export function RewardsScreen({ navigation }: Props) {
       <Text style={styles.sub}>{t("rewards.subtitleV2")}</Text>
 
       <Text style={styles.section}>{t("rewards.perChild")}</Text>
+      <Text style={styles.help}>{t("rewards.unitPerChildHelp")}</Text>
       {childrenProfiles.length === 0 ? (
         <Text style={[styles.help, { marginTop: 8 }]}>{t("rewards.noChildrenHelp")}</Text>
       ) : (
@@ -209,6 +216,9 @@ export function RewardsScreen({ navigation }: Props) {
                   value={active}
                   onValueChange={(v) => void onToggleChild(child.id, v)}
                   disabled={saving}
+                  accessibilityLabel={
+                    active ? t("rewards.activated") : t("rewards.deactivated")
+                  }
                 />
               </View>
               <View style={[styles.unitRow, !active && styles.unitRowDisabled]}>

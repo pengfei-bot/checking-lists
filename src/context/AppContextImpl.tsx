@@ -125,6 +125,11 @@ interface AppContextValue {
     childId: string,
     input: { unitKind?: RewardUnitKind; enabled?: boolean }
   ) => Promise<RewardChildSettings>;
+  /**
+   * Create missing reward_child_settings rows (enabled:true, points) when family
+   * rewards master is on — heals DJRUNV-like gaps and new kids.
+   */
+  ensureMissingChildRewardSettings: () => Promise<void>;
   setTaskPoints: (taskId: string, points: number | null) => Promise<void>;
   validateEarn: (taskId: string, childId: string, completionId: string) => Promise<RewardLedgerEntry | null>;
   resetChildBalance: (childId: string, note?: string) => Promise<RewardLedgerEntry | null>;
@@ -192,7 +197,32 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         fid,
         session?.displayName || session?.email || "Parent"
       );
-      const next = await applyRememberedProfile(loaded);
+      let next = await applyRememberedProfile(loaded);
+      // Auto-heal: family rewards on but children lack reward_child_settings rows.
+      if (next.rewardSettings?.enabled) {
+        const have = new Set(
+          (next.rewardChildSettings ?? []).map((s) => s.childProfileId)
+        );
+        const missing = next.profiles.filter(
+          (p) => p.role === "child" && !have.has(p.id)
+        );
+        if (missing.length > 0) {
+          let settings = [...(next.rewardChildSettings ?? [])];
+          for (const child of missing) {
+            try {
+              const saved = await cloudUpsertRewardChildSettings(fid, child.id, {
+                enabled: true,
+                unitKind: "points",
+              });
+              settings = settings.filter((s) => s.childProfileId !== child.id);
+              settings.push(saved);
+            } catch {
+              /* RewardsScreen ensure can retry */
+            }
+          }
+          next = { ...next, rewardChildSettings: settings };
+        }
+      }
       setState(next);
       stateRef.current = next;
       await saveCloudStateCache(fid, next);
@@ -701,15 +731,58 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         throw new Error("Cette action nécessite une connexion Internet.");
       }
       const profile = await cloudInsertChild(familyId, { name: input.name, emoji: input.emoji, color });
+      let childSettingsExtra: RewardChildSettings | null = null;
+      if (stateRef.current.rewardSettings?.enabled) {
+        try {
+          childSettingsExtra = await cloudUpsertRewardChildSettings(familyId, profile.id, {
+            enabled: true,
+            unitKind: "points",
+          });
+        } catch {
+          /* ensure on Rewards open will retry */
+        }
+      }
       setState((prev) => {
-        const next = { ...prev, profiles: [...prev.profiles, profile] };
+        const list = prev.rewardChildSettings ?? [];
+        const rewardChildSettings =
+          childSettingsExtra && !list.some((s) => s.childProfileId === profile.id)
+            ? [...list, childSettingsExtra]
+            : childSettingsExtra
+              ? list.map((s) =>
+                  s.childProfileId === profile.id ? childSettingsExtra! : s
+                )
+              : list;
+        const next = {
+          ...prev,
+          profiles: [...prev.profiles, profile],
+          rewardChildSettings,
+        };
+        stateRef.current = next;
         void cacheCloudSnapshot(next);
         return next;
       });
       return profile;
     }
     const profile: Profile = { id: uid("profile_child"), name: input.name.trim(), role: "child", emoji: input.emoji?.trim() || "🌟", color };
-    await persistLocal({ ...state, profiles: [...state.profiles, profile] });
+    const prev = stateRef.current;
+    let rewardChildSettings = prev.rewardChildSettings ?? [];
+    if (prev.rewardSettings?.enabled && !rewardChildSettings.some((s) => s.childProfileId === profile.id)) {
+      rewardChildSettings = [
+        ...rewardChildSettings,
+        {
+          childProfileId: profile.id,
+          familyId: prev.rewardSettings.familyId || "local",
+          unitKind: "points" as const,
+          enabled: true,
+          updatedAt: new Date().toISOString(),
+        },
+      ];
+    }
+    await persistLocal({
+      ...prev,
+      profiles: [...prev.profiles, profile],
+      rewardChildSettings,
+    });
     return profile;
   }, [familyId, isCloud, persistLocal, state, cacheCloudSnapshot]);
 
@@ -917,6 +990,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     },
     [familyId, persistLocal, cacheCloudSnapshot]
   );
+
+  const ensureMissingChildRewardSettings = useCallback(async (): Promise<void> => {
+    const prev = stateRef.current;
+    // Match SQL backfill: only when family master is enabled.
+    if (!prev.rewardSettings?.enabled) return;
+    const have = new Set((prev.rewardChildSettings ?? []).map((s) => s.childProfileId));
+    const missing = prev.profiles.filter((p) => p.role === "child" && !have.has(p.id));
+    if (missing.length === 0) return;
+    for (const child of missing) {
+      try {
+        await upsertChildRewardSettings(child.id, { enabled: true, unitKind: "points" });
+      } catch {
+        /* best-effort; next open / sync retries */
+      }
+    }
+  }, [upsertChildRewardSettings]);
 
   const setChildUnitKind = useCallback(
     async (childId: string, unitKind: RewardUnitKind): Promise<RewardChildSettings> => {
@@ -1178,6 +1267,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     isRewardsActiveForChild,
     balanceFor, ledgerByChild, pointsFor, isEarnValidated, unitKindFor, pendingEarns, pendingEarnCount,
     updateRewardSettings, setChildUnitKind, setChildRewardsEnabled, upsertChildRewardSettings,
+    ensureMissingChildRewardSettings,
     setTaskPoints, validateEarn, resetChildBalance,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

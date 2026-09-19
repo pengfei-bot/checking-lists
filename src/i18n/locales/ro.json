@@ -485,7 +485,7 @@
     "toValidateEmpty": "Nothing waiting for validation.",
     "validatePendingCta": "Validate",
     "subtitleV2": "Enable rewards per child, choose Points or €, and set points per task.",
-    "perChild": "Per child",
+    "perChild": "Per-child activation",
     "activated": "Enabled",
     "deactivated": "Disabled",
     "parentOnlyActivate": "Only a parent can enable rewards. The child sees their balance when enabled for them.",
