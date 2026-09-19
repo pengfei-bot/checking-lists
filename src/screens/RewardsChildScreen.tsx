@@ -214,10 +214,10 @@ export function RewardsChildScreen({ navigation, route }: Props) {
                           entry.amount < 0 && styles.amountNeg,
                         ]}
                       >
-                        {amountStr} {unitLabel}
+                        {amountStr} {unitLabel === "€" ? "€" : "⭐"}
                       </Text>
                     ) : null}
-                    <Text style={styles.rowTitle}>
+                    <Text style={[styles.rowTitle, isReset && styles.resetAmount]}>
                       {isReset
                         ? kindLabel(entry.kind)
                         : task
@@ -229,7 +229,9 @@ export function RewardsChildScreen({ navigation, route }: Props) {
                       {entry.note ? ` · ${entry.note}` : ""}
                     </Text>
                   </View>
-                  <Text style={styles.resetIcon}>{isReset ? "🗑️" : "✨"}</Text>
+                  <View style={[styles.sideIcon, isReset ? styles.sideIconReset : styles.sideIconEarn]}>
+                    <Text style={styles.resetIcon}>{isReset ? "🗑️" : "⭐"}</Text>
+                  </View>
                 </View>
               </View>
             );
@@ -251,14 +253,14 @@ const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
   container: { ...rewardsStyles.screenHistory },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "800",
     color: colors.text,
-    marginBottom: 14,
+    marginBottom: 10,
   },
   soldeCard: {
     ...rewardsStyles.soldePurpleCard,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   soldeStarCircle: { ...rewardsStyles.soldePurpleStarCircle },
   soldeStar: { fontSize: 26 },
@@ -267,16 +269,15 @@ const styles = StyleSheet.create({
   soldeUnit: { fontSize: 18, fontWeight: "800", color: rewardsUi.purpleDeep },
   soldeDecor: { fontSize: 22 },
   help: { color: colors.textMuted, textAlign: "center", marginTop: 8 },
-  section: { fontWeight: "800", fontSize: 16, marginTop: 24, marginBottom: 12, color: colors.text },
+  section: { fontWeight: "800", fontSize: 16, marginTop: 18, marginBottom: 10, color: colors.text },
   timeline: { paddingLeft: 2 },
-  timelineItem: { flexDirection: "row", alignItems: "stretch", gap: 10, marginBottom: 10 },
+  timelineItem: { flexDirection: "row", alignItems: "stretch", gap: 10, marginBottom: 8 },
   timelineRail: { width: 22, alignItems: "center" },
   timelineLine: {
     flex: 1,
     width: 2,
     marginTop: 4,
     backgroundColor: "#D1D5DB",
-    borderStyle: "dashed",
     minHeight: 12,
   },
   row: {
@@ -285,8 +286,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     borderRadius: 14,
-    borderWidth: 1,
+    borderWidth: 0,
     padding: 12,
+    ...rewardsUi.shadow,
   },
   earnAmount: {
     fontWeight: "800",
@@ -294,10 +296,26 @@ const styles = StyleSheet.create({
     color: colors.success,
     marginBottom: 2,
   },
+  resetAmount: {
+    fontWeight: "800",
+    fontSize: 14,
+    color: colors.textMuted,
+    marginBottom: 2,
+  },
   rowTitle: { fontWeight: "700", color: colors.text },
   rowMeta: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
   amountNeg: { color: colors.danger },
-  resetIcon: { fontSize: 18 },
+  sideIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+  sideIconEarn: { backgroundColor: "#fff" },
+  sideIconReset: { backgroundColor: "#fff" },
+  resetIcon: { fontSize: 16 },
   unitBlock: { marginTop: 14, alignItems: "flex-start", gap: 6 },
   unitLabel: { fontWeight: "700", fontSize: 12, color: colors.textMuted },
 });

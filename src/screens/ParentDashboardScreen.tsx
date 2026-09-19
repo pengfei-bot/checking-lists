@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
+import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { TaskCard } from "../components/TaskCard";
@@ -43,6 +44,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
     isRewardsActiveForChild,
     pointsFor,
     unitKindFor,
+    balanceFor,
   } = useApp();
   const { isAuthenticated, family, deleteAccount } = useAuth();
   const [deletingAccount, setDeletingAccount] = useState(false);
@@ -178,9 +180,17 @@ export function ParentDashboardScreen({ navigation }: Props) {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsScroll}>
           <Pressable
             onPress={() => setFilterChildId("all")}
-            style={[styles.chip, filterChildId === "all" && styles.chipActive]}
+            style={[
+              rewardsStyles.filterChip,
+              filterChildId === "all" && rewardsStyles.filterChipActiveOrange,
+            ]}
           >
-            <Text style={[styles.chipText, filterChildId === "all" && styles.chipTextActive]}>
+            <Text
+              style={[
+                rewardsStyles.filterChipText,
+                filterChildId === "all" && rewardsStyles.filterChipTextActive,
+              ]}
+            >
               {t("common.all")}
             </Text>
           </Pressable>
@@ -188,9 +198,17 @@ export function ParentDashboardScreen({ navigation }: Props) {
             <Pressable
               key={c.id}
               onPress={() => setFilterChildId(c.id)}
-              style={[styles.chip, filterChildId === c.id && styles.chipActive]}
+              style={[
+                rewardsStyles.filterChip,
+                filterChildId === c.id && rewardsStyles.filterChipActiveOrange,
+              ]}
             >
-              <Text style={[styles.chipText, filterChildId === c.id && styles.chipTextActive]}>
+              <Text
+                style={[
+                  rewardsStyles.filterChipText,
+                  filterChildId === c.id && rewardsStyles.filterChipTextActive,
+                ]}
+              >
                 {c.emoji} {c.name}
               </Text>
             </Pressable>
@@ -277,6 +295,38 @@ export function ParentDashboardScreen({ navigation }: Props) {
           )}
         </View>
 
+        {selectedChild && isRewardsActiveForChild(selectedChild.id) ? (
+          <Pressable
+            onPress={() => navigation.navigate("RewardsChild", { childId: selectedChild.id })}
+            style={styles.balanceCard}
+            accessibilityRole="button"
+            accessibilityLabel={t("parentDash.openRewards")}
+          >
+            <View style={styles.balanceStarCircle}>
+              <Text style={{ fontSize: 26 }}>⭐</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.balanceLabel}>{t("rewards.soldeLabel")}</Text>
+              <Text style={styles.balanceValue}>
+                {balanceFor(selectedChild.id)}{" "}
+                <Text style={styles.balanceUnit}>
+                  {t(unitShortKey(unitKindFor(selectedChild.id)))}
+                </Text>
+              </Text>
+            </View>
+            <View style={styles.balanceCta}>
+              <Text style={styles.balanceCtaText}>{t("parentDash.rewards")} ›</Text>
+              {pendingEarnCount > 0 ? (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>
+                    {pendingEarnCount > 99 ? "99+" : String(pendingEarnCount)}
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+          </Pressable>
+        ) : null}
+
         <Text style={styles.section}>{todayTitle}</Text>
         {todayTasks.length === 0 ? (
           <View style={styles.emptyBox}>
@@ -302,14 +352,14 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   }
                   onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                   rightAccessory={
-                    <View style={styles.taskRight}>
-                      <Pressable
-                        onPress={() => navigation.navigate("TaskForm", { taskId: task.id })}
-                        style={styles.editBtn}
-                      >
-                        <Text style={styles.editBtnText}>{t("common.edit")}</Text>
-                      </Pressable>
-                    </View>
+                    <Pressable
+                      onPress={() => navigation.navigate("TaskForm", { taskId: task.id })}
+                      style={styles.editBtn}
+                      accessibilityLabel={t("common.edit")}
+                      hitSlop={8}
+                    >
+                      <Text style={styles.editBtnText}>✎</Text>
+                    </Pressable>
                   }
                 />
                 {done?.photoUri ? (
@@ -451,7 +501,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.parentBg },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
-  container: { padding: 16, paddingBottom: 24 },
+  container: { padding: 14, paddingBottom: 20 },
   headerRow: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -472,35 +522,35 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   menuDots: { fontSize: 22, fontWeight: "800", color: colors.text, marginTop: -4 },
-  chipsScroll: { marginVertical: 12 },
+  chipsScroll: { marginVertical: 8, flexGrow: 0 },
   chip: {
     paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingVertical: 7,
     borderRadius: 999,
     backgroundColor: colors.card,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: colors.border,
     marginRight: 8,
   },
-  chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  chipActive: { backgroundColor: rewardsUi.filterOrange, borderColor: rewardsUi.filterOrange },
   chipText: { fontWeight: "700", color: colors.text },
   chipTextActive: { color: "#fff" },
-  statsRow: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginBottom: 12 },
+  statsRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 10 },
   statCard: {
     minWidth: "45%",
     flexGrow: 1,
     flexBasis: "40%",
     backgroundColor: colors.card,
-    borderRadius: 16,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
+    borderRadius: rewardsUi.cardRadius,
+    padding: 10,
+    borderWidth: 0,
     alignItems: "center",
+    ...rewardsUi.shadow,
   },
-  statCardCompact: { paddingVertical: 10 },
+  statCardCompact: { paddingVertical: 8 },
   statCardSelected: {
     borderWidth: 2,
-    borderColor: colors.primary,
+    borderColor: rewardsUi.filterOrange,
     minWidth: "100%",
     flexBasis: "100%",
   },
@@ -508,7 +558,27 @@ const styles = StyleSheet.create({
   statName: { fontWeight: "700", marginTop: 4 },
   statValue: { fontSize: 22, fontWeight: "800", color: colors.primary, marginTop: 4 },
   statLabel: { color: colors.textMuted, fontSize: 12 },
-  compactRow: { flexDirection: "row", gap: 10, marginBottom: 14 },
+  balanceCard: {
+    ...rewardsStyles.soldeCard,
+    marginBottom: 12,
+  },
+  balanceStarCircle: { ...rewardsStyles.soldeStarCircle },
+  balanceLabel: { ...rewardsStyles.soldeLabel },
+  balanceValue: { ...rewardsStyles.soldeValue },
+  balanceUnit: { fontSize: 16, fontWeight: "800", color: colors.primary },
+  balanceCta: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 999,
+    borderWidth: 1.5,
+    borderColor: rewardsUi.filterOrange,
+    backgroundColor: "#fff",
+  },
+  balanceCtaText: { fontWeight: "800", color: rewardsUi.filterOrange, fontSize: 12 },
+  compactRow: { flexDirection: "row", gap: 8, marginBottom: 10 },
   compactBtn: {
     flex: 1,
     flexDirection: "row",
@@ -516,10 +586,10 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: colors.card,
     borderRadius: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
+    borderWidth: 0,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    ...rewardsUi.shadow,
   },
   compactBtnIconOnly: { flex: 0.55, justifyContent: "center", gap: 6, paddingHorizontal: 10 },
   compactEmoji: { fontSize: 18 },
@@ -538,10 +608,10 @@ const styles = StyleSheet.create({
   emptyBox: {
     backgroundColor: colors.card,
     borderRadius: 14,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 12,
+    padding: 12,
+    borderWidth: 0,
+    marginBottom: 10,
+    ...rewardsUi.shadow,
   },
   empty: { color: colors.textMuted },
   childrenHeader: {
@@ -559,33 +629,22 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: colors.card,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
+    borderWidth: 0,
     paddingVertical: 8,
     paddingHorizontal: 10,
+    ...rewardsUi.shadow,
   },
   kidManageName: { fontWeight: "700", color: colors.text },
   kidManageEdit: { color: colors.primary, fontWeight: "600", fontSize: 12 },
-  taskRight: { flexDirection: "row", alignItems: "center", gap: 6 },
-  pointsBadge: {
-    backgroundColor: "#E3F2FD",
-    borderColor: "#64B5F6",
-    borderWidth: 1,
-    borderRadius: 999,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  pointsBadgeText: { fontWeight: "800", color: colors.primary, fontSize: 12 },
   editBtn: {
-    minWidth: 44,
-    height: 40,
+    width: 36,
+    height: 36,
     borderRadius: 12,
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.bg,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 8,
   },
-  editBtnText: { fontWeight: "700", color: colors.text, fontSize: 13 },
+  editBtnText: { fontWeight: "700", color: colors.textMuted, fontSize: 16 },
   thumb: {
     height: 120,
     borderRadius: 12,

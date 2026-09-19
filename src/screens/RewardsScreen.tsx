@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -48,6 +49,7 @@ export function RewardsScreen({ navigation }: Props) {
   const [validatingId, setValidatingId] = useState<string | null>(null);
   const [pointsDraft, setPointsDraft] = useState<Record<string, string>>({});
   const [filterChildId, setFilterChildId] = useState<ChildFilter>("all");
+  const [pendingOpen, setPendingOpen] = useState(false);
 
   // Heal missing per-child rows when opening Rewards (new kids / pre-backfill families).
   useEffect(() => {
@@ -68,6 +70,11 @@ export function RewardsScreen({ navigation }: Props) {
       ),
     [pendingEarns, filterChildId]
   );
+
+  // Auto-expand hub only when there is something to validate (still below fold).
+  useEffect(() => {
+    if (filteredPending.length > 0) setPendingOpen(true);
+  }, [filteredPending.length]);
 
   if (blocked || !currentProfile || currentProfile.role !== "parent") {
     return (
@@ -176,257 +183,295 @@ export function RewardsScreen({ navigation }: Props) {
     }
   };
 
-  return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-      <Text style={styles.title}>{t("rewards.title")}</Text>
-      <Text style={styles.sub}>{t("rewards.subtitleV2")}</Text>
-
-      <Text style={styles.section}>{t("rewards.perChild")}</Text>
-      <Text style={styles.help}>{t("rewards.unitPerChildHelp")}</Text>
-      {childrenProfiles.length === 0 ? (
-        <Text style={[styles.help, { marginTop: 8 }]}>{t("rewards.noChildrenHelp")}</Text>
-      ) : (
-        childrenProfiles.map((child) => {
-          const active = isRewardsActiveForChild(child.id);
-          const kind = unitKindFor(child.id);
-          const bal = balanceFor(child.id);
-          const unit = t(unitShortKey(kind));
-          return (
-            <View key={child.id} style={styles.childCard}>
-              <View style={styles.childHeader}>
-                <Pressable
-                  onPress={() => navigation.navigate("RewardsChild", { childId: child.id })}
-                  style={styles.childIdentity}
-                >
-                  <View
-                    style={[
-                      rewardsStyles.avatarCircle,
-                      { backgroundColor: (child.color || colors.primary) + "33" },
-                    ]}
-                  >
-                    <Text style={rewardsStyles.avatarEmoji}>{child.emoji}</Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.childName}>
-                      {child.name} {child.emoji}
-                    </Text>
-                    <Text style={[styles.statusLabel, active ? styles.statusOn : styles.statusOff]}>
-                      {active ? t("rewards.activated") : t("rewards.deactivated")}
-                    </Text>
-                    {active ? (
-                      <Text style={styles.childMeta}>
-                        {t("rewards.balanceLabel", { amount: bal, unit })}
-                      </Text>
-                    ) : null}
-                  </View>
-                </Pressable>
-                <Switch
-                  value={active}
-                  onValueChange={(v) => void onToggleChild(child.id, v)}
-                  disabled={saving}
-                  trackColor={{ false: "#D1D5DB", true: colors.success }}
-                  thumbColor="#FFFFFF"
-                  ios_backgroundColor="#D1D5DB"
-                  accessibilityLabel={
-                    active ? t("rewards.activated") : t("rewards.deactivated")
-                  }
-                />
-              </View>
-              <View style={[styles.unitRow, !active && styles.unitRowDisabled]}>
-                <View style={rewardsStyles.unitSeg}>
-                  <Pressable
-                    onPress={() => void onUnitKind(child.id, "points")}
-                    disabled={saving || !active}
-                    style={[
-                      rewardsStyles.unitSegItem,
-                      kind === "points" && active && rewardsStyles.unitSegItemActive,
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        rewardsStyles.unitSegText,
-                        kind === "points" && active && rewardsStyles.unitSegTextActive,
-                      ]}
-                    >
-                      {t("rewards.unitPoints")}
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    onPress={() => void onUnitKind(child.id, "money")}
-                    disabled={saving || !active}
-                    style={[
-                      rewardsStyles.unitSegItem,
-                      kind === "money" && active && rewardsStyles.unitSegItemActive,
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        rewardsStyles.unitSegText,
-                        kind === "money" && active && rewardsStyles.unitSegTextActive,
-                      ]}
-                    >
-                      {t("rewards.unitMoneyChip")}
-                    </Text>
-                  </Pressable>
-                </View>
-              </View>
-            </View>
-          );
-        })
-      )}
-
-      <View style={rewardsStyles.infoBanner}>
-        <View style={rewardsStyles.infoBannerIcon}>
-          <Text style={rewardsStyles.infoBannerIconText}>i</Text>
-        </View>
-        <Text style={rewardsStyles.infoBannerText}>{t("rewards.parentOnlyActivate")}</Text>
-      </View>
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsScroll}>
+  const filterChips = (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsScroll}>
+      <Pressable
+        onPress={() => setFilterChildId("all")}
+        style={[
+          rewardsStyles.filterChip,
+          filterChildId === "all" && rewardsStyles.filterChipActive,
+        ]}
+      >
+        <Text
+          style={[
+            rewardsStyles.filterChipText,
+            filterChildId === "all" && rewardsStyles.filterChipTextActive,
+          ]}
+        >
+          {t("common.all")}
+        </Text>
+      </Pressable>
+      {childrenProfiles.map((c) => (
         <Pressable
-          onPress={() => setFilterChildId("all")}
+          key={c.id}
+          onPress={() => setFilterChildId(c.id)}
           style={[
             rewardsStyles.filterChip,
-            filterChildId === "all" && rewardsStyles.filterChipActive,
+            filterChildId === c.id && rewardsStyles.filterChipActive,
           ]}
         >
           <Text
             style={[
               rewardsStyles.filterChipText,
-              filterChildId === "all" && rewardsStyles.filterChipTextActive,
+              filterChildId === c.id && rewardsStyles.filterChipTextActive,
             ]}
           >
-            {t("common.all")}
+            {c.emoji} {c.name}
           </Text>
         </Pressable>
-        {childrenProfiles.map((c) => (
-          <Pressable
-            key={c.id}
-            onPress={() => setFilterChildId(c.id)}
-            style={[
-              rewardsStyles.filterChip,
-              filterChildId === c.id && rewardsStyles.filterChipActive,
-            ]}
-          >
-            <Text
-              style={[
-                rewardsStyles.filterChipText,
-                filterChildId === c.id && rewardsStyles.filterChipTextActive,
-              ]}
-            >
-              {c.emoji} {c.name}
-            </Text>
-          </Pressable>
-        ))}
-      </ScrollView>
+      ))}
+    </ScrollView>
+  );
 
-      <View style={styles.pendingCard}>
-        <Text style={styles.pendingTitle}>
-          {t("rewards.toValidate")}
-          {filteredPending.length > 0 ? ` (${filteredPending.length})` : ""}
-        </Text>
-        {filteredPending.length === 0 ? (
-          <Text style={styles.help}>{t("rewards.toValidateEmpty")}</Text>
+  return (
+    <View style={styles.root}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Activation first — no intro title/subtitle noise */}
+        <Text style={styles.section}>{t("rewards.perChild")}</Text>
+        {childrenProfiles.length === 0 ? (
+          <Text style={styles.help}>{t("rewards.noChildrenHelp")}</Text>
         ) : (
-          filteredPending.map((item) => {
-            const child = getProfile(item.childId);
-            const unit = unitLabelFor(item.childId);
+          childrenProfiles.map((child) => {
+            const active = isRewardsActiveForChild(child.id);
+            const kind = unitKindFor(child.id);
+            const bal = balanceFor(child.id);
+            const unit = t(unitShortKey(kind));
             return (
-              <View key={item.completionId} style={styles.pendingRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.taskTitle}>{item.taskTitle}</Text>
-                  <Text style={styles.childMeta}>
-                    {child ? `${child.emoji} ${child.name}` : "—"} · +{item.points} {unit}
-                  </Text>
+              <View key={child.id} style={styles.childCard}>
+                <View style={styles.childHeader}>
+                  <Pressable
+                    onPress={() => navigation.navigate("RewardsChild", { childId: child.id })}
+                    style={styles.childIdentity}
+                  >
+                    <View
+                      style={[
+                        rewardsStyles.avatarCircle,
+                        { backgroundColor: (child.color || colors.primary) + "33" },
+                      ]}
+                    >
+                      <Text style={rewardsStyles.avatarEmoji}>{child.emoji}</Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.childName}>
+                        {child.name} {child.emoji}
+                      </Text>
+                      <Text
+                        style={[styles.statusLabel, active ? styles.statusOn : styles.statusOff]}
+                      >
+                        {active ? t("rewards.activated") : t("rewards.deactivated")}
+                      </Text>
+                      {active ? (
+                        <Text style={styles.childMeta}>
+                          {t("rewards.balanceLabel", { amount: bal, unit })}
+                        </Text>
+                      ) : null}
+                    </View>
+                  </Pressable>
+                  <Switch
+                    value={active}
+                    onValueChange={(v) => void onToggleChild(child.id, v)}
+                    disabled={saving}
+                    trackColor={{ false: "#D1D5DB", true: colors.success }}
+                    thumbColor="#FFFFFF"
+                    ios_backgroundColor="#D1D5DB"
+                    accessibilityLabel={
+                      active ? t("rewards.activated") : t("rewards.deactivated")
+                    }
+                  />
                 </View>
-                <PrimaryButton
-                  label={t("rewards.validatePendingCta")}
-                  onPress={() => void onValidatePending(item)}
-                  loading={validatingId === item.completionId}
-                  style={styles.validateBtn}
-                />
+                <View style={[styles.unitRow, !active && styles.unitRowDisabled]}>
+                  <View style={rewardsStyles.unitSeg}>
+                    <Pressable
+                      onPress={() => void onUnitKind(child.id, "points")}
+                      disabled={saving || !active}
+                      style={[
+                        rewardsStyles.unitSegItem,
+                        kind === "points" && active && rewardsStyles.unitSegItemActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          rewardsStyles.unitSegText,
+                          kind === "points" && active && rewardsStyles.unitSegTextActive,
+                        ]}
+                      >
+                        {t("rewards.unitPoints")}
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => void onUnitKind(child.id, "money")}
+                      disabled={saving || !active}
+                      style={[
+                        rewardsStyles.unitSegItem,
+                        kind === "money" && active && rewardsStyles.unitSegItemActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          rewardsStyles.unitSegText,
+                          kind === "money" && active && rewardsStyles.unitSegTextActive,
+                        ]}
+                      >
+                        {t("rewards.unitMoneyChip")}
+                      </Text>
+                    </Pressable>
+                  </View>
+                </View>
               </View>
             );
           })
         )}
-      </View>
 
-      <Text style={styles.section}>{t("rewards.configurePoints")}</Text>
-      <Text style={styles.help}>{t("rewards.configurePointsHelp")}</Text>
-      {tasksSorted.length === 0 ? (
-        <Text style={[styles.help, { marginTop: 8 }]}>{t("rewards.noTasks")}</Text>
-      ) : (
-        tasksSorted.map((task) => {
-          const child = childrenProfiles.find((c) => c.id === task.childId);
-          const current = pointsFor(task.id);
-          const draft =
-            pointsDraft[task.id] !== undefined
-              ? pointsDraft[task.id]
-              : current != null
-                ? String(current)
-                : "";
-          const childActive = child ? isRewardsActiveForChild(child.id) : false;
-          return (
-            <View key={task.id} style={[styles.taskRow, !childActive && styles.taskRowMuted]}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.taskTitle}>{task.title}</Text>
-                <Text style={styles.childMeta}>
-                  {child ? `${child.emoji} ${child.name}` : "—"} · {task.time}
-                  {!childActive ? ` · ${t("rewards.deactivated")}` : ""}
-                </Text>
-              </View>
-              {current != null && childActive ? (
-                <View style={[rewardsStyles.pointsPill, { marginRight: 4 }]}>
-                  <Text style={rewardsStyles.pointsPillText}>+{current} ⭐</Text>
+        <View style={rewardsStyles.infoBanner}>
+          <View style={rewardsStyles.infoBannerIcon}>
+            <Text style={rewardsStyles.infoBannerIconText}>i</Text>
+          </View>
+          <Text style={rewardsStyles.infoBannerText}>{t("rewards.parentOnlyActivate")}</Text>
+        </View>
+
+        {filterChips}
+
+        <Text style={styles.section}>{t("rewards.configurePoints")}</Text>
+        {tasksSorted.length === 0 ? (
+          <Text style={styles.help}>{t("rewards.noTasks")}</Text>
+        ) : (
+          tasksSorted.map((task) => {
+            const child = childrenProfiles.find((c) => c.id === task.childId);
+            const current = pointsFor(task.id);
+            const draft =
+              pointsDraft[task.id] !== undefined
+                ? pointsDraft[task.id]
+                : current != null
+                  ? String(current)
+                  : "";
+            const childActive = child ? isRewardsActiveForChild(child.id) : false;
+            return (
+              <View key={task.id} style={[styles.taskRow, !childActive && styles.taskRowMuted]}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.taskTitle}>{task.title}</Text>
+                  <Text style={styles.childMeta}>
+                    {child ? `${child.emoji} ${child.name}` : "—"} · {task.time}
+                    {!childActive ? ` · ${t("rewards.deactivated")}` : ""}
+                  </Text>
                 </View>
-              ) : null}
-              <TextInput
-                value={draft}
-                onChangeText={(v) => setPointsDraft((p) => ({ ...p, [task.id]: v }))}
-                keyboardType="number-pad"
-                style={styles.pointsInput}
-                placeholder="0"
-                placeholderTextColor={colors.textMuted}
-                editable={childActive}
-              />
-              <Pressable
-                onPress={() => void onSavePoints(task.id)}
-                style={styles.savePts}
-                disabled={saving || !childActive}
-              >
-                <Text style={styles.savePtsText}>{t("common.save")}</Text>
-              </Pressable>
-            </View>
-          );
-        })
-      )}
+                {current != null && childActive ? (
+                  <View style={[rewardsStyles.pointsPill, { marginRight: 4 }]}>
+                    <Text style={rewardsStyles.pointsPillText}>+{current} ⭐</Text>
+                  </View>
+                ) : null}
+                <TextInput
+                  value={draft}
+                  onChangeText={(v) => setPointsDraft((p) => ({ ...p, [task.id]: v }))}
+                  keyboardType="number-pad"
+                  style={styles.pointsInput}
+                  placeholder="0"
+                  placeholderTextColor={colors.textMuted}
+                  editable={childActive}
+                />
+                <Pressable
+                  onPress={() => void onSavePoints(task.id)}
+                  style={styles.savePts}
+                  disabled={saving || !childActive}
+                >
+                  <Text style={styles.savePtsText}>{t("common.save")}</Text>
+                </Pressable>
+              </View>
+            );
+          })
+        )}
 
-      <PrimaryButton
-        label={t("rewards.saveSettings")}
-        onPress={() => void onSaveAll()}
-        loading={saving}
-        style={styles.saveBtn}
-      />
-    </ScrollView>
+        {/* « À valider » hub below the fold — collapsed when empty */}
+        <Pressable
+          onPress={() => setPendingOpen((v) => !v)}
+          style={styles.pendingHeader}
+          accessibilityRole="button"
+        >
+          <Text style={styles.pendingTitle}>
+            {t("rewards.toValidate")}
+            {filteredPending.length > 0 ? ` (${filteredPending.length})` : ""}
+          </Text>
+          <Text style={styles.pendingChevron}>{pendingOpen ? "▾" : "▸"}</Text>
+        </Pressable>
+        {pendingOpen ? (
+          <View style={styles.pendingCard}>
+            {filteredPending.length === 0 ? (
+              <Text style={styles.help}>{t("rewards.toValidateEmpty")}</Text>
+            ) : (
+              filteredPending.map((item) => {
+                const child = getProfile(item.childId);
+                const unit = unitLabelFor(item.childId);
+                return (
+                  <View key={item.completionId} style={styles.pendingRow}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.taskTitle}>{item.taskTitle}</Text>
+                      <Text style={styles.childMeta}>
+                        {child ? `${child.emoji} ${child.name}` : "—"} · +{item.points} {unit}
+                      </Text>
+                    </View>
+                    <PrimaryButton
+                      label={t("rewards.validatePendingCta")}
+                      onPress={() => void onValidatePending(item)}
+                      loading={validatingId === item.completionId}
+                      style={styles.validateBtn}
+                    />
+                  </View>
+                );
+              })
+            )}
+          </View>
+        ) : null}
+
+        <View style={{ height: 72 }} />
+      </ScrollView>
+
+      <View style={styles.stickyBar}>
+        <PrimaryButton
+          label={t("rewards.saveSettings")}
+          onPress={() => void onSaveAll()}
+          loading={saving}
+          style={styles.saveBtn}
+        />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: { flex: 1, backgroundColor: colors.bg },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
   container: { ...rewardsStyles.screenParent },
-  title: { fontSize: 24, fontWeight: "800", color: colors.text },
-  sub: { color: colors.textMuted, marginTop: 4, marginBottom: 14 },
+  stickyBar: {
+    ...rewardsStyles.stickyBar,
+    paddingBottom: Platform.OS === "ios" ? 20 : 12,
+  },
+  section: {
+    fontWeight: "800",
+    fontSize: 16,
+    marginTop: 4,
+    marginBottom: 8,
+    color: colors.text,
+  },
+  help: { color: colors.textMuted, fontSize: 13, marginTop: 2, marginBottom: 6 },
+  pendingHeader: {
+    marginTop: 16,
+    marginBottom: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  pendingTitle: { fontWeight: "800", fontSize: 16, color: colors.text },
+  pendingChevron: { fontSize: 16, color: colors.textMuted, fontWeight: "700" },
   pendingCard: {
     backgroundColor: colors.card,
     borderRadius: rewardsUi.cardRadius,
-    padding: 14,
-    borderWidth: 2,
-    borderColor: colors.primary,
-    marginBottom: 16,
-    marginTop: 8,
+    padding: 12,
+    borderWidth: 0,
+    marginBottom: 8,
     ...rewardsUi.shadow,
   },
-  pendingTitle: { fontWeight: "800", fontSize: 17, color: colors.text, marginBottom: 8 },
   pendingRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -436,47 +481,44 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
   },
   validateBtn: { paddingHorizontal: 12, minWidth: 96 },
-  help: { color: colors.textMuted, fontSize: 13, marginTop: 2 },
-  section: { fontWeight: "800", fontSize: 16, marginTop: 8, marginBottom: 8, color: colors.text },
   childCard: {
     backgroundColor: colors.card,
     borderRadius: rewardsUi.cardRadius,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 14,
-    marginBottom: 12,
+    borderWidth: 0,
+    padding: 12,
+    marginBottom: 10,
     ...rewardsUi.shadow,
   },
   childHeader: { flexDirection: "row", alignItems: "center", gap: 10 },
-  childIdentity: { flexDirection: "row", alignItems: "center", gap: 12, flex: 1 },
+  childIdentity: { flexDirection: "row", alignItems: "center", gap: 10, flex: 1 },
   childName: { fontWeight: "800", color: colors.text, fontSize: 16 },
-  statusLabel: { fontWeight: "700", fontSize: 13, marginTop: 2 },
+  statusLabel: { fontWeight: "700", fontSize: 13, marginTop: 1 },
   statusOn: { color: colors.success },
   statusOff: { color: colors.textMuted },
-  childMeta: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
-  unitRow: { marginTop: 12 },
+  childMeta: { color: colors.textMuted, fontSize: 12, marginTop: 1 },
+  unitRow: { marginTop: 10 },
   unitRowDisabled: { opacity: 0.4 },
-  chipsScroll: { marginBottom: 8, flexGrow: 0 },
+  chipsScroll: { marginBottom: 10, flexGrow: 0 },
   taskRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
     backgroundColor: colors.card,
     borderRadius: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 12,
+    borderWidth: 0,
+    padding: 10,
     marginTop: 8,
+    ...rewardsUi.shadow,
   },
   taskRowMuted: { opacity: 0.55 },
   taskTitle: { fontWeight: "700", color: colors.text },
   pointsInput: {
-    width: 56,
+    width: 52,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 10,
     paddingHorizontal: 8,
-    paddingVertical: 8,
+    paddingVertical: 7,
     textAlign: "center",
     backgroundColor: colors.bg,
     color: colors.text,
@@ -484,10 +526,10 @@ const styles = StyleSheet.create({
   },
   savePts: {
     paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingVertical: 7,
     borderRadius: 10,
     backgroundColor: colors.primarySoft,
   },
   savePtsText: { fontWeight: "700", color: colors.primary, fontSize: 12 },
-  saveBtn: { marginTop: 20, borderRadius: 16 },
+  saveBtn: { borderRadius: 16 },
 });

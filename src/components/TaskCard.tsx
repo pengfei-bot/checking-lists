@@ -18,6 +18,8 @@ interface Props {
   pointsLabel?: string | null;
   onPress?: () => void;
   rightAccessory?: React.ReactNode;
+  /** Compact kid-home rows (M3). */
+  compact?: boolean;
 }
 
 export function TaskCard({
@@ -29,6 +31,7 @@ export function TaskCard({
   pointsLabel,
   onPress,
   rightAccessory,
+  compact,
 }: Props) {
   const { t, i18n } = useTranslation();
   const doneTime = done && completedAt ? formatCompletionTime(completedAt, i18n.language) : null;
@@ -49,15 +52,20 @@ export function TaskCard({
       onPress={onPress}
       style={({ pressed }) => [
         styles.card,
+        compact && styles.cardCompact,
         done && styles.cardDone,
         pressed && { opacity: 0.9 },
       ]}
     >
       <View style={styles.left}>
-        <Text style={[styles.time, done && styles.muted]}>{task.time}</Text>
+        <Text style={[styles.time, compact && styles.timeCompact, done && styles.muted]}>
+          {task.time}
+        </Text>
         <View style={{ flex: 1 }}>
           <View style={styles.titleRow}>
-            <Text style={[styles.title, done && styles.titleDone]}>{task.title}</Text>
+            <Text style={[styles.title, compact && styles.titleCompact, done && styles.titleDone]}>
+              {task.title}
+            </Text>
             {pointsLabel ? (
               <View style={styles.pointsBadge}>
                 <Text style={styles.pointsBadgeText}>{pointsLabel}</Text>
@@ -74,7 +82,7 @@ export function TaskCard({
               </Text>
             ) : null}
           </View>
-          <Text style={styles.meta}>
+          <Text style={[styles.meta, compact && styles.metaCompact]}>
             {childName ? `${childName} · ` : ""}
             {recurrenceLabel(task.recurrence, task.intervalWeeks)}
             {task.reminderEnabled ? " · 🔔" : ""}
@@ -92,28 +100,34 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.card,
     borderRadius: rewardsUi.cardRadius,
-    padding: 14,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: colors.border,
+    padding: 12,
+    marginBottom: 8,
+    borderWidth: 0,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 10,
+    gap: 8,
+    ...rewardsUi.shadow,
+  },
+  cardCompact: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    marginBottom: 8,
   },
   cardDone: {
     backgroundColor: colors.successSoft,
-    borderColor: "#B7E4C7",
   },
-  left: { flexDirection: "row", alignItems: "center", gap: 12, flex: 1 },
+  left: { flexDirection: "row", alignItems: "center", gap: 10, flex: 1 },
   time: {
     fontSize: 15,
     fontWeight: "700",
     color: colors.primary,
     minWidth: 48,
   },
+  timeCompact: { fontSize: 14, minWidth: 42 },
   titleRow: { flexDirection: "row", alignItems: "center", gap: 6, flexWrap: "wrap" },
   title: { fontSize: 16, fontWeight: "700", color: colors.text, flexShrink: 1 },
+  titleCompact: { fontSize: 15 },
   titleDone: { textDecorationLine: "line-through", color: colors.textMuted },
   pointsBadge: {
     ...rewardsStyles.pointsPill,
@@ -123,5 +137,6 @@ const styles = StyleSheet.create({
   },
   photoPill: { fontSize: 14 },
   meta: { marginTop: 2, fontSize: 12, color: colors.textMuted },
+  metaCompact: { fontSize: 11 },
   muted: { color: colors.textMuted },
 });

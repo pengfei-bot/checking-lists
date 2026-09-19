@@ -11,7 +11,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
-import { rewardsUi } from "../theme/rewardsUi";
+import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { TaskCard } from "../components/TaskCard";
 import { PrimaryButton } from "../components/PrimaryButton";
@@ -102,12 +102,12 @@ export function ChildHomeScreen({ navigation }: Props) {
             accessibilityRole="button"
             accessibilityLabel={t("rewards.soldeChip", { amount: balance, unit: unitLabel })}
           >
-            <View style={styles.soldeStarCircle}>
-              <Text style={styles.soldeStar}>⭐</Text>
+            <View style={rewardsStyles.soldeStarCircle}>
+              <Text style={rewardsStyles.soldeStar}>⭐</Text>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.soldeLabel}>{t("rewards.soldeLabel")}</Text>
-              <Text style={styles.soldeValue}>
+              <Text style={rewardsStyles.soldeLabel}>{t("rewards.soldeLabel")}</Text>
+              <Text style={rewardsStyles.soldeValue}>
                 {balance} <Text style={styles.soldeUnit}>{unitLabel}</Text>
               </Text>
             </View>
@@ -181,24 +181,26 @@ export function ChildHomeScreen({ navigation }: Props) {
           tasks.map((task) => {
             const done = !!completionFor(task.id);
             const pts = rewardsActive ? pointsFor(task.id) : null;
+            const showCamera = !done;
             return (
               <TaskCard
                 key={task.id}
                 task={task}
                 done={done}
+                compact
                 hasPhoto={!!completionFor(task.id)?.photoUri}
-                pointsLabel={pts != null ? `+${pts} ${unitLabel}` : null}
+                pointsLabel={pts != null ? `+${pts} ${unitLabel === "€" ? "€" : "⭐"}` : null}
                 onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                 rightAccessory={
                   <View style={styles.actions}>
                     <Pressable
-                      style={styles.miniBtn}
+                      style={[styles.miniBtn, done && styles.miniBtnDone]}
                       onPress={() => void quickDone(task.id)}
                       accessibilityLabel={done ? t("childHome.unmarkA11y") : t("childHome.markDoneA11y")}
                     >
-                      <Text style={styles.miniText}>{done ? "↩️" : "○"}</Text>
+                      <Text style={styles.miniText}>{done ? "✓" : "○"}</Text>
                     </Pressable>
-                    {!done && (
+                    {showCamera ? (
                       <Pressable
                         style={styles.miniBtn}
                         onPress={() => void doneWithPhoto(task.id)}
@@ -210,7 +212,7 @@ export function ChildHomeScreen({ navigation }: Props) {
                       >
                         <Text style={styles.miniText}>📷</Text>
                       </Pressable>
-                    )}
+                    ) : null}
                   </View>
                 }
               />
@@ -218,16 +220,6 @@ export function ChildHomeScreen({ navigation }: Props) {
           })
         )}
 
-        {rewardsActive ? (
-          <Pressable
-            style={styles.rewardsHistoryChip}
-            onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
-            accessibilityRole="button"
-            accessibilityLabel={t("rewards.myHistory")}
-          >
-            <Text style={styles.rewardsHistoryChipText}>⭐ {t("rewards.myHistory")}</Text>
-          </Pressable>
-        ) : null}
         <Pressable
           style={styles.historyChip}
           onPress={() => navigation.navigate("ChildHistory")}
@@ -287,49 +279,31 @@ export function ChildHomeScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.kidBg },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
-  container: { padding: 16, paddingBottom: 40 },
-  hero: { borderRadius: 20, padding: 18, marginBottom: 12 },
+  container: { padding: 14, paddingBottom: 36 },
+  hero: { borderRadius: 18, padding: 14, marginBottom: 10 },
   heroTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  heroEmoji: { fontSize: 40 },
+  heroEmoji: { fontSize: 36 },
   moreBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: "#ffffffaa",
     alignItems: "center",
     justifyContent: "center",
   },
-  moreBtnText: { fontSize: 22, fontWeight: "800", color: colors.text },
-  heroTitle: { fontSize: 24, fontWeight: "800", color: colors.text, marginTop: 4 },
+  moreBtnText: { fontSize: 20, fontWeight: "800", color: colors.text },
+  heroTitle: { fontSize: 22, fontWeight: "800", color: colors.text, marginTop: 2 },
   heroSub: { color: colors.textMuted, textTransform: "capitalize", marginTop: 2 },
-  progress: { marginTop: 10, fontWeight: "700", color: colors.primary },
+  progress: { marginTop: 8, fontWeight: "700", color: colors.primary },
   soldeCard: {
-    backgroundColor: colors.card,
-    borderRadius: 16,
-    padding: 14,
-    marginBottom: 16,
-    borderWidth: 1.5,
-    borderColor: "#D6E0FF",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
+    ...rewardsStyles.soldeCard,
+    marginBottom: 12,
   },
-  soldeStarCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: colors.primarySoft,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  soldeStar: { fontSize: 26 },
-  soldeLabel: { fontSize: 13, fontWeight: "700", color: colors.textMuted },
-  soldeValue: { fontSize: 26, fontWeight: "800", color: colors.primary, marginTop: 2 },
-  soldeUnit: { fontSize: 18, fontWeight: "800", color: colors.primary },
+  soldeUnit: { fontSize: 16, fontWeight: "800", color: colors.primary },
   historyCtaMini: {
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    minHeight: 44,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    minHeight: 40,
     justifyContent: "center",
     borderRadius: 999,
     borderWidth: 1.5,
@@ -338,38 +312,26 @@ const styles = StyleSheet.create({
   },
   historyCtaMiniText: { fontWeight: "800", color: colors.primary, fontSize: 12 },
   empty: { textAlign: "center", color: colors.textMuted, marginVertical: 24, fontSize: 16 },
-  actions: { flexDirection: "row", alignItems: "center", gap: 6 },
+  actions: { flexDirection: "row", alignItems: "center", gap: 4 },
   miniBtn: {
-    minWidth: 48,
-    height: 48,
-    paddingHorizontal: 8,
-    borderRadius: 14,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     backgroundColor: colors.primarySoft,
     alignItems: "center",
     justifyContent: "center",
   },
-  miniText: { fontSize: 20 },
-  rewardsHistoryChip: {
-    marginTop: 16,
-    alignSelf: "center",
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    minHeight: 48,
-    borderRadius: 999,
-    backgroundColor: colors.primarySoft,
-    borderWidth: 0,
-    justifyContent: "center",
-  },
-  rewardsHistoryChipText: { fontWeight: "800", color: colors.primary, fontSize: 15 },
+  miniBtnDone: { backgroundColor: colors.successSoft },
+  miniText: { fontSize: 18, fontWeight: "700", color: colors.primary },
   historyChip: {
-    marginTop: 12,
+    marginTop: 14,
     alignSelf: "center",
-    paddingHorizontal: 18,
-    paddingVertical: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderRadius: 999,
     backgroundColor: colors.primarySoft,
   },
-  historyChipText: { fontWeight: "800", color: colors.primary, fontSize: 15 },
+  historyChipText: { fontWeight: "800", color: colors.primary, fontSize: 14 },
   menuBackdrop: {
     flex: 1,
     backgroundColor: "#00000066",
