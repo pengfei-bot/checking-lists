@@ -13,19 +13,19 @@ import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
-import { TaskCard } from "../components/TaskCard";
 import { PrimaryButton } from "../components/PrimaryButton";
-import { formatLocalizedDate, todayISO } from "../utils/dates";
+import { todayISO } from "../utils/dates";
 import { unitShortKey } from "../utils/rewards";
 import { notifyUser } from "../utils/feedback";
 import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
 import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
 import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
+import { ChildRewardsBottomNav } from "../components/RewardsBottomNav";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChildHome">;
 
 export function ChildHomeScreen({ navigation }: Props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const {
     currentProfile,
     tasksForChildToday,
@@ -60,66 +60,13 @@ export function ChildHomeScreen({ navigation }: Props) {
 
   const tasks = tasksForChildToday(currentProfile.id);
   const doneCount = tasks.filter((task) => completionFor(task.id)).length;
-  const progress = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
   const balance = balanceFor(currentProfile.id);
   const unitLabel = t(unitShortKey(unitKindFor(currentProfile.id)));
   const rewardsActive = isRewardsActiveForChild(currentProfile.id);
-
-  const header = useMemo(
-    () => (
-      <>
-        <View
-          style={[
-            styles.hero,
-            {
-              backgroundColor: rewardsActive
-                ? rewardsUi.peach
-                : currentProfile.color + "22",
-            },
-          ]}
-        >
-          <View style={styles.heroTop}>
-            <Text style={styles.heroEmoji}>{currentProfile.emoji}</Text>
-            <Pressable
-              onPress={() => setMenuOpen(true)}
-              style={styles.moreBtn}
-              accessibilityRole="button"
-              accessibilityLabel={t("childHome.more")}
-            >
-              <Text style={styles.moreBtnText}>⋯</Text>
-            </Pressable>
-          </View>
-          <Text style={styles.heroTitle}>{t("childHome.hello", { name: currentProfile.name })}</Text>
-          <Text style={styles.heroSub}>{formatLocalizedDate(todayISO(), i18n.language)}</Text>
-          <Text style={styles.progress}>
-            {t("childHome.progress", { done: doneCount, total: tasks.length, percent: progress })}
-          </Text>
-        </View>
-        {rewardsActive ? (
-          <Pressable
-            onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
-            style={styles.soldeCard}
-            accessibilityRole="button"
-            accessibilityLabel={t("rewards.soldeChip", { amount: balance, unit: unitLabel })}
-          >
-            <View style={rewardsStyles.soldeStarCircle}>
-              <Text style={rewardsStyles.soldeStar}>⭐</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={rewardsStyles.soldeLabel}>{t("rewards.soldeLabel")}</Text>
-              <Text style={rewardsStyles.soldeValue}>
-                {balance} <Text style={styles.soldeUnit}>{unitLabel}</Text>
-              </Text>
-            </View>
-            <View style={styles.historyCtaMini}>
-              <Text style={styles.historyCtaMiniText}>{t("rewards.myHistory")} ›</Text>
-            </View>
-          </Pressable>
-        ) : null}
-      </>
-    ),
-    [currentProfile, doneCount, tasks.length, progress, balance, rewardsActive, unitLabel, t, i18n.language, navigation]
-  );
+  const possibleStars = useMemo(() => {
+    if (!rewardsActive) return 0;
+    return tasks.reduce((sum, task) => sum + (pointsFor(task.id) ?? 0), 0);
+  }, [tasks, rewardsActive, pointsFor]);
 
   const quickDone = async (taskId: string) => {
     const existing = completionFor(taskId);
@@ -173,60 +120,141 @@ export function ChildHomeScreen({ navigation }: Props) {
 
   return (
     <View style={styles.root}>
-      <ScrollView contentContainerStyle={styles.container}>
-        {header}
-        {tasks.length === 0 ? (
-          <Text style={styles.empty}>{t("childHome.empty")}</Text>
-        ) : (
-          tasks.map((task) => {
-            const done = !!completionFor(task.id);
-            const pts = rewardsActive ? pointsFor(task.id) : null;
-            const showCamera = !done;
-            return (
-              <TaskCard
-                key={task.id}
-                task={task}
-                done={done}
-                compact
-                hasPhoto={!!completionFor(task.id)?.photoUri}
-                pointsLabel={pts != null ? `+${pts} ${unitLabel === "€" ? "€" : "⭐"}` : null}
-                onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
-                rightAccessory={
-                  <View style={styles.actions}>
-                    <Pressable
-                      style={[styles.miniBtn, done && styles.miniBtnDone]}
-                      onPress={() => void quickDone(task.id)}
-                      accessibilityLabel={done ? t("childHome.unmarkA11y") : t("childHome.markDoneA11y")}
-                    >
-                      <Text style={styles.miniText}>{done ? "✓" : "○"}</Text>
-                    </Pressable>
-                    {showCamera ? (
-                      <Pressable
-                        style={styles.miniBtn}
-                        onPress={() => void doneWithPhoto(task.id)}
-                        accessibilityLabel={
-                          task.photoRequired
-                            ? t("photoRequired.addToValidate")
-                            : t("taskDetail.childDonePhoto")
-                        }
-                      >
-                        <Text style={styles.miniText}>📷</Text>
-                      </Pressable>
-                    ) : null}
-                  </View>
-                }
-              />
-            );
-          })
-        )}
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        {/* Peach header band — M3 */}
+        <View style={styles.peachHeader}>
+          <View style={styles.headerRow}>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <Text style={styles.hello}>
+                {t("childHome.hello", { name: currentProfile.name })} {currentProfile.emoji}
+              </Text>
+              <Text style={styles.ready}>{t("childHome.readyLine")}</Text>
+            </View>
+            <View style={styles.mascotWrap}>
+              <Text style={styles.mascot}>{currentProfile.emoji || "🦁"}</Text>
+              <Pressable
+                onPress={() => setMenuOpen(true)}
+                style={styles.moreBtn}
+                accessibilityRole="button"
+                accessibilityLabel={t("childHome.more")}
+              >
+                <Text style={styles.moreBtnText}>⋯</Text>
+              </Pressable>
+            </View>
+          </View>
 
-        <Pressable
-          style={styles.historyChip}
-          onPress={() => navigation.navigate("ChildHistory")}
-        >
-          <Text style={styles.historyChipText}>📅 {t("childHome.history")}</Text>
-        </Pressable>
+          {rewardsActive ? (
+            <Pressable
+              onPress={() => navigation.navigate("RewardsChild", { childId: currentProfile.id })}
+              style={styles.soldeCard}
+              accessibilityRole="button"
+              accessibilityLabel={t("rewards.soldeChip", { amount: balance, unit: unitLabel })}
+            >
+              <View style={rewardsStyles.soldeStarCircle}>
+                <Text style={rewardsStyles.soldeStar}>⭐</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={rewardsStyles.soldeLabel}>{t("rewards.soldeLabel")}</Text>
+                <Text style={rewardsStyles.soldeValue}>
+                  {balance} <Text style={styles.soldeStarInline}>⭐</Text>
+                </Text>
+              </View>
+              <Text style={styles.piggy} accessibilityLabel="piggy">
+                🐷
+              </Text>
+            </Pressable>
+          ) : null}
+        </View>
+
+        {/* White body sheet */}
+        <View style={styles.bodySheet}>
+          <View style={styles.sectionRow}>
+            <Text style={styles.sectionTitle}>
+              {currentProfile.emoji} {t("childHome.tasksToday")}
+            </Text>
+            {rewardsActive ? (
+              <Text style={styles.sectionMeta}>
+                {t("childHome.tasksPossible", {
+                  count: tasks.length,
+                  stars: possibleStars,
+                })}
+              </Text>
+            ) : (
+              <Text style={styles.sectionMeta}>
+                {doneCount}/{tasks.length}
+              </Text>
+            )}
+          </View>
+
+          {tasks.length === 0 ? (
+            <Text style={styles.empty}>{t("childHome.empty")}</Text>
+          ) : (
+            tasks.map((task) => {
+              const done = !!completionFor(task.id);
+              const pts = rewardsActive ? pointsFor(task.id) : null;
+              return (
+                <View key={task.id} style={[styles.taskRow, done && styles.taskRowDone]}>
+                  <Pressable
+                    style={[styles.checkbox, done && styles.checkboxDone]}
+                    onPress={() => void quickDone(task.id)}
+                    accessibilityLabel={done ? t("childHome.unmarkA11y") : t("childHome.markDoneA11y")}
+                  >
+                    <Text style={[styles.checkboxText, done && styles.checkboxTextDone]}>
+                      {done ? "✓" : ""}
+                    </Text>
+                  </Pressable>
+
+                  <Pressable
+                    style={styles.taskMain}
+                    onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
+                  >
+                    <Text style={[styles.taskTitle, done && styles.taskTitleDone]} numberOfLines={2}>
+                      {task.title}
+                    </Text>
+                    <Text style={styles.taskMeta}>🕒 {task.time}</Text>
+                  </Pressable>
+
+                  {task.photoRequired ? (
+                    <Pressable
+                      style={styles.camBtn}
+                      onPress={() => void doneWithPhoto(task.id)}
+                      accessibilityLabel={
+                        task.photoRequired
+                          ? t("photoRequired.addToValidate")
+                          : t("taskDetail.childDonePhoto")
+                      }
+                    >
+                      <Text style={styles.camText}>{completionFor(task.id)?.photoUri ? "✓📷" : "📷"}</Text>
+                    </Pressable>
+                  ) : null}
+
+                  {pts != null ? (
+                    <View style={rewardsStyles.pointsPill}>
+                      <Text style={rewardsStyles.pointsPillText}>
+                        +{pts} {unitLabel === "€" ? "€" : "⭐"}
+                      </Text>
+                    </View>
+                  ) : null}
+                </View>
+              );
+            })
+          )}
+
+          <Pressable
+            style={styles.historyChip}
+            onPress={() => navigation.navigate("ChildHistory")}
+          >
+            <Text style={styles.historyChipText}>📅 {t("childHome.history")}</Text>
+          </Pressable>
+        </View>
       </ScrollView>
+
+      <ChildRewardsBottomNav
+        navigation={navigation}
+        active="home"
+        childId={currentProfile.id}
+        rewardsActive={rewardsActive}
+      />
 
       <Modal visible={menuOpen} transparent animationType="fade" onRequestClose={() => setMenuOpen(false)}>
         <Pressable style={styles.menuBackdrop} onPress={() => setMenuOpen(false)}>
@@ -277,61 +305,122 @@ export function ChildHomeScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.kidBg },
+  root: { flex: 1, backgroundColor: rewardsUi.cream },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
-  container: { padding: 14, paddingBottom: 36 },
-  hero: { borderRadius: 18, padding: 14, marginBottom: 10 },
-  heroTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  heroEmoji: { fontSize: 36 },
+  scroll: { paddingBottom: 8 },
+  peachHeader: {
+    backgroundColor: rewardsUi.peach,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 20,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
+  },
+  headerRow: { flexDirection: "row", alignItems: "flex-start" },
+  hello: {
+    fontSize: 26,
+    fontWeight: "800",
+    color: rewardsUi.navy,
+    lineHeight: 32,
+  },
+  ready: {
+    marginTop: 6,
+    fontSize: 14,
+    fontWeight: "600",
+    color: rewardsUi.navy,
+    opacity: 0.85,
+  },
+  mascotWrap: { alignItems: "flex-end", gap: 6 },
+  mascot: { fontSize: 52, lineHeight: 56 },
   moreBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#ffffffaa",
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#ffffffcc",
     alignItems: "center",
     justifyContent: "center",
   },
-  moreBtnText: { fontSize: 20, fontWeight: "800", color: colors.text },
-  heroTitle: { fontSize: 22, fontWeight: "800", color: colors.text, marginTop: 2 },
-  heroSub: { color: colors.textMuted, textTransform: "capitalize", marginTop: 2 },
-  progress: { marginTop: 8, fontWeight: "700", color: colors.primary },
+  moreBtnText: { fontSize: 18, fontWeight: "800", color: rewardsUi.navy },
   soldeCard: {
     ...rewardsStyles.soldeCard,
-    marginBottom: 12,
+    marginTop: 14,
   },
-  soldeUnit: { fontSize: 16, fontWeight: "800", color: colors.primary },
-  historyCtaMini: {
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    minHeight: 40,
-    justifyContent: "center",
-    borderRadius: 999,
-    borderWidth: 1.5,
-    borderColor: colors.primary,
+  soldeStarInline: { fontSize: 18 },
+  piggy: { fontSize: 40, marginRight: 2 },
+  bodySheet: {
     backgroundColor: "#fff",
+    marginTop: -8,
+    marginHorizontal: 0,
+    paddingHorizontal: 14,
+    paddingTop: 18,
+    paddingBottom: 20,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    minHeight: 320,
   },
-  historyCtaMiniText: { fontWeight: "800", color: colors.primary, fontSize: 12 },
+  sectionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+    gap: 8,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "800",
+    color: rewardsUi.navy,
+    flexShrink: 1,
+  },
+  sectionMeta: { fontSize: 12, fontWeight: "600", color: rewardsUi.navyMuted },
   empty: { textAlign: "center", color: colors.textMuted, marginVertical: 24, fontSize: 16 },
-  actions: { flexDirection: "row", alignItems: "center", gap: 4 },
-  miniBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: colors.primarySoft,
+  taskRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: "#fff",
+    borderRadius: rewardsUi.rowRadius,
+    borderWidth: 1,
+    borderColor: "#EEF0F4",
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    marginBottom: 10,
+    ...rewardsUi.shadow,
+  },
+  taskRowDone: { backgroundColor: colors.successSoft, borderColor: "#C8E6D4" },
+  checkbox: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#fff",
   },
-  miniBtnDone: { backgroundColor: colors.successSoft },
-  miniText: { fontSize: 18, fontWeight: "700", color: colors.primary },
+  checkboxDone: {
+    backgroundColor: colors.success,
+    borderColor: colors.success,
+  },
+  checkboxText: { fontSize: 14, fontWeight: "800", color: colors.primary },
+  checkboxTextDone: { color: "#fff" },
+  taskMain: { flex: 1, minWidth: 0 },
+  taskTitle: { fontSize: 15, fontWeight: "800", color: rewardsUi.navy },
+  taskTitleDone: { textDecorationLine: "line-through", color: colors.textMuted },
+  taskMeta: { marginTop: 3, fontSize: 12, color: colors.textMuted, fontWeight: "600" },
+  camBtn: {
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+  },
+  camText: { fontSize: 18 },
   historyChip: {
-    marginTop: 14,
+    marginTop: 10,
     alignSelf: "center",
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 999,
-    backgroundColor: colors.primarySoft,
+    backgroundColor: rewardsUi.peachSoft,
   },
-  historyChipText: { fontWeight: "800", color: colors.primary, fontSize: 14 },
+  historyChipText: { fontWeight: "800", color: rewardsUi.navy, fontSize: 14 },
   menuBackdrop: {
     flex: 1,
     backgroundColor: "#00000066",

@@ -162,7 +162,14 @@
     "addToCalendar": "Cuir mo chuid cúraimí leis an bhféilire",
     "more": "More",
     "markDoneA11y": "Mark as done",
-    "unmarkA11y": "Undo"
+    "unmarkA11y": "Undo",
+    "readyLine": "Ready to do great things today? ⭐",
+    "tasksToday": "Today's tasks",
+    "tasksPossible": "{{count}} tasks · {{stars}} ⭐ possible",
+    "navHome": "Home",
+    "navTasks": "Tasks",
+    "navRewards": "Rewards",
+    "navHistory": "History"
   },
   "childHistory": {
     "title": "Stair na Staire",
@@ -196,7 +203,11 @@
     "edit": "Edit",
     "todayFor": "Inniu · {{name}}",
     "rewards": "Rewards",
-    "openRewards": "⭐ Open Rewards"
+    "openRewards": "⭐ Open Rewards",
+    "navDashboard": "Home",
+    "navTasks": "Tasks",
+    "navRewards": "Rewards",
+    "navProfile": "Profile"
   },
   "calendar": {
     "legend": "Finscéal",
@@ -497,6 +508,8 @@
     "disabledHintChild": "Rewards are not enabled for you yet. Ask a parent.",
     "noChildrenHelp": "Add a child (or open the demo) to configure rewards.",
     "soldeLabel": "Balance",
-    "currentBalanceLabel": "Current balance"
+    "currentBalanceLabel": "Current balance",
+    "validatedBy": "Validated by {{name}}",
+    "validatedByParent": "Validated by a parent"
   }
 }

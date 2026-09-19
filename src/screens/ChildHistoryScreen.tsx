@@ -11,6 +11,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
+import { rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { dateLocaleTag } from "../i18n";
@@ -26,12 +27,13 @@ import {
   statusColor,
   statusEmoji,
 } from "../utils/calendarStatus";
+import { ChildRewardsBottomNav } from "../components/RewardsBottomNav";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChildHistory">;
 
 export function ChildHistoryScreen({ navigation }: Props) {
   const { t, i18n } = useTranslation();
-  const { currentProfile, state, setCurrentProfileId } = useApp();
+  const { currentProfile, state, setCurrentProfileId, isRewardsActiveForChild } = useApp();
   const { width } = useWindowDimensions();
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
@@ -251,12 +253,20 @@ export function ChildHistoryScreen({ navigation }: Props) {
           style={{ marginTop: 16, alignSelf: "stretch" }}
         />
       </ScrollView>
+      {childId ? (
+        <ChildRewardsBottomNav
+          navigation={navigation}
+          active="history"
+          childId={childId}
+          rewardsActive={isRewardsActiveForChild(childId)}
+        />
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.kidBg },
+  root: { flex: 1, backgroundColor: rewardsUi.cream },
   center: {
     flex: 1,
     alignItems: "center",

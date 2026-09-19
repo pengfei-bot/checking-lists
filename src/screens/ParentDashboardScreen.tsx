@@ -27,6 +27,7 @@ import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { unitShortKey } from "../utils/rewards";
 import { ensureNotificationPermissions, notificationsSupported } from "../services/notifications";
+import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParentDashboard">;
 
@@ -215,34 +216,30 @@ export function ParentDashboardScreen({ navigation }: Props) {
           ))}
         </ScrollView>
 
-        {visibleStats.length > 0 ? (
+        {/* M2: tasks-first — only show cream selected-child card when filtered */}
+        {selectedChild ? (
           <View style={styles.statsRow}>
-            {visibleStats.map(({ child, total, done }) => {
-              const isSelected = filterChildId === child.id;
-              return (
-                <Pressable
-                  key={child.id}
-                  onPress={() => setFilterChildId(isSelected ? "all" : child.id)}
-                  style={({ pressed }) => [
-                    styles.statCard,
-                    isSelected ? styles.statCardSelected : null,
-                    filterChildId === "all" ? styles.statCardCompact : null,
-                    pressed ? { opacity: 0.92 } : null,
-                    // RN-web focus ring can look like a coral outline
-                    { outlineWidth: 0, outlineStyle: "solid", outlineColor: "transparent" } as object,
-                  ]}
-                >
-                  <Text style={styles.statEmoji}>{child.emoji}</Text>
-                  <Text style={styles.statName} numberOfLines={1}>
-                    {child.name}
-                  </Text>
-                  <Text style={styles.statValue}>
-                    {done}/{total}
-                  </Text>
-                  <Text style={styles.statLabel}>{t("common.done")}</Text>
-                </Pressable>
-              );
-            })}
+            {visibleStats.map(({ child, total, done }) => (
+              <Pressable
+                key={child.id}
+                onPress={() => setFilterChildId("all")}
+                style={({ pressed }) => [
+                  styles.statCard,
+                  styles.statCardSelected,
+                  pressed ? { opacity: 0.92 } : null,
+                  { outlineWidth: 0, outlineStyle: "solid", outlineColor: "transparent" } as object,
+                ]}
+              >
+                <Text style={styles.statEmoji}>{child.emoji}</Text>
+                <Text style={styles.statName} numberOfLines={1}>
+                  {child.name}
+                </Text>
+                <Text style={styles.statValue}>
+                  {done}/{total}
+                </Text>
+                <Text style={styles.statLabel}>{t("common.done")}</Text>
+              </Pressable>
+            ))}
           </View>
         ) : null}
 
@@ -298,38 +295,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
           )}
         </View>
 
-        {selectedChild && isRewardsActiveForChild(selectedChild.id) ? (
-          <Pressable
-            onPress={() => navigation.navigate("RewardsChild", { childId: selectedChild.id })}
-            style={styles.balanceCard}
-            accessibilityRole="button"
-            accessibilityLabel={t("parentDash.openRewards")}
-          >
-            <View style={styles.balanceStarCircle}>
-              <Text style={{ fontSize: 26 }}>⭐</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.balanceLabel}>{t("rewards.soldeLabel")}</Text>
-              <Text style={styles.balanceValue}>
-                {balanceFor(selectedChild.id)}{" "}
-                <Text style={styles.balanceUnit}>
-                  {t(unitShortKey(unitKindFor(selectedChild.id)))}
-                </Text>
-              </Text>
-            </View>
-            <View style={styles.balanceCta}>
-              <Text style={styles.balanceCtaText}>{t("parentDash.rewards")} ›</Text>
-              {pendingEarnCount > 0 ? (
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>
-                    {pendingEarnCount > 99 ? "99+" : String(pendingEarnCount)}
-                  </Text>
-                </View>
-              ) : null}
-            </View>
-          </Pressable>
-        ) : null}
-
         <Text style={styles.section}>{todayTitle}</Text>
         {todayTasks.length === 0 ? (
           <View style={styles.emptyBox}>
@@ -350,9 +315,10 @@ export function ParentDashboardScreen({ navigation }: Props) {
                   childName={child?.name}
                   pointsLabel={
                     isRewardsActiveForChild(task.childId) && pointsFor(task.id) != null
-                      ? `+${pointsFor(task.id)} ${t(unitShortKey(unitKindFor(task.childId)))}`
+                      ? `+${pointsFor(task.id)} ${unitKindFor(task.childId) === "money" ? "€" : "⭐"}`
                       : null
                   }
+                  iconEmoji={undefined}
                   onPress={() => navigation.navigate("TaskDetail", { taskId: task.id, date: todayISO() })}
                   rightAccessory={
                     <Pressable
@@ -391,6 +357,39 @@ export function ParentDashboardScreen({ navigation }: Props) {
             );
           })
         )}
+
+        {selectedChild && isRewardsActiveForChild(selectedChild.id) ? (
+          <Pressable
+            onPress={() => navigation.navigate("RewardsChild", { childId: selectedChild.id })}
+            style={styles.balanceCard}
+            accessibilityRole="button"
+            accessibilityLabel={t("parentDash.openRewards")}
+          >
+            <View style={styles.balanceStarCircle}>
+              <Text style={{ fontSize: 26 }}>⭐</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.balanceLabel}>{t("rewards.soldeLabel")}</Text>
+              <Text style={styles.balanceValue}>
+                {balanceFor(selectedChild.id)}{" "}
+                <Text style={styles.balanceUnit}>
+                  {t(unitShortKey(unitKindFor(selectedChild.id)))}
+                </Text>
+              </Text>
+            </View>
+            <View style={styles.balanceCta}>
+              <Text style={styles.balanceCtaText}>{t("parentDash.rewards")} ›</Text>
+              {pendingEarnCount > 0 ? (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>
+                    {pendingEarnCount > 99 ? "99+" : String(pendingEarnCount)}
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+          </Pressable>
+        ) : null}
+
 
         <View style={styles.childrenHeader}>
           <Text style={[styles.section, { marginBottom: 0 }]}>{t("parentDash.children")}</Text>
@@ -490,6 +489,8 @@ export function ParentDashboardScreen({ navigation }: Props) {
           </View>
         </Pressable>
       </Modal>
+      <ParentRewardsBottomNav navigation={navigation} active="dashboard" />
+
       <PhotoLightbox
         uri={lightbox?.uri ?? null}
         visible={!!lightbox}
@@ -502,7 +503,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.parentBg },
+  root: { flex: 1, backgroundColor: rewardsUi.cream },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
   container: { padding: 14, paddingBottom: 20 },
   headerRow: {
@@ -666,7 +667,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 10,
     paddingBottom: Platform.OS === "ios" ? 20 : 12,
-    backgroundColor: colors.parentBg,
+    backgroundColor: rewardsUi.cream,
     borderTopWidth: 1,
     borderTopColor: colors.border,
   },

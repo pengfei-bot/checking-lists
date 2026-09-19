@@ -162,7 +162,14 @@
     "addToCalendar": "Tambahkan tugas saya ke kalender",
     "more": "More",
     "markDoneA11y": "Tandai sebagai selesai",
-    "unmarkA11y": "Buat asal"
+    "unmarkA11y": "Buat asal",
+    "readyLine": "Ready to do great things today? ⭐",
+    "tasksToday": "Today's tasks",
+    "tasksPossible": "{{count}} tasks · {{stars}} ⭐ possible",
+    "navHome": "Home",
+    "navTasks": "Tasks",
+    "navRewards": "Rewards",
+    "navHistory": "History"
   },
   "childHistory": {
     "title": "Sejarah",
@@ -196,7 +203,11 @@
     "edit": "Edit",
     "todayFor": "Hari Ini · {{name}}",
     "rewards": "Rewards",
-    "openRewards": "⭐ Open Rewards"
+    "openRewards": "⭐ Open Rewards",
+    "navDashboard": "Home",
+    "navTasks": "Tasks",
+    "navRewards": "Rewards",
+    "navProfile": "Profile"
   },
   "calendar": {
     "legend": "Legend",
@@ -497,6 +508,8 @@
     "disabledHintChild": "Rewards are not enabled for you yet. Ask a parent.",
     "noChildrenHelp": "Add a child (or open the demo) to configure rewards.",
     "soldeLabel": "Balance",
-    "currentBalanceLabel": "Current balance"
+    "currentBalanceLabel": "Current balance",
+    "validatedBy": "Validated by {{name}}",
+    "validatedByParent": "Validated by a parent"
   }
 }

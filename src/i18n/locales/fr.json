@@ -162,7 +162,14 @@
     "addToCalendar": "Ajouter mes tâches au calendrier",
     "more": "Plus",
     "markDoneA11y": "Marquer comme fait",
-    "unmarkA11y": "Annuler"
+    "unmarkA11y": "Annuler",
+    "readyLine": "Prêt à faire de super choses aujourd’hui ? ⭐",
+    "tasksToday": "Tes tâches d'aujourd'hui",
+    "tasksPossible": "{{count}} tâches · {{stars}} ⭐ possibles",
+    "navHome": "Accueil",
+    "navTasks": "Tâches",
+    "navRewards": "Récompenses",
+    "navHistory": "Historique"
   },
   "childHistory": {
     "title": "Historique",
@@ -196,7 +203,11 @@
     "edit": "Modifier",
     "todayFor": "Aujourd'hui · {{name}}",
     "rewards": "Récompenses",
-    "openRewards": "⭐ Ouvrir Récompenses"
+    "openRewards": "⭐ Ouvrir Récompenses",
+    "navDashboard": "Accueil",
+    "navTasks": "Tâches",
+    "navRewards": "Récompenses",
+    "navProfile": "Profil"
   },
   "calendar": {
     "legend": "Légende",
@@ -497,6 +508,8 @@
     "disabledHintChild": "Les récompenses ne sont pas encore activées pour toi. Demande à un parent.",
     "noChildrenHelp": "Ajoute un enfant (ou ouvre la démo) pour configurer les récompenses.",
     "soldeLabel": "Solde",
-    "currentBalanceLabel": "Solde actuel"
+    "currentBalanceLabel": "Solde actuel",
+    "validatedBy": "Validé par {{name}}",
+    "validatedByParent": "Validé par un parent"
   }
 }

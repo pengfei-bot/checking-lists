@@ -14,12 +14,23 @@ interface Props {
   /** Proof photo already received (Storage URL / local) */
   hasPhoto?: boolean;
   childName?: string;
-  /** e.g. "+5 ⭐" shown next to the title when rewards are active for the child */
+  /** e.g. "+5 ⭐" shown as large yellow pill on the right */
   pointsLabel?: string | null;
   onPress?: () => void;
   rightAccessory?: React.ReactNode;
   /** Compact kid-home rows (M3). */
   compact?: boolean;
+  /** Optional left emoji icon circle (M2 mockup). */
+  iconEmoji?: string | null;
+}
+
+function defaultIcon(title: string): string {
+  const t = title.toLowerCase();
+  if (t.includes("dent") || t.includes("brush") || t.includes("tooth")) return "🪥";
+  if (t.includes("devoir") || t.includes("homework") || t.includes("lire") || t.includes("read")) return "📚";
+  if (t.includes("chambre") || t.includes("ranger") || t.includes("room")) return "🧹";
+  if (t.includes("poisson") || t.includes("fish") || t.includes("manger")) return "🐟";
+  return "✨";
 }
 
 export function TaskCard({
@@ -32,6 +43,7 @@ export function TaskCard({
   onPress,
   rightAccessory,
   compact,
+  iconEmoji,
 }: Props) {
   const { t, i18n } = useTranslation();
   const doneTime = done && completedAt ? formatCompletionTime(completedAt, i18n.language) : null;
@@ -47,6 +59,8 @@ export function TaskCard({
       : " 📷"
     : "";
 
+  const icon = iconEmoji === null ? null : iconEmoji || defaultIcon(task.title);
+
   return (
     <Pressable
       onPress={onPress}
@@ -57,31 +71,21 @@ export function TaskCard({
         pressed && { opacity: 0.9 },
       ]}
     >
+      {icon ? (
+        <View style={[styles.iconCircle, done && styles.iconCircleDone]}>
+          <Text style={styles.iconEmoji}>{icon}</Text>
+        </View>
+      ) : null}
       <View style={styles.left}>
-        <Text style={[styles.time, compact && styles.timeCompact, done && styles.muted]}>
-          {task.time}
-        </Text>
         <View style={{ flex: 1 }}>
           <View style={styles.titleRow}>
-            <Text style={[styles.title, compact && styles.titleCompact, done && styles.titleDone]}>
-              {task.title}
+            <Text style={[styles.time, compact && styles.timeCompact, done && styles.muted]}>
+              🕒 {task.time}
             </Text>
-            {pointsLabel ? (
-              <View style={styles.pointsBadge}>
-                <Text style={styles.pointsBadgeText}>{pointsLabel}</Text>
-              </View>
-            ) : null}
-            {task.photoRequired ? (
-              <Text
-                style={styles.photoPill}
-                accessibilityLabel={
-                  hasPhoto ? t("photoRequired.receivedA11y") : t("photoRequired.requiredA11y")
-                }
-              >
-                {hasPhoto ? "✓📷" : "📷"}
-              </Text>
-            ) : null}
           </View>
+          <Text style={[styles.title, compact && styles.titleCompact, done && styles.titleDone]}>
+            {task.title}
+          </Text>
           <Text style={[styles.meta, compact && styles.metaCompact]}>
             {childName ? `${childName} · ` : ""}
             {recurrenceLabel(task.recurrence, task.intervalWeeks)}
@@ -91,6 +95,11 @@ export function TaskCard({
           </Text>
         </View>
       </View>
+      {pointsLabel ? (
+        <View style={styles.pointsBadge}>
+          <Text style={styles.pointsBadgeText}>{pointsLabel}</Text>
+        </View>
+      ) : null}
       {rightAccessory}
     </Pressable>
   );
@@ -106,7 +115,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 8,
+    gap: 10,
     ...rewardsUi.shadow,
   },
   cardCompact: {
@@ -117,16 +126,25 @@ const styles = StyleSheet.create({
   cardDone: {
     backgroundColor: colors.successSoft,
   },
-  left: { flexDirection: "row", alignItems: "center", gap: 10, flex: 1 },
-  time: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: colors.primary,
-    minWidth: 48,
+  iconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: rewardsUi.peachSoft,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  timeCompact: { fontSize: 14, minWidth: 42 },
+  iconCircleDone: { backgroundColor: colors.successSoft },
+  iconEmoji: { fontSize: 22 },
+  left: { flexDirection: "row", alignItems: "center", gap: 10, flex: 1, minWidth: 0 },
+  time: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: colors.textMuted,
+  },
+  timeCompact: { fontSize: 11 },
   titleRow: { flexDirection: "row", alignItems: "center", gap: 6, flexWrap: "wrap" },
-  title: { fontSize: 16, fontWeight: "700", color: colors.text, flexShrink: 1 },
+  title: { fontSize: 16, fontWeight: "800", color: rewardsUi.navy, flexShrink: 1 },
   titleCompact: { fontSize: 15 },
   titleDone: { textDecorationLine: "line-through", color: colors.textMuted },
   pointsBadge: {
@@ -135,7 +153,6 @@ const styles = StyleSheet.create({
   pointsBadgeText: {
     ...rewardsStyles.pointsPillText,
   },
-  photoPill: { fontSize: 14 },
   meta: { marginTop: 2, fontSize: 12, color: colors.textMuted },
   metaCompact: { fontSize: 11 },
   muted: { color: colors.textMuted },

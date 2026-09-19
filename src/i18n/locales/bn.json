@@ -162,7 +162,14 @@
     "addToCalendar": "বর্ষপঞ্জির মধ্যে কর্ম যোগ করুন",
     "more": "More",
     "markDoneA11y": "সম্পন্ন হিসেবে চিহ্নিত করুন",
-    "unmarkA11y": "পূর্বাবস্থায় ফিরুন"
+    "unmarkA11y": "পূর্বাবস্থায় ফিরুন",
+    "readyLine": "Ready to do great things today? ⭐",
+    "tasksToday": "Today's tasks",
+    "tasksPossible": "{{count}} tasks · {{stars}} ⭐ possible",
+    "navHome": "Home",
+    "navTasks": "Tasks",
+    "navRewards": "Rewards",
+    "navHistory": "History"
   },
   "childHistory": {
     "title": "ব্রাউজ-ইতিহাস",
@@ -196,7 +203,11 @@
     "edit": "Edit",
     "todayFor": "আজ · {{name}}",
     "rewards": "Rewards",
-    "openRewards": "⭐ Open Rewards"
+    "openRewards": "⭐ Open Rewards",
+    "navDashboard": "Home",
+    "navTasks": "Tasks",
+    "navRewards": "Rewards",
+    "navProfile": "Profile"
   },
   "calendar": {
     "legend": "বর্ণনা (legend) প্রদর্শন করুন",
@@ -497,6 +508,8 @@
     "disabledHintChild": "Rewards are not enabled for you yet. Ask a parent.",
     "noChildrenHelp": "Add a child (or open the demo) to configure rewards.",
     "soldeLabel": "Balance",
-    "currentBalanceLabel": "Current balance"
+    "currentBalanceLabel": "Current balance",
+    "validatedBy": "Validated by {{name}}",
+    "validatedByParent": "Validated by a parent"
   }
 }

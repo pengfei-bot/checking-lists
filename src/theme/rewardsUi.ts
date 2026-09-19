@@ -1,19 +1,45 @@
 import { Platform, StyleSheet, ViewStyle } from "react-native";
 import { colors } from "./colors";
 
-/** Shared Rewards V2 visual language (mockups M1–M4 + Pxp live delta). */
+/**
+ * Rewards V2 visual language — faithful to mockups M1–M4
+ * (cream/peach child chrome, yellow +N pills, purple history solde).
+ */
 export const rewardsUi = {
-  peach: "#FFF1E5",
-  purple: "#6B5CE7",
-  purpleSoft: "#EFEAFE",
-  purpleDeep: "#5B4BC9",
-  mint: "#E6F7EF",
-  greyRow: "#F3F4F6",
-  avatarBg: "#F0F3FA",
-  /** M2 child-filter selected (Pxp override — orange, not primary blue). */
+  /** M3 header / soft peach band */
+  peach: "#FFD6B6",
+  peachSoft: "#FFF1E5",
+  /** M3/M4 screen cream */
+  cream: "#FFF9F1",
+  creamDeep: "#FFF3E6",
+  navy: "#1A2B48",
+  navyMuted: "#5A6B85",
+  /** M3 solde card */
+  soldeBlue: "#E8F3FD",
+  soldeBlueBorder: "#C5DCF5",
+  soldeValue: "#0B72EB",
+  /** Uniform yellow/orange +N pills (M2/M3) */
+  pillYellow: "#FFE082",
+  pillYellowBorder: "#FFB74D",
+  pillYellowText: "#E65100",
+  /** M2 orange filter / accents */
   filterOrange: "#FF7A3D",
   filterOrangeSoft: "#FFE8DC",
-  cardRadius: 16,
+  selectedCream: "#FFEFD9",
+  /** M4 purple solde */
+  purple: "#6B5CE7",
+  purpleSoft: "#F0E8FF",
+  purpleDeep: "#5B4BC9",
+  purpleCircle: "#7C6CF0",
+  /** M4 timeline */
+  mint: "#E4F6EC",
+  mintBorder: "#B7E4C7",
+  greyRow: "#F0F1F3",
+  avatarBg: "#F0F3FA",
+  navCream: "#FFF6EC",
+  navActive: "#FF7A3D",
+  cardRadius: 18,
+  rowRadius: 14,
   pillRadius: 999,
   shadow: Platform.select({
     ios: {
@@ -39,16 +65,15 @@ export const rewardsStyles = StyleSheet.create({
     backgroundColor: colors.bg,
   },
   screenKid: {
-    padding: 14,
-    paddingBottom: 40,
-    backgroundColor: colors.bg,
+    padding: 0,
+    paddingBottom: 0,
+    backgroundColor: rewardsUi.cream,
   },
   screenHistory: {
-    padding: 14,
+    padding: 16,
     paddingBottom: 40,
-    backgroundColor: colors.bg,
+    backgroundColor: rewardsUi.cream,
   },
-  /** White raised card — no coral/orange outline. */
   card: {
     backgroundColor: colors.card,
     borderRadius: rewardsUi.cardRadius,
@@ -99,29 +124,31 @@ export const rewardsStyles = StyleSheet.create({
     fontWeight: "600",
   },
   avatarCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: rewardsUi.avatarBg,
   },
-  avatarEmoji: { fontSize: 24 },
+  avatarEmoji: { fontSize: 26 },
+  /** Large yellow +N ⭐ pill — used on M2/M3 task rows */
   pointsPill: {
-    backgroundColor: "#FFF3E0",
+    backgroundColor: rewardsUi.pillYellow,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderWidth: 1.5,
-    borderColor: "#FFB74D",
+    borderColor: rewardsUi.pillYellowBorder,
     minHeight: 36,
+    minWidth: 64,
     alignItems: "center",
     justifyContent: "center",
   },
   pointsPillText: {
     fontWeight: "900",
-    color: "#E65100",
-    fontSize: 16,
+    color: rewardsUi.pillYellowText,
+    fontSize: 15,
     letterSpacing: 0.2,
   },
   filterChip: {
@@ -137,7 +164,6 @@ export const rewardsStyles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
-  /** M2-only selected filter (orange). */
   filterChipActiveOrange: {
     backgroundColor: rewardsUi.filterOrange,
     borderColor: rewardsUi.filterOrange,
@@ -163,40 +189,46 @@ export const rewardsStyles = StyleSheet.create({
   },
   unitSegText: { fontWeight: "700", color: colors.textMuted, fontSize: 13 },
   unitSegTextActive: { color: "#fff" },
+  /** M3 pale-blue solde card */
   soldeCard: {
-    backgroundColor: colors.card,
+    backgroundColor: rewardsUi.soldeBlue,
     borderRadius: rewardsUi.cardRadius,
-    padding: 14,
-    borderWidth: 0,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: rewardsUi.soldeBlueBorder,
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
     ...rewardsUi.shadow,
   },
   soldeStarCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: colors.primarySoft,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: "#FFF8E7",
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#FFE0A3",
   },
-  soldeStar: { fontSize: 26 },
+  soldeStar: { fontSize: 28 },
   soldeLabel: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: colors.textMuted,
+    fontSize: 14,
+    fontWeight: "800",
+    color: rewardsUi.navy,
   },
   soldeValue: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "800",
-    color: colors.primary,
+    color: rewardsUi.soldeValue,
     marginTop: 2,
   },
+  /** M4 lavender solde panel */
   soldePurpleCard: {
     backgroundColor: rewardsUi.purpleSoft,
     borderRadius: rewardsUi.cardRadius,
-    padding: 14,
+    padding: 16,
     borderWidth: 0,
     flexDirection: "row",
     alignItems: "center",
@@ -204,15 +236,15 @@ export const rewardsStyles = StyleSheet.create({
     ...rewardsUi.shadow,
   },
   soldePurpleStarCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: rewardsUi.purple,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: rewardsUi.purpleCircle,
     alignItems: "center",
     justifyContent: "center",
   },
   soldePurpleValue: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "800",
     color: rewardsUi.purpleDeep,
     marginTop: 2,
@@ -237,20 +269,35 @@ export const rewardsStyles = StyleSheet.create({
   },
   earnRow: {
     backgroundColor: rewardsUi.mint,
-    borderColor: "#B7E4C7",
+    borderColor: rewardsUi.mintBorder,
   },
   resetRow: {
     backgroundColor: rewardsUi.greyRow,
     borderColor: colors.border,
   },
   timelineDot: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
   },
   timelineDotEarn: { backgroundColor: colors.success },
   timelineDotReset: { backgroundColor: colors.textMuted },
-  timelineDotText: { color: "#fff", fontSize: 11, fontWeight: "800" },
+  timelineDotText: { color: "#fff", fontSize: 12, fontWeight: "800" },
+  /** Decorative cream bottom nav (web look parity) */
+  fakeNav: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    paddingTop: 10,
+    paddingBottom: Platform.OS === "ios" ? 22 : 12,
+    backgroundColor: rewardsUi.navCream,
+    borderTopWidth: 1,
+    borderTopColor: "#F0E0D0",
+  },
+  fakeNavItem: { alignItems: "center", gap: 2, minWidth: 72 },
+  fakeNavIcon: { fontSize: 20 },
+  fakeNavLabel: { fontSize: 11, fontWeight: "700", color: rewardsUi.navyMuted },
+  fakeNavLabelActive: { color: rewardsUi.navActive },
 });

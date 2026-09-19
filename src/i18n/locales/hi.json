@@ -162,7 +162,14 @@
     "addToCalendar": "मेरे कार्यों को कैलेंडर में जोड़ें",
     "more": "More",
     "markDoneA11y": "पूर्ण के रूप में चिह्नित करें",
-    "unmarkA11y": "पूर्ववत करें"
+    "unmarkA11y": "पूर्ववत करें",
+    "readyLine": "Ready to do great things today? ⭐",
+    "tasksToday": "Today's tasks",
+    "tasksPossible": "{{count}} tasks · {{stars}} ⭐ possible",
+    "navHome": "Home",
+    "navTasks": "Tasks",
+    "navRewards": "Rewards",
+    "navHistory": "History"
   },
   "childHistory": {
     "title": "इतिहास",
@@ -196,7 +203,11 @@
     "edit": "Edit",
     "todayFor": "आज · {{name}}",
     "rewards": "Rewards",
-    "openRewards": "⭐ Open Rewards"
+    "openRewards": "⭐ Open Rewards",
+    "navDashboard": "Home",
+    "navTasks": "Tasks",
+    "navRewards": "Rewards",
+    "navProfile": "Profile"
   },
   "calendar": {
     "legend": "लीजेंड",
@@ -497,6 +508,8 @@
     "disabledHintChild": "Rewards are not enabled for you yet. Ask a parent.",
     "noChildrenHelp": "Add a child (or open the demo) to configure rewards.",
     "soldeLabel": "Balance",
-    "currentBalanceLabel": "Current balance"
+    "currentBalanceLabel": "Current balance",
+    "validatedBy": "Validated by {{name}}",
+    "validatedByParent": "Validated by a parent"
   }
 }

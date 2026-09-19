@@ -162,7 +162,14 @@
     "addToCalendar": "내 작업을 캘린더에 추가",
     "more": "More",
     "markDoneA11y": "완료로 표시",
-    "unmarkA11y": "실행 취소"
+    "unmarkA11y": "실행 취소",
+    "readyLine": "Ready to do great things today? ⭐",
+    "tasksToday": "Today's tasks",
+    "tasksPossible": "{{count}} tasks · {{stars}} ⭐ possible",
+    "navHome": "Home",
+    "navTasks": "Tasks",
+    "navRewards": "Rewards",
+    "navHistory": "History"
   },
   "childHistory": {
     "title": "- 연혁",
@@ -196,7 +203,11 @@
     "edit": "Edit",
     "todayFor": "오늘 · {{name}}",
     "rewards": "Rewards",
-    "openRewards": "⭐ Open Rewards"
+    "openRewards": "⭐ Open Rewards",
+    "navDashboard": "Home",
+    "navTasks": "Tasks",
+    "navRewards": "Rewards",
+    "navProfile": "Profile"
   },
   "calendar": {
     "legend": "인기 있는",
@@ -497,6 +508,8 @@
     "disabledHintChild": "Rewards are not enabled for you yet. Ask a parent.",
     "noChildrenHelp": "Add a child (or open the demo) to configure rewards.",
     "soldeLabel": "Balance",
-    "currentBalanceLabel": "Current balance"
+    "currentBalanceLabel": "Current balance",
+    "validatedBy": "Validated by {{name}}",
+    "validatedByParent": "Validated by a parent"
   }
 }

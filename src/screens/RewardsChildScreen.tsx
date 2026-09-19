@@ -12,8 +12,19 @@ import { formatCompletionTime, formatLocalizedDate } from "../utils/dates";
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { RewardUnitKind } from "../types";
 import { unitShortKey } from "../utils/rewards";
+import { ChildRewardsBottomNav } from "../components/RewardsBottomNav";
 
 type Props = NativeStackScreenProps<RootStackParamList, "RewardsChild">;
+
+function sideEmojiFor(title: string | undefined, isReset: boolean): string {
+  if (isReset) return "🗑️";
+  const t = (title || "").toLowerCase();
+  if (t.includes("dent") || t.includes("brush") || t.includes("tooth")) return "🪥";
+  if (t.includes("devoir") || t.includes("homework") || t.includes("lire") || t.includes("read")) return "📓";
+  if (t.includes("chambre") || t.includes("ranger") || t.includes("room")) return "🧹";
+  if (t.includes("poisson") || t.includes("fish") || t.includes("manger")) return "🐟";
+  return "⭐";
+}
 
 export function RewardsChildScreen({ navigation, route }: Props) {
   const { childId } = route.params;
@@ -28,6 +39,7 @@ export function RewardsChildScreen({ navigation, route }: Props) {
     isRewardsActiveForChild,
     resetChildBalance,
     currentProfile,
+    state,
   } = useApp();
   const [busy, setBusy] = useState(false);
 
@@ -97,225 +109,286 @@ export function RewardsChildScreen({ navigation, route }: Props) {
     return t("rewards.kindAdjust");
   };
 
+  const actorName = (createdBy?: string) => {
+    if (!createdBy) return t("profiles.parentFallback");
+    const p = state.profiles.find((x) => x.id === createdBy);
+    return p?.name || t("profiles.parentFallback");
+  };
+  const validatorLabel = (createdBy?: string) => {
+    if (!createdBy) return t("rewards.validatedByParent");
+    const p = state.profiles.find((x) => x.id === createdBy);
+    if (p) return t("rewards.validatedBy", { name: p.name });
+    return t("rewards.validatedByParent");
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>
-        {isOwnChild ? t("rewards.myHistory") : `${child.emoji} ${child.name}`}
-      </Text>
-
-      <View style={styles.soldeCard}>
-        <View style={styles.soldeStarCircle}>
-          <Text style={styles.soldeStar}>⭐</Text>
+    <View style={styles.root}>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        <View style={styles.headerBlock}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.title}>
+              {isOwnChild ? t("rewards.myHistory") : `${child.emoji} ${child.name}`}
+            </Text>
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={styles.backPill}
+              accessibilityRole="button"
+              accessibilityLabel={t("common.back")}
+            >
+              <Text style={styles.backPillText}>←</Text>
+            </Pressable>
+          </View>
+          <Text style={styles.headerMascot}>🌟</Text>
         </View>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.soldeLabel}>{t("rewards.currentBalanceLabel")}</Text>
-          <Text style={styles.soldeValue}>
-            {balance} <Text style={styles.soldeUnit}>{unitLabel}</Text>
-          </Text>
+
+        <View style={styles.soldeCard}>
+          <View style={styles.soldeStarCircle}>
+            <Text style={styles.soldeStar}>⭐</Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.soldeLabel}>{t("rewards.currentBalanceLabel")}</Text>
+            <Text style={styles.soldeValue}>
+              {balance} <Text style={styles.soldeUnit}>⭐</Text>
+            </Text>
+          </View>
+          <Text style={styles.soldeDecor}>☁️🌟</Text>
         </View>
-        <Text style={styles.soldeDecor}>✨</Text>
-      </View>
 
-      {!childActive && isParent ? (
-        <Text style={styles.help}>{t("rewards.disabledHint")}</Text>
-      ) : null}
+        {!childActive && isParent ? (
+          <Text style={styles.help}>{t("rewards.disabledHint")}</Text>
+        ) : null}
 
-      {isParent ? (
-        <View style={styles.unitBlock}>
-          <Text style={styles.unitLabel}>{t("rewards.unitKind")}</Text>
-          <View style={rewardsStyles.unitSeg}>
-            {(["points", "money"] as RewardUnitKind[]).map((kind) => (
-              <Pressable
-                key={kind}
-                disabled={busy}
-                onPress={() => {
-                  void (async () => {
-                    if (unitKind === kind) return;
-                    setBusy(true);
-                    try {
-                      await setChildUnitKind(childId, kind);
-                    } catch (e) {
-                      notifyUser(t("common.error"), frenchCloudError(e, t("rewards.saveFailed")));
-                    } finally {
-                      setBusy(false);
-                    }
-                  })();
-                }}
-                style={[
-                  rewardsStyles.unitSegItem,
-                  unitKind === kind && rewardsStyles.unitSegItemActive,
-                ]}
-              >
-                <Text
+        {isParent ? (
+          <View style={styles.unitBlock}>
+            <Text style={styles.unitLabel}>{t("rewards.unitKind")}</Text>
+            <View style={rewardsStyles.unitSeg}>
+              {(["points", "money"] as RewardUnitKind[]).map((kind) => (
+                <Pressable
+                  key={kind}
+                  disabled={busy}
+                  onPress={() => {
+                    void (async () => {
+                      if (unitKind === kind) return;
+                      setBusy(true);
+                      try {
+                        await setChildUnitKind(childId, kind);
+                      } catch (e) {
+                        notifyUser(t("common.error"), frenchCloudError(e, t("rewards.saveFailed")));
+                      } finally {
+                        setBusy(false);
+                      }
+                    })();
+                  }}
                   style={[
-                    rewardsStyles.unitSegText,
-                    unitKind === kind && rewardsStyles.unitSegTextActive,
+                    rewardsStyles.unitSegItem,
+                    unitKind === kind && rewardsStyles.unitSegItemActive,
                   ]}
                 >
-                  {kind === "points" ? t("rewards.unitPoints") : t("rewards.unitMoney")}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        </View>
-      ) : null}
-
-      {isParent ? (
-        <PrimaryButton
-          label={t("rewards.resetButton")}
-          variant="danger"
-          onPress={onReset}
-          loading={busy}
-          style={{ marginTop: 16 }}
-        />
-      ) : null}
-
-      <Text style={styles.section}>{t("rewards.history")}</Text>
-      {entries.length === 0 ? (
-        <Text style={styles.help}>{t("rewards.historyEmpty")}</Text>
-      ) : (
-        <View style={styles.timeline}>
-          {entries.map((entry, index) => {
-            const task = entry.taskId ? getTask(entry.taskId) : undefined;
-            const day = entry.createdAt.slice(0, 10);
-            const time = formatCompletionTime(entry.createdAt, i18n.language);
-            const amountStr =
-              entry.amount > 0 ? `+${entry.amount}` : String(entry.amount);
-            const isReset = entry.kind === "reset";
-            const isLast = index === entries.length - 1;
-            return (
-              <View key={entry.id} style={styles.timelineItem}>
-                <View style={styles.timelineRail}>
-                  <View
+                  <Text
                     style={[
-                      rewardsStyles.timelineDot,
-                      isReset
-                        ? rewardsStyles.timelineDotReset
-                        : rewardsStyles.timelineDotEarn,
+                      rewardsStyles.unitSegText,
+                      unitKind === kind && rewardsStyles.unitSegTextActive,
                     ]}
                   >
-                    <Text style={rewardsStyles.timelineDotText}>
-                      {isReset ? "↺" : "✓"}
-                    </Text>
-                  </View>
-                  {!isLast ? <View style={styles.timelineLine} /> : null}
-                </View>
-                <View
-                  style={[
-                    styles.row,
-                    isReset ? rewardsStyles.resetRow : rewardsStyles.earnRow,
-                  ]}
-                >
-                  <View style={{ flex: 1 }}>
-                    {!isReset ? (
-                      <Text
-                        style={[
-                          styles.earnAmount,
-                          entry.amount < 0 && styles.amountNeg,
-                        ]}
-                      >
-                        {amountStr} {unitLabel === "€" ? "€" : "⭐"}
-                      </Text>
-                    ) : null}
-                    <Text style={[styles.rowTitle, isReset && styles.resetAmount]}>
-                      {isReset
-                        ? kindLabel(entry.kind)
-                        : task
-                          ? task.title
-                          : kindLabel(entry.kind)}
-                    </Text>
-                    <Text style={styles.rowMeta}>
-                      {formatLocalizedDate(day, i18n.language)} · {time}
-                      {entry.note ? ` · ${entry.note}` : ""}
-                    </Text>
-                  </View>
-                  <View style={[styles.sideIcon, isReset ? styles.sideIconReset : styles.sideIconEarn]}>
-                    <Text style={styles.resetIcon}>{isReset ? "🗑️" : "⭐"}</Text>
-                  </View>
-                </View>
-              </View>
-            );
-          })}
-        </View>
-      )}
+                    {kind === "points" ? t("rewards.unitPoints") : t("rewards.unitMoney")}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
+        ) : null}
 
-      <PrimaryButton
-        label={t("common.back")}
-        variant="ghost"
-        onPress={() => navigation.goBack()}
-        style={{ marginTop: 16 }}
-      />
-    </ScrollView>
+        {isParent ? (
+          <PrimaryButton
+            label={t("rewards.resetButton")}
+            variant="danger"
+            onPress={onReset}
+            loading={busy}
+            style={{ marginTop: 14 }}
+          />
+        ) : null}
+
+        <Text style={styles.section}>{t("rewards.history")}</Text>
+        {entries.length === 0 ? (
+          <Text style={styles.help}>{t("rewards.historyEmpty")}</Text>
+        ) : (
+          <View style={styles.timeline}>
+            {entries.map((entry, index) => {
+              const task = entry.taskId ? getTask(entry.taskId) : undefined;
+              const day = entry.createdAt.slice(0, 10);
+              const time = formatCompletionTime(entry.createdAt, i18n.language);
+              const amountStr =
+                entry.amount > 0 ? `+${entry.amount}` : String(entry.amount);
+              const isReset = entry.kind === "reset";
+              const isLast = index === entries.length - 1;
+              const side = sideEmojiFor(task?.title, isReset);
+              return (
+                <View key={entry.id} style={styles.timelineItem}>
+                  <View style={styles.timelineRail}>
+                    <View
+                      style={[
+                        rewardsStyles.timelineDot,
+                        isReset
+                          ? rewardsStyles.timelineDotReset
+                          : rewardsStyles.timelineDotEarn,
+                      ]}
+                    >
+                      <Text style={rewardsStyles.timelineDotText}>
+                        {isReset ? "↺" : "✓"}
+                      </Text>
+                    </View>
+                    {!isLast ? <View style={styles.timelineLine} /> : null}
+                  </View>
+                  <View
+                    style={[
+                      styles.row,
+                      isReset ? rewardsStyles.resetRow : rewardsStyles.earnRow,
+                    ]}
+                  >
+                    <View style={{ flex: 1 }}>
+                      {!isReset ? (
+                        <Text
+                          style={[
+                            styles.earnAmount,
+                            entry.amount < 0 && styles.amountNeg,
+                          ]}
+                        >
+                          {amountStr} {unitLabel === "€" ? "€" : "⭐"}
+                        </Text>
+                      ) : null}
+                      <Text style={[styles.rowTitle, isReset && styles.resetTitle]}>
+                        {isReset
+                          ? kindLabel(entry.kind)
+                          : task
+                            ? task.title
+                            : kindLabel(entry.kind)}
+                      </Text>
+                      <Text style={styles.rowMeta}>
+                        {isReset
+                          ? `${actorName(entry.createdBy)} · ${formatLocalizedDate(day, i18n.language)}`
+                          : `${validatorLabel(entry.createdBy)} · 🕒 ${time}`}
+                        {!isReset && entry.note ? ` · ${entry.note}` : ""}
+                      </Text>
+                    </View>
+                    <View style={[styles.sideIcon, isReset ? styles.sideIconReset : styles.sideIconEarn]}>
+                      <Text style={styles.sideEmoji}>{side}</Text>
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        )}
+      </ScrollView>
+
+      {isOwnChild ? (
+        <ChildRewardsBottomNav
+          navigation={navigation}
+          active="rewards"
+          childId={childId}
+          rewardsActive={childActive}
+        />
+      ) : null}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: { flex: 1, backgroundColor: rewardsUi.cream },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
-  container: { ...rewardsStyles.screenHistory },
-  title: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: colors.text,
-    marginBottom: 10,
+  container: {
+    ...rewardsStyles.screenHistory,
+    maxWidth: 480,
+    width: "100%",
+    alignSelf: "center",
   },
+  headerBlock: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 12,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: rewardsUi.navy,
+    marginBottom: 8,
+  },
+  backPill: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: rewardsUi.pillYellow,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: rewardsUi.pillYellowBorder,
+  },
+  backPillText: { fontSize: 18, fontWeight: "800", color: rewardsUi.navy },
+  headerMascot: { fontSize: 36, marginTop: 2 },
   soldeCard: {
     ...rewardsStyles.soldePurpleCard,
     marginBottom: 10,
   },
   soldeStarCircle: { ...rewardsStyles.soldePurpleStarCircle },
   soldeStar: { fontSize: 26 },
-  soldeLabel: { fontSize: 13, fontWeight: "700", color: colors.text },
+  soldeLabel: { fontSize: 14, fontWeight: "700", color: rewardsUi.navy },
   soldeValue: { ...rewardsStyles.soldePurpleValue },
   soldeUnit: { fontSize: 18, fontWeight: "800", color: rewardsUi.purpleDeep },
-  soldeDecor: { fontSize: 22 },
+  soldeDecor: { fontSize: 28 },
   help: { color: colors.textMuted, textAlign: "center", marginTop: 8 },
-  section: { fontWeight: "800", fontSize: 16, marginTop: 18, marginBottom: 10, color: colors.text },
+  section: {
+    fontWeight: "800",
+    fontSize: 16,
+    marginTop: 18,
+    marginBottom: 10,
+    color: rewardsUi.navy,
+  },
   timeline: { paddingLeft: 2 },
-  timelineItem: { flexDirection: "row", alignItems: "stretch", gap: 10, marginBottom: 8 },
-  timelineRail: { width: 22, alignItems: "center" },
+  timelineItem: { flexDirection: "row", alignItems: "stretch", gap: 10, marginBottom: 10 },
+  timelineRail: { width: 24, alignItems: "center" },
   timelineLine: {
     flex: 1,
     width: 2,
     marginTop: 4,
     backgroundColor: "#D1D5DB",
     minHeight: 12,
+    borderStyle: "dashed",
   },
   row: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 0,
     padding: 12,
     ...rewardsUi.shadow,
   },
   earnAmount: {
-    fontWeight: "800",
-    fontSize: 15,
+    fontWeight: "900",
+    fontSize: 18,
     color: colors.success,
     marginBottom: 2,
   },
-  resetAmount: {
+  resetTitle: {
     fontWeight: "800",
-    fontSize: 14,
+    fontSize: 15,
     color: colors.textMuted,
-    marginBottom: 2,
   },
-  rowTitle: { fontWeight: "700", color: colors.text },
-  rowMeta: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
+  rowTitle: { fontWeight: "800", color: rewardsUi.navy, fontSize: 15 },
+  rowMeta: { color: colors.textMuted, fontSize: 12, marginTop: 3, fontWeight: "600" },
   amountNeg: { color: colors.danger },
   sideIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#fff",
   },
   sideIconEarn: { backgroundColor: "#fff" },
   sideIconReset: { backgroundColor: "#fff" },
-  resetIcon: { fontSize: 16 },
+  sideEmoji: { fontSize: 22 },
   unitBlock: { marginTop: 14, alignItems: "flex-start", gap: 6 },
   unitLabel: { fontWeight: "700", fontSize: 12, color: colors.textMuted },
 });

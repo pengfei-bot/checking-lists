@@ -21,6 +21,7 @@ import { frenchCloudError } from "../utils/cloudTimeout";
 import { notifyUser } from "../utils/feedback";
 import { RewardUnitKind } from "../types";
 import { unitShortKey } from "../utils/rewards";
+import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Rewards">;
 type ChildFilter = string | "all";
@@ -435,6 +436,7 @@ export function RewardsScreen({ navigation }: Props) {
           style={styles.saveBtn}
         />
       </View>
+      <ParentRewardsBottomNav navigation={navigation} active="rewards" />
     </View>
   );
 }
@@ -485,8 +487,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     borderRadius: rewardsUi.cardRadius,
     borderWidth: 0,
-    padding: 12,
-    marginBottom: 10,
+    padding: 14,
+    marginBottom: 12,
     ...rewardsUi.shadow,
   },
   childHeader: { flexDirection: "row", alignItems: "center", gap: 10 },
