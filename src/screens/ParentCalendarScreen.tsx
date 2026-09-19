@@ -13,6 +13,8 @@ import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
+import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
+import { rewardsUi } from "../theme/rewardsUi";
 import {
   daysInMonth,
   formatLocalizedMonthYear,
@@ -173,6 +175,7 @@ export function ParentCalendarScreen({ navigation }: Props) {
 
         <Text style={styles.hint}>{t("calendar.hint")}</Text>
       </ScrollView>
+      <ParentRewardsBottomNav navigation={navigation} active="tasks" />
     </View>
   );
 }

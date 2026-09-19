@@ -19,7 +19,6 @@ export function ChildRewardsBottomNav({
   navigation,
   active,
   childId,
-  rewardsActive,
 }: {
   navigation: Navigate;
   active: ChildTab;
@@ -37,8 +36,9 @@ export function ChildRewardsBottomNav({
     return (
       <Pressable
         key={key}
-        style={rewardsStyles.fakeNavItem}
+        style={styles.navItem}
         onPress={onPress}
+        hitSlop={8}
         accessibilityRole="button"
         accessibilityState={{ selected: isActive }}
       >
@@ -48,6 +48,7 @@ export function ChildRewardsBottomNav({
             rewardsStyles.fakeNavLabel,
             isActive && rewardsStyles.fakeNavLabelActive,
           ]}
+          numberOfLines={1}
         >
           {label}
         </Text>
@@ -59,16 +60,12 @@ export function ChildRewardsBottomNav({
   return (
     <View style={rewardsStyles.fakeNav}>
       {item("home", "🏠", t("childHome.navHome"), () => navigation.navigate("ChildHome"))}
-      {item("tasks", "📋", t("childHome.navTasks"), () => navigation.navigate("ChildHome"))}
+      {item("tasks", "📋", t("childHome.navTasks"), () => navigation.navigate("ChildHistory"))}
       {item("rewards", "⭐", t("childHome.navRewards"), () => {
-        if (childId) {
-          navigation.navigate("RewardsChild", { childId });
-        }
+        if (childId) navigation.navigate("RewardsChild", { childId });
       })}
       {item("history", "📜", t("childHome.navHistory"), () => {
-        if (childId) {
-          navigation.navigate("RewardsChild", { childId });
-        }
+        if (childId) navigation.navigate("RewardsChild", { childId });
       })}
     </View>
   );
@@ -92,8 +89,9 @@ export function ParentRewardsBottomNav({
     return (
       <Pressable
         key={key}
-        style={rewardsStyles.fakeNavItem}
+        style={styles.navItem}
         onPress={onPress}
+        hitSlop={8}
         accessibilityRole="button"
         accessibilityState={{ selected: isActive }}
       >
@@ -103,6 +101,7 @@ export function ParentRewardsBottomNav({
             rewardsStyles.fakeNavLabel,
             isActive && rewardsStyles.fakeNavLabelActive,
           ]}
+          numberOfLines={1}
         >
           {label}
         </Text>
@@ -130,6 +129,13 @@ export function ParentRewardsBottomNav({
 }
 
 const styles = {
+  navItem: {
+    flex: 1,
+    alignItems: "center" as const,
+    gap: 2,
+    paddingVertical: 4,
+    minWidth: 64,
+  },
   activeDot: {
     width: 5,
     height: 5,

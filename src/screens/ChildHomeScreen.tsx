@@ -240,12 +240,6 @@ export function ChildHomeScreen({ navigation }: Props) {
             })
           )}
 
-          <Pressable
-            style={styles.historyChip}
-            onPress={() => navigation.navigate("ChildHistory")}
-          >
-            <Text style={styles.historyChipText}>📅 {t("childHome.history")}</Text>
-          </Pressable>
         </View>
       </ScrollView>
 

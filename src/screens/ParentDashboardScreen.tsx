@@ -412,7 +412,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
         </View>
 
         {/* Spacer for sticky CTA */}
-        <View style={{ height: 72 }} />
+        <View style={{ height: 96 }} />
       </ScrollView>
 
       <View style={styles.stickyBar}>
@@ -665,8 +665,8 @@ const styles = StyleSheet.create({
   },
   stickyBar: {
     paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: Platform.OS === "ios" ? 20 : 12,
+    paddingTop: 8,
+    paddingBottom: 8,
     backgroundColor: rewardsUi.cream,
     borderTopWidth: 1,
     borderTopColor: colors.border,

@@ -256,7 +256,7 @@ export function ChildHistoryScreen({ navigation }: Props) {
       {childId ? (
         <ChildRewardsBottomNav
           navigation={navigation}
-          active="history"
+          active="tasks"
           childId={childId}
           rewardsActive={isRewardsActiveForChild(childId)}
         />
