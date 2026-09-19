@@ -2,7 +2,7 @@
   "expo": {
     "name": "Famlist",
     "slug": "checking-lists",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -23,7 +23,8 @@
         ],
         "ITSAppUsesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.pengfeibot.famlist"
+      "bundleIdentifier": "com.pengfeibot.famlist",
+      "buildNumber": "5"
     },
     "android": {
       "adaptiveIcon": {
@@ -45,7 +46,8 @@
         "android.permission.WRITE_CALENDAR"
       ],
       "predictiveBackGestureEnabled": false,
-      "package": "com.pengfeibot.famlist"
+      "package": "com.pengfeibot.famlist",
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png",
