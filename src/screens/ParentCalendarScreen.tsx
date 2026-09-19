@@ -95,7 +95,7 @@ export function ParentCalendarScreen({ navigation }: Props) {
 
   return (
     <View style={styles.root}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.navRow}>
           <Pressable onPress={goPrev} style={styles.navBtn} accessibilityLabel={t("calendar.prevMonth")}>
             <Text style={styles.navBtnText}>‹</Text>

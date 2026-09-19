@@ -1,6 +1,7 @@
 import React from "react";
 import { Pressable, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
+import { useApp } from "../context/AppContext";
 import { RootStackParamList } from "../navigation/types";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 
@@ -38,9 +39,10 @@ export function ChildRewardsBottomNav({
         key={key}
         style={styles.navItem}
         onPress={onPress}
-        hitSlop={8}
+        hitSlop={12}
         accessibilityRole="button"
         accessibilityState={{ selected: isActive }}
+        accessibilityLabel={label}
       >
         <Text style={rewardsStyles.fakeNavIcon}>{icon}</Text>
         <Text
@@ -58,12 +60,10 @@ export function ChildRewardsBottomNav({
   };
 
   return (
-    <View style={rewardsStyles.fakeNav}>
+    <View style={[rewardsStyles.fakeNav, styles.navBar]}>
       {item("home", "🏠", t("childHome.navHome"), () => navigation.navigate("ChildHome"))}
       {item("tasks", "📋", t("childHome.navTasks"), () => navigation.navigate("ChildHistory"))}
-      {item("rewards", "⭐", t("childHome.navRewards"), () =>
-        navigation.navigate("ChildHome")
-      )}
+      {item("rewards", "⭐", t("childHome.navRewards"), () => navigation.navigate("ChildHome"))}
       {item("history", "📜", t("childHome.navHistory"), () => {
         if (childId) navigation.navigate("RewardsChild", { childId });
       })}
@@ -79,6 +79,7 @@ export function ParentRewardsBottomNav({
   active: ParentTab;
 }) {
   const { t } = useTranslation();
+  const { setCurrentProfileId } = useApp();
   const item = (
     key: ParentTab,
     icon: string,
@@ -91,9 +92,10 @@ export function ParentRewardsBottomNav({
         key={key}
         style={styles.navItem}
         onPress={onPress}
-        hitSlop={8}
+        hitSlop={12}
         accessibilityRole="button"
         accessibilityState={{ selected: isActive }}
+        accessibilityLabel={label}
       >
         <Text style={rewardsStyles.fakeNavIcon}>{icon}</Text>
         <Text
@@ -111,7 +113,7 @@ export function ParentRewardsBottomNav({
   };
 
   return (
-    <View style={rewardsStyles.fakeNav}>
+    <View style={[rewardsStyles.fakeNav, styles.navBar]}>
       {item("dashboard", "🏠", t("parentDash.navDashboard"), () =>
         navigation.navigate("ParentDashboard")
       )}
@@ -121,19 +123,24 @@ export function ParentRewardsBottomNav({
       {item("rewards", "🏆", t("parentDash.navRewards"), () =>
         navigation.navigate("Rewards")
       )}
-      {item("profile", "👤", t("parentDash.navProfile"), () =>
-        navigation.navigate("ProfilePicker", { mode: "switch" })
-      )}
+      {item("profile", "👤", t("parentDash.navProfile"), () => {
+        setCurrentProfileId(null);
+        navigation.navigate("ProfilePicker", { mode: "switch" });
+      })}
     </View>
   );
 }
 
 const styles = {
+  navBar: {
+    zIndex: 20,
+    elevation: 8,
+  },
   navItem: {
     flex: 1,
     alignItems: "center" as const,
     gap: 2,
-    paddingVertical: 4,
+    paddingVertical: 6,
     minWidth: 64,
   },
   activeDot: {

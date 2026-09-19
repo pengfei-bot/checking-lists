@@ -29,7 +29,7 @@
     "familyShare": "Partage famille",
     "whoAreYou": "Qui es-tu ?",
     "childHome": "Mes tâches",
-    "childHistory": "Historique",
+    "childHistory": "Calendrier",
     "childDay": "Jour",
     "parentDashboard": "Parents",
     "parentCalendar": "Calendrier",
@@ -172,7 +172,7 @@
     "navHistory": "Historique"
   },
   "childHistory": {
-    "title": "Historique",
+    "title": "Calendrier des tâches",
     "subtitle": "{{name}} · calendrier des réalisations",
     "legend": "Légende",
     "hint": "Touchez un jour pour voir les tâches réalisées et les photos.",
@@ -204,7 +204,7 @@
     "todayFor": "Aujourd'hui · {{name}}",
     "rewards": "Récompenses",
     "openRewards": "⭐ Ouvrir Récompenses",
-    "navDashboard": "Tableau de bord",
+    "navDashboard": "Tableau",
     "navTasks": "Tâches",
     "navRewards": "Récompenses",
     "navProfile": "Profil"

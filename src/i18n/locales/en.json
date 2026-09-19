@@ -29,7 +29,7 @@
     "familyShare": "Family sharing",
     "whoAreYou": "Who are you?",
     "childHome": "My tasks",
-    "childHistory": "History",
+    "childHistory": "Calendar",
     "childDay": "Day",
     "parentDashboard": "Parents",
     "parentCalendar": "Calendar",
@@ -172,7 +172,7 @@
     "navHistory": "History"
   },
   "childHistory": {
-    "title": "History",
+    "title": "Task calendar",
     "subtitle": "{{name}} · completion calendar",
     "legend": "Legend",
     "hint": "Tap a day to see completed tasks and photos.",

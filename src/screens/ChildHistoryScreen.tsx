@@ -136,7 +136,7 @@ export function ChildHistoryScreen({ navigation }: Props) {
 
   return (
     <View style={styles.root}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View
           style={[styles.hero, { backgroundColor: currentProfile.color + "22" }]}
         >
