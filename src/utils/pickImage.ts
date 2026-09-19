@@ -1,5 +1,6 @@
 import { Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { preferMockPhotoQaFromUrl } from "./webCloudFlag";
 
 export type PickImageOutcome =
   | { status: "success"; uri: string }
@@ -99,6 +100,10 @@ export async function pickProofImage(options?: {
   preferCamera?: boolean;
 }): Promise<PickImageOutcome> {
   const quality = options?.quality ?? 0.7;
+
+  if (preferMockPhotoQaFromUrl()) {
+    return { status: "success", uri: MOCK_PHOTO_URI };
+  }
 
   if (Platform.OS === "web") {
     try {
