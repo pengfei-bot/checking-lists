@@ -5,7 +5,7 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   RedeemInvite: undefined;
   FamilyShare: undefined;
-  ProfilePicker: undefined;
+  ProfilePicker: { mode?: "switch" } | undefined;
   ChildHome: undefined;
   ChildHistory: undefined;
   ChildDayDetail: { date: string };

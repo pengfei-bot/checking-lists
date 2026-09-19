@@ -61,9 +61,9 @@ export function ChildRewardsBottomNav({
     <View style={rewardsStyles.fakeNav}>
       {item("home", "🏠", t("childHome.navHome"), () => navigation.navigate("ChildHome"))}
       {item("tasks", "📋", t("childHome.navTasks"), () => navigation.navigate("ChildHistory"))}
-      {item("rewards", "⭐", t("childHome.navRewards"), () => {
-        if (childId) navigation.navigate("RewardsChild", { childId });
-      })}
+      {item("rewards", "⭐", t("childHome.navRewards"), () =>
+        navigation.navigate("ChildHome")
+      )}
       {item("history", "📜", t("childHome.navHistory"), () => {
         if (childId) navigation.navigate("RewardsChild", { childId });
       })}
@@ -122,7 +122,7 @@ export function ParentRewardsBottomNav({
         navigation.navigate("Rewards")
       )}
       {item("profile", "👤", t("parentDash.navProfile"), () =>
-        navigation.navigate("ProfilePicker")
+        navigation.navigate("ProfilePicker", { mode: "switch" })
       )}
     </View>
   );

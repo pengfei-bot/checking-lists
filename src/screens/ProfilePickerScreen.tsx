@@ -20,7 +20,7 @@ import { confirmUser, notifyUser } from "../utils/feedback";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProfilePicker">;
 
-export function ProfilePickerScreen({ navigation }: Props) {
+export function ProfilePickerScreen({ navigation, route }: Props) {
   const { t, i18n } = useTranslation();
   const {
     ready,
@@ -39,8 +39,10 @@ export function ProfilePickerScreen({ navigation }: Props) {
   const singleChildId = kids.length === 1 ? kids[0].id : null;
 
   // Resume last profile (and always auto-enter when this device is a child with one kid).
+  // Skip when opened from bottom-nav "Profil" (mode=switch) so the picker stays usable.
   useEffect(() => {
     if (!ready) return;
+    if (route.params?.mode === "switch") return;
     if (isChildDevice && singleChildId) {
       if (state.currentProfileId !== singleChildId) setCurrentProfileId(singleChildId);
       navigation.reset({ index: 0, routes: [{ name: "ChildHome" }] });
@@ -60,6 +62,7 @@ export function ProfilePickerScreen({ navigation }: Props) {
     state.profiles,
     navigation,
     setCurrentProfileId,
+    route.params?.mode,
   ]);
 
   if (!ready) {
