@@ -121,34 +121,26 @@ export function RewardsChildScreen({ navigation, route }: Props) {
   return (
     <View style={[styles.root, { backgroundColor: softTint(child.color || colors.primary, 0.08) }]}>
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-        <View style={[styles.headerBlock, styles.headerTint, { backgroundColor: tint }]}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.title}>
-              {isOwnChild ? t("rewards.myHistory") : `${child.emoji} ${child.name}`}
-            </Text>
-            <Pressable
-              onPress={() => navigation.goBack()}
-              style={styles.backPill}
-              accessibilityRole="button"
-              accessibilityLabel={t("common.back")}
-            >
-              <Text style={styles.backPillText}>←</Text>
-            </Pressable>
-          </View>
-          <Text style={styles.headerMascot}>🌟</Text>
-        </View>
-
-        <View style={styles.soldeCard}>
-          <View style={styles.soldeStarCircle}>
-            <Text style={styles.soldeStar}>⭐</Text>
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.soldeLabel}>{t("rewards.currentBalanceLabel")}</Text>
-            <Text style={styles.soldeValue}>
-              {balance} <Text style={styles.soldeUnit}>⭐</Text>
+        <View style={[styles.hero, styles.headerTint, { backgroundColor: tint }]}>
+          <Pressable
+            onPress={() => navigation.goBack()}
+            style={styles.backPill}
+            accessibilityRole="button"
+            accessibilityLabel={t("common.back")}
+          >
+            <Text style={styles.backPillText}>←</Text>
+          </Pressable>
+          <View style={styles.heroIdentity}>
+            {!isOwnChild ? <Text style={styles.heroEmoji}>{child.emoji}</Text> : null}
+            <Text style={styles.heroTitle} numberOfLines={1}>
+              {isOwnChild ? t("rewards.myHistory") : child.name}
             </Text>
           </View>
-          <Text style={styles.soldeDecor}>☁️🌟</Text>
+          <View style={styles.heroBalanceChip}>
+            <Text style={styles.heroBalanceValue}>
+              {balance} {unitLabel === "€" ? "€" : "⭐"}
+            </Text>
+          </View>
         </View>
 
         {!childActive && isParent ? (
@@ -303,46 +295,58 @@ const styles = StyleSheet.create({
   },
   headerTint: {
     marginHorizontal: -16,
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 14,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    paddingHorizontal: 14,
+    paddingTop: 10,
+    paddingBottom: 12,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
     marginBottom: 8,
   },
-  headerBlock: {
+  hero: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    marginBottom: 12,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: rewardsUi.navy,
-    marginBottom: 8,
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 4,
   },
   backPill: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     backgroundColor: rewardsUi.pillYellow,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
     borderColor: rewardsUi.pillYellowBorder,
   },
-  backPillText: { fontSize: 18, fontWeight: "800", color: rewardsUi.navy },
-  headerMascot: { fontSize: 36, marginTop: 2 },
-  soldeCard: {
-    ...rewardsStyles.soldePurpleCard,
-    marginBottom: 10,
+  backPillText: { fontSize: 17, fontWeight: "800", color: rewardsUi.navy },
+  heroIdentity: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
-  soldeStarCircle: { ...rewardsStyles.soldePurpleStarCircle },
-  soldeStar: { fontSize: 26 },
-  soldeLabel: { fontSize: 14, fontWeight: "700", color: rewardsUi.navy },
-  soldeValue: { ...rewardsStyles.soldePurpleValue },
-  soldeUnit: { fontSize: 18, fontWeight: "800", color: rewardsUi.purpleDeep },
-  soldeDecor: { fontSize: 28 },
+  heroEmoji: { fontSize: 28 },
+  heroTitle: {
+    flex: 1,
+    minWidth: 0,
+    fontSize: 18,
+    fontWeight: "800",
+    color: rewardsUi.navy,
+  },
+  heroBalanceChip: {
+    backgroundColor: rewardsUi.purpleSoft,
+    borderRadius: rewardsUi.pillRadius,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderWidth: 1,
+    borderColor: "#D9CFFF",
+  },
+  heroBalanceValue: {
+    fontSize: 15,
+    fontWeight: "900",
+    color: rewardsUi.purpleDeep,
+  },
   help: { color: colors.textMuted, textAlign: "center", marginTop: 8 },
   section: {
     fontWeight: "800",

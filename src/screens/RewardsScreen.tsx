@@ -10,7 +10,7 @@ import {
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
-import { colors } from "../theme/colors";
+import { colors, softTint } from "../theme/colors";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
@@ -151,12 +151,30 @@ export function RewardsScreen({ navigation }: Props) {
                     <Text style={styles.childChevron} accessibilityElementsHidden>
                       {expanded ? "▼" : "▶"}
                     </Text>
-                    <View style={styles.childSummary}>
-                      <Text style={styles.childName} numberOfLines={1}>
+                    <View
+                      style={[
+                        rewardsStyles.avatarCircle,
+                        {
+                          backgroundColor: softTint(child.color || colors.primary, 0.2),
+                          borderColor: child.color || colors.primary,
+                          borderWidth: 2,
+                        },
+                      ]}
+                    >
+                      <Text style={rewardsStyles.avatarEmoji}>{child.emoji}</Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.childName}>
                         {child.name} {child.emoji}
                       </Text>
-                      <Text style={styles.balanceInline} numberOfLines={1}>
-                        {t("rewards.soldeChip", { amount: bal, unit })}
+                      <Text style={styles.sectionLabel}>{t("rewards.childSectionLabel")}</Text>
+                      <Text
+                        style={[styles.statusLabel, active ? styles.statusOn : styles.statusOff]}
+                      >
+                        {active ? t("rewards.activated") : t("rewards.deactivated")}
+                        {active
+                          ? ` · ${t("rewards.soldeChip", { amount: bal, unit })}`
+                          : ""}
                       </Text>
                     </View>
                   </Pressable>
@@ -175,6 +193,9 @@ export function RewardsScreen({ navigation }: Props) {
 
                 {expanded ? (
                   <View style={styles.childBody}>
+                    <Text style={styles.balanceDetail}>
+                      {t("rewards.soldeChip", { amount: bal, unit })}
+                    </Text>
                     <Text style={styles.unitRowLabel}>{t("rewards.unitRowLabel")}</Text>
                     <View style={[styles.unitRow, !active && styles.unitRowDisabled]}>
                       <View style={rewardsStyles.unitSeg}>
@@ -274,33 +295,37 @@ const styles = StyleSheet.create({
     borderColor: rewardsUi.peach,
     backgroundColor: rewardsUi.peachSoft,
   },
-  childHeader: { flexDirection: "row", alignItems: "center", gap: 10 },
-  childIdentity: { flexDirection: "row", alignItems: "center", gap: 8, flex: 1, minWidth: 0 },
+  childHeader: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
+  childIdentity: { flexDirection: "row", alignItems: "flex-start", gap: 10, flex: 1 },
   childChevron: {
     fontSize: 12,
     color: rewardsUi.navyMuted,
     fontWeight: "800",
+    marginTop: 16,
     width: 14,
   },
-  childSummary: {
-    flex: 1,
-    minWidth: 0,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
+  childName: { fontWeight: "800", color: rewardsUi.navy, fontSize: 16 },
+  sectionLabel: {
+    fontWeight: "700",
+    fontSize: 12,
+    color: rewardsUi.navyMuted,
+    marginTop: 1,
+    letterSpacing: 0.2,
   },
-  childName: { flexShrink: 1, fontWeight: "800", color: rewardsUi.navy, fontSize: 16 },
-  balanceInline: {
-    flexShrink: 0,
-    color: rewardsUi.navy,
-    fontSize: 14,
-    fontWeight: "800",
-  },
+  statusLabel: { fontWeight: "700", fontSize: 13, marginTop: 2 },
+  statusOn: { color: colors.success },
+  statusOff: { color: colors.textMuted },
   childBody: {
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: "#F0E0D0",
+  },
+  balanceDetail: {
+    color: rewardsUi.navy,
+    fontSize: 14,
+    fontWeight: "800",
+    marginBottom: 10,
   },
   unitRowLabel: {
     fontWeight: "700",
