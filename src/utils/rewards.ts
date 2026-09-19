@@ -53,6 +53,61 @@ export function ledgerHasEarnForCompletion(
   );
 }
 
+/** Note written on adjust rows that reverse a credited earn after uncomplete. */
+export const VOID_UNCOMPLETE_NOTE = "void_uncomplete";
+
+export function ledgerHasVoidForCompletion(
+  ledger: RewardLedgerEntry[],
+  completionId: string
+): RewardLedgerEntry | undefined {
+  return ledger.find(
+    (e) =>
+      e.kind === "adjust" &&
+      e.completionId === completionId &&
+      e.note === VOID_UNCOMPLETE_NOTE
+  );
+}
+
+/**
+ * Active (not voided) earn for a completion. Used by pending list + validate
+ * so a voided earn does not block re-earn after a rare same-id race.
+ */
+export function ledgerHasActiveEarnForCompletion(
+  ledger: RewardLedgerEntry[],
+  completionId: string
+): RewardLedgerEntry | undefined {
+  const earn = ledgerHasEarnForCompletion(ledger, completionId);
+  if (!earn) return undefined;
+  if (ledgerHasVoidForCompletion(ledger, completionId)) return undefined;
+  return earn;
+}
+
+/**
+ * Build a local optimistic void adjust for an uncomplete, or null if there is
+ * nothing to reverse (pending-only / already voided / no earn).
+ */
+export function buildVoidAdjustForCompletion(
+  ledger: RewardLedgerEntry[],
+  completion: Pick<TaskCompletion, "id" | "taskId" | "childId">,
+  familyId: string,
+  id: string,
+  createdAt = new Date().toISOString()
+): RewardLedgerEntry | null {
+  const earn = ledgerHasActiveEarnForCompletion(ledger, completion.id);
+  if (!earn) return null;
+  return {
+    id,
+    familyId,
+    childProfileId: completion.childId,
+    amount: -earn.amount,
+    kind: "adjust",
+    taskId: completion.taskId,
+    completionId: completion.id,
+    note: VOID_UNCOMPLETE_NOTE,
+    createdAt,
+  };
+}
+
 export function ledgerForChild(
   ledger: RewardLedgerEntry[],
   childProfileId: string
@@ -126,6 +181,7 @@ export function listPendingEarns(
   const earned = new Set(
     ledger
       .filter((e) => e.kind === "earn" && e.completionId)
+      .filter((e) => !ledgerHasVoidForCompletion(ledger, e.completionId as string))
       .map((e) => e.completionId as string)
   );
   const out: PendingEarnItem[] = [];

@@ -42,10 +42,11 @@ import {
 } from "../types";
 import {
   balanceForChild,
+  buildVoidAdjustForCompletion,
   emptyRewardsState,
   isRewardsActiveForChild as isRewardsActiveForChildUtil,
   ledgerForChild,
-  ledgerHasEarnForCompletion,
+  ledgerHasActiveEarnForCompletion,
   listPendingEarns,
   PendingEarnItem,
   pointsForTask,
@@ -466,15 +467,32 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [familyId, persistLocal, state, cacheCloudSnapshot, flushPending]);
 
   const unmarkTaskDone = useCallback(async (taskId: string, date = todayISO()) => {
+    const applyLocalUnmark = (prev: AppState): AppState => {
+      const completion = prev.completions.find((c) => c.taskId === taskId && c.date === date);
+      const completions = prev.completions.filter((c) => !(c.taskId === taskId && c.date === date));
+      let rewardLedger = prev.rewardLedger ?? [];
+      if (completion) {
+        const fid = familyId || prev.rewardSettings?.familyId || "local";
+        const voidEntry = buildVoidAdjustForCompletion(
+          rewardLedger,
+          completion,
+          fid,
+          newCloudId()
+        );
+        if (voidEntry) {
+          rewardLedger = [voidEntry, ...rewardLedger];
+        }
+      }
+      return { ...prev, completions, rewardLedger };
+    };
+
     if (familyId) {
       const online = await probeOnline(2_000);
       if (online) {
         try {
           await cloudUnmarkDone(taskId, date);
-          const next = {
-            ...stateRef.current,
-            completions: stateRef.current.completions.filter((c) => !(c.taskId === taskId && c.date === date)),
-          };
+          // DB trigger voids credited earn; mirror locally for immediate solde update.
+          const next = applyLocalUnmark(stateRef.current);
           stateRef.current = next;
           setState(next);
           void cacheCloudSnapshot(next);
@@ -488,10 +506,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      const next = {
-        ...stateRef.current,
-        completions: stateRef.current.completions.filter((c) => !(c.taskId === taskId && c.date === date)),
-      };
+      const next = applyLocalUnmark(stateRef.current);
       stateRef.current = next;
       setState(next);
       void cacheCloudSnapshot(next);
@@ -501,7 +516,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setSyncError("offline");
       return;
     }
-    await persistLocal({ ...state, completions: state.completions.filter((c) => !(c.taskId === taskId && c.date === date)) });
+    await persistLocal(applyLocalUnmark(state));
   }, [familyId, persistLocal, state, cacheCloudSnapshot, flushPending]);
 
   const clearCompletionPhoto = useCallback(async (completionId: string) => {
@@ -906,7 +921,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [state.rewardTasks]
   );
   const isEarnValidated = useCallback(
-    (completionId: string) => !!ledgerHasEarnForCompletion(state.rewardLedger ?? [], completionId),
+    (completionId: string) => !!ledgerHasActiveEarnForCompletion(state.rewardLedger ?? [], completionId),
     [state.rewardLedger]
   );
 
@@ -1125,7 +1140,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const pts = pointsForTask(prev.rewardTasks ?? [], taskId);
       if (pts == null) return null;
 
-      const existing = ledgerHasEarnForCompletion(prev.rewardLedger ?? [], completionId);
+      const existing = ledgerHasActiveEarnForCompletion(prev.rewardLedger ?? [], completionId);
       if (existing) return existing;
 
       if (familyId) {
@@ -1141,11 +1156,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         });
         setState((p) => {
           const ledger = p.rewardLedger ?? [];
-          if (ledger.some((e) => e.id === saved.id || (e.completionId === completionId && e.kind === "earn"))) {
+          const hasActiveEarn = ledgerHasActiveEarnForCompletion(ledger, completionId);
+          if (ledger.some((e) => e.id === saved.id) || hasActiveEarn) {
             const next = {
               ...p,
               rewardLedger: ledger.map((e) =>
-                e.completionId === completionId && e.kind === "earn" ? saved : e
+                e.id === saved.id || (hasActiveEarn && e.completionId === completionId && e.kind === "earn")
+                  ? saved
+                  : e
               ),
             };
             stateRef.current = next;
