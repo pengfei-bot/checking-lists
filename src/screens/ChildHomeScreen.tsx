@@ -261,14 +261,6 @@ export function ChildHomeScreen({ navigation }: Props) {
                         {done ? "✓" : ""}
                       </Text>
                     </Pressable>
-                    {burst?.taskId === task.id ? (
-                      <RewardCelebration
-                        key={burst.key}
-                        amount={burst.amount}
-                        unitKind={burst.unitKind}
-                        onFinished={clearBurst}
-                      />
-                    ) : null}
                   </View>
 
                   <Pressable
@@ -309,6 +301,15 @@ export function ChildHomeScreen({ navigation }: Props) {
 
         </View>
       </ScrollView>
+
+      {burst ? (
+        <RewardCelebration
+          key={burst.key}
+          amount={burst.amount}
+          unitKind={burst.unitKind}
+          onFinished={clearBurst}
+        />
+      ) : null}
 
       <BuildStamp />
       <ChildRewardsBottomNav

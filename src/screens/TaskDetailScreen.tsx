@@ -196,19 +196,9 @@ export function TaskDetailScreen({ navigation, route }: Props) {
 
   if (isChild) {
     return (
-      <>
+      <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.statusEmoji}>{done ? "⭐" : "○"}</Text>
-        <View style={styles.celebrateHost} pointerEvents="none">
-          {burst ? (
-            <RewardCelebration
-              key={burst.key}
-              amount={burst.amount}
-              unitKind={burst.unitKind}
-              onFinished={clearBurst}
-            />
-          ) : null}
-        </View>
         <Text style={styles.childEmoji}>{child?.emoji ?? "✅"}</Text>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
         <Text style={styles.childTitle}>{task.title}</Text>
@@ -288,6 +278,14 @@ export function TaskDetailScreen({ navigation, route }: Props) {
 
         <PrimaryButton label={t("common.back")} variant="ghost" onPress={() => navigation.goBack()} style={{ marginTop: 8 }} />
       </ScrollView>
+      {burst ? (
+        <RewardCelebration
+          key={burst.key}
+          amount={burst.amount}
+          unitKind={burst.unitKind}
+          onFinished={clearBurst}
+        />
+      ) : null}
       <PhotoLightbox
         uri={lightbox?.uri ?? null}
         visible={!!lightbox}
@@ -295,7 +293,7 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         subtitle={lightbox?.subtitle}
         onClose={() => setLightbox(null)}
       />
-      </>
+      </View>
     );
   }
 
@@ -408,18 +406,9 @@ export function TaskDetailScreen({ navigation, route }: Props) {
 }
 
 const styles = StyleSheet.create({
+  root: { flex: 1 },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
   container: { padding: 16, paddingBottom: 40, backgroundColor: colors.bg, flexGrow: 1 },
-  celebrateHost: {
-    position: "relative",
-    overflow: "visible",
-    alignSelf: "center",
-    width: 120,
-    height: 48,
-    marginTop: -8,
-    marginBottom: -8,
-    zIndex: 5,
-  },
   statusEmoji: { fontSize: 72, textAlign: "center", marginTop: 8 },
   emoji: { fontSize: 40 },
   childEmoji: { fontSize: 40, textAlign: "center" },
