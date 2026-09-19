@@ -527,6 +527,7 @@
     "pendingForChild": "{{count}} to validate",
     "unitRowLabel": "Unit (€ / ⭐)",
     "openChildHistory": "View balance and history",
+    "childDetails": "Details",
     "creditedOnComplete": "Credited on completion",
     "pointsOnTaskTip": "Points are set on each task — open Create / Edit task to choose 0, 1, 2, 5…",
     "activateForChild": "Enable rewards for this child"

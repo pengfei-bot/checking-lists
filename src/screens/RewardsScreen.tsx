@@ -17,7 +17,7 @@ import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { BuildStamp } from "../components/BuildStamp";
 import { frenchCloudError } from "../utils/cloudTimeout";
-import { notifyUser } from "../utils/feedback";
+import { confirmUser, notifyUser } from "../utils/feedback";
 import { RewardUnitKind } from "../types";
 import { unitShortKey } from "../utils/rewards";
 import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
@@ -35,6 +35,7 @@ export function RewardsScreen({ navigation }: Props) {
     upsertChildRewardSettings,
     ensureMissingChildRewardSettings,
     isRewardsActiveForChild,
+    resetChildBalance,
     unitKindFor,
   } = useApp();
 
@@ -85,6 +86,29 @@ export function RewardsScreen({ navigation }: Props) {
       await upsertChildRewardSettings(childId, { unitKind: kind });
     } catch (e) {
       notifyUser(t("common.error"), frenchCloudError(e, t("rewards.saveFailed")));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onResetChild = async (childId: string, childName: string, balance: number, unit: string) => {
+    if (balance <= 0) {
+      notifyUser(t("rewards.resetTitle"), t("rewards.resetEmpty"));
+      return;
+    }
+    const confirmed = await confirmUser(
+      t("rewards.resetTitle"),
+      t("rewards.resetBody", { name: childName, balance, unit }),
+      t("rewards.resetConfirm")
+    );
+    if (!confirmed) return;
+
+    setSaving(true);
+    try {
+      await resetChildBalance(childId);
+      notifyUser(t("rewards.resetDoneTitle"), t("rewards.resetDoneBody"));
+    } catch (e) {
+      notifyUser(t("common.error"), frenchCloudError(e, t("rewards.resetFailed")));
     } finally {
       setSaving(false);
     }
@@ -152,9 +176,6 @@ export function RewardsScreen({ navigation }: Props) {
                           ? ` · ${t("rewards.soldeChip", { amount: bal, unit })}`
                           : ""}
                       </Text>
-                      <Text style={styles.expandHint}>
-                        {expanded ? t("rewards.tapToCollapse") : t("rewards.tapToExpand")}
-                      </Text>
                     </View>
                   </Pressable>
                   <Switch
@@ -170,13 +191,11 @@ export function RewardsScreen({ navigation }: Props) {
                   />
                 </View>
 
-                <View style={styles.tipBanner}>
-                  <Text style={styles.tipBannerIcon}>💡</Text>
-                  <Text style={styles.tipBannerText}>{t("rewards.pointsOnTaskTip")}</Text>
-                </View>
-
                 {expanded ? (
                   <View style={styles.childBody}>
+                    <Text style={styles.balanceDetail}>
+                      {t("rewards.soldeChip", { amount: bal, unit })}
+                    </Text>
                     <Text style={styles.unitRowLabel}>{t("rewards.unitRowLabel")}</Text>
                     <View style={[styles.unitRow, !active && styles.unitRowDisabled]}>
                       <View style={rewardsStyles.unitSeg}>
@@ -216,35 +235,28 @@ export function RewardsScreen({ navigation }: Props) {
                         </Pressable>
                       </View>
                     </View>
-                    <Pressable
+                    <Text style={styles.pointsNote}>{t("rewards.configureCta")}</Text>
+                    <PrimaryButton
+                      label={`⚙️ ${t("rewards.childDetails")}`}
+                      variant="secondary"
                       onPress={() =>
                         navigation.navigate("RewardsChild", { childId: child.id })
                       }
-                      style={styles.historyLink}
-                      accessibilityRole="link"
-                    >
-                      <Text style={styles.historyLinkText}>
-                        {t("rewards.openChildHistory")} →
-                      </Text>
-                    </Pressable>
+                      style={styles.settingsButton}
+                    />
+                    <PrimaryButton
+                      label={t("rewards.resetButton")}
+                      variant="danger"
+                      onPress={() => void onResetChild(child.id, child.name, bal, unit)}
+                      disabled={saving}
+                      style={styles.resetButton}
+                    />
                   </View>
                 ) : null}
               </View>
             );
           })
         )}
-
-        <View style={rewardsStyles.infoBanner}>
-          <View style={rewardsStyles.infoBannerIcon}>
-            <Text style={rewardsStyles.infoBannerIconText}>i</Text>
-          </View>
-          <Text style={rewardsStyles.infoBannerText}>{t("rewards.parentOnlyActivate")}</Text>
-        </View>
-
-        <View style={styles.pointsTipCard}>
-          <Text style={styles.section}>{t("rewards.configurePoints")}</Text>
-          <Text style={styles.help}>{t("rewards.configurePointsHelp")}</Text>
-        </View>
 
         <BuildStamp />
         <View style={{ height: 72 }} />
@@ -303,37 +315,17 @@ const styles = StyleSheet.create({
   statusLabel: { fontWeight: "700", fontSize: 13, marginTop: 2 },
   statusOn: { color: colors.success },
   statusOff: { color: colors.textMuted },
-  expandHint: {
-    marginTop: 3,
-    fontSize: 11,
-    fontWeight: "600",
-    color: rewardsUi.navyMuted,
-  },
-  tipBanner: {
-    marginTop: 10,
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: rewardsUi.pillRadius,
-    borderWidth: 1,
-    borderColor: "#F0E0D0",
-    backgroundColor: "#FFF9F3",
-  },
-  tipBannerIcon: { fontSize: 14, marginTop: 1 },
-  tipBannerText: {
-    flex: 1,
-    fontWeight: "600",
-    color: rewardsUi.navyMuted,
-    fontSize: 13,
-    lineHeight: 18,
-  },
   childBody: {
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: "#F0E0D0",
+  },
+  balanceDetail: {
+    color: rewardsUi.navy,
+    fontSize: 14,
+    fontWeight: "800",
+    marginBottom: 10,
   },
   unitRowLabel: {
     fontWeight: "700",
@@ -343,24 +335,18 @@ const styles = StyleSheet.create({
   },
   unitRow: { marginTop: 0 },
   unitRowDisabled: { opacity: 0.4 },
-  historyLink: {
-    marginTop: 12,
-    alignSelf: "flex-start",
-    paddingVertical: 6,
+  pointsNote: {
+    color: rewardsUi.navyMuted,
+    fontSize: 12,
+    fontWeight: "600",
+    marginTop: 10,
   },
-  historyLinkText: {
-    fontWeight: "800",
-    color: colors.primary,
-    fontSize: 13,
+  settingsButton: {
+    marginTop: 10,
+    alignSelf: "stretch",
   },
-  pointsTipCard: {
-    marginTop: 8,
-    marginBottom: 4,
-    backgroundColor: colors.card,
-    borderRadius: rewardsUi.cardRadius,
-    borderWidth: 1,
-    borderColor: "#F0E0D0",
-    padding: 14,
-    ...rewardsUi.shadow,
+  resetButton: {
+    marginTop: 10,
+    alignSelf: "stretch",
   },
 });

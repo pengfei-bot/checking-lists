@@ -527,6 +527,7 @@
     "pendingForChild": "{{count}} à valider",
     "unitRowLabel": "Unité (€ / ⭐)",
     "openChildHistory": "Voir solde et historique",
+    "childDetails": "Détail",
     "creditedOnComplete": "Crédité à la complétion",
     "pointsOnTaskTip": "Les points se règlent sur chaque tâche — ouvrez Créer / Modifier une tâche pour choisir 0, 1, 2, 5…",
     "activateForChild": "Activez les récompenses pour cet enfant"
