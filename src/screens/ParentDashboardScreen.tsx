@@ -223,10 +223,13 @@ export function ParentDashboardScreen({ navigation }: Props) {
                 <Pressable
                   key={child.id}
                   onPress={() => setFilterChildId(isSelected ? "all" : child.id)}
-                  style={[
+                  style={({ pressed }) => [
                     styles.statCard,
-                    isSelected && styles.statCardSelected,
-                    filterChildId === "all" && styles.statCardCompact,
+                    isSelected ? styles.statCardSelected : null,
+                    filterChildId === "all" ? styles.statCardCompact : null,
+                    pressed ? { opacity: 0.92 } : null,
+                    // RN-web focus ring can look like a coral outline
+                    { outlineWidth: 0, outlineStyle: "solid", outlineColor: "transparent" } as object,
                   ]}
                 >
                   <Text style={styles.statEmoji}>{child.emoji}</Text>
@@ -549,11 +552,17 @@ const styles = StyleSheet.create({
   },
   statCardCompact: { paddingVertical: 8 },
   statCardSelected: {
-    // M2 mockup: selected child = raised white card, no coral outline
+    // M2: cream fill + shadow only — never coral/orange outline
     borderWidth: 0,
-    backgroundColor: "#FFF8F0",
+    borderColor: "transparent",
+    backgroundColor: "#FFEFD9",
     minWidth: "100%",
     flexBasis: "100%",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
   },
   statEmoji: { fontSize: 28 },
   statName: { fontWeight: "700", marginTop: 4 },
