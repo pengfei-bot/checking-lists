@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Histórico",
@@ -319,7 +323,9 @@
     "deleteBody": "“O” e suas tarefas / completações serão removidas. Isto não pode ser desfeito.",
     "deletedTitle": "Criança excluída",
     "deletedBody": "Foi removido da família.",
-    "deleteFailed": "Não foi possível apagar a criança."
+    "deleteFailed": "Não foi possível apagar a criança.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Todos os dias",

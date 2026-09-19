@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "プロフィール",
@@ -319,7 +323,9 @@
     "deleteBody": "「000」とタスク/完了が削除されます。 これは元に戻すことができません。",
     "deletedTitle": "削除された子供",
     "deletedBody": "⟦00 は家族から削除されました。",
-    "deleteFailed": "削除できません。"
+    "deleteFailed": "削除できません。",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "日替わり",

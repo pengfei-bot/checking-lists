@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Istorija",
@@ -319,7 +323,9 @@
     "deleteBody": "Bus pašalintos jų užduotys / papildymai. To negalima panaikinti.",
     "deletedTitle": "Vaikas pašalintas",
     "deletedBody": "Iš šeimos buvo pašalinta maždaug 0 kN.",
-    "deleteFailed": "Nepavyko ištrinti vaiko."
+    "deleteFailed": "Nepavyko ištrinti vaiko.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Kiekvieną dieną",

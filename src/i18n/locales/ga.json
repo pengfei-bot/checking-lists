@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Stair na Staire",
@@ -319,7 +323,9 @@
     "deleteBody": "“Seolfar” agus bainfear a gcuid cúraimí / críochnaithe. Ní féidir é seo a bheith gan amhras.",
     "deletedTitle": "Linbh scriosta",
     "deletedBody": "Baineadh an leathanach seo as an teaghlach.",
-    "deleteFailed": "Níorbh fhéidir an leanbh a scriosadh."
+    "deleteFailed": "Níorbh fhéidir an leanbh a scriosadh.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Gach lá",

@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Storia",
@@ -319,7 +323,9 @@
     "deleteBody": "“{{name}}” e i loro compiti / completamento saranno rimossi. Questo non può essere annullato.",
     "deletedTitle": "Bambino cancellato",
     "deletedBody": "{{name}} è stato rimosso dalla famiglia.",
-    "deleteFailed": "Non poteva eliminare il bambino."
+    "deleteFailed": "Non poteva eliminare il bambino.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Ogni giorno",

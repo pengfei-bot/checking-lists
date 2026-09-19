@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Vēsture",
@@ -319,7 +323,9 @@
     "deleteBody": "“””un to uzdevumi / pabeigšanas tiks noņemti. To nevar atcelt.",
     "deletedTitle": "Bērns svītrots",
     "deletedBody": "",
-    "deleteFailed": "Neizdevās izdzēst bērnu."
+    "deleteFailed": "Neizdevās izdzēst bērnu.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Katru dienu",

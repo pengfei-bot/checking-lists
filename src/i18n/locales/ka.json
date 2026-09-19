@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "ისტორია",
@@ -319,7 +323,9 @@
     "deleteBody": "“{{name}}” and their tasks / completions will be removed. This cannot be undone.",
     "deletedTitle": "Child deleted",
     "deletedBody": "{{name}} was removed from the family.",
-    "deleteFailed": "Could not delete the child."
+    "deleteFailed": "Could not delete the child.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "ყოველდღე",

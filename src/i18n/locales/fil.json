@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Kasaysayan",
@@ -319,7 +323,9 @@
     "deleteBody": "Ang “{{name}}” at ang kanilang mga atas / mga pagtatapos ay aalisin. Hindi ito maaaring alisin.",
     "deletedTitle": "Inalis ang mga Bata",
     "deletedBody": "Ang {{name}} ay inalis sa pamilya.",
-    "deleteFailed": "Hindi mabale - wala ang bata."
+    "deleteFailed": "Hindi mabale - wala ang bata.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Araw - araw",

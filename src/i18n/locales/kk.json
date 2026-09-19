@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Tarih Tarihi",
@@ -319,7 +323,9 @@
     "deleteBody": "“⟦0.” ve görevleri / tamamlamaları kaldırılacaktır. Bu geri alınmaz.",
     "deletedTitle": "Çocuk silindi",
     "deletedBody": ".0 the aileden kaldırıldı.",
-    "deleteFailed": "Çocuğu silemez."
+    "deleteFailed": "Çocuğu silemez.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Her gün her gün",

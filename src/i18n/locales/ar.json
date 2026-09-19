@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "التاريخ",
@@ -319,7 +323,9 @@
     "deleteBody": "&quot; ⟧ &quot; وستحذف مهامهم/الإنجازات. هذا لا يمكن أن يزول",
     "deletedTitle": "الطفل المحذوب",
     "deletedBody": "أزيلت من العائلة",
-    "deleteFailed": "لا يمكن حذف الطفل."
+    "deleteFailed": "لا يمكن حذف الطفل.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "كل يوم",

@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Historie",
@@ -319,7 +323,9 @@
     "deleteBody": "Og deres opgaver vil blive fjernet. Det kan ikke gøres om.",
     "deletedTitle": "Barn slettet",
     "deletedBody": "Den blev fjernet fra familien.",
-    "deleteFailed": "Kunne ikke slette barnet."
+    "deleteFailed": "Kunne ikke slette barnet.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Hver dag",

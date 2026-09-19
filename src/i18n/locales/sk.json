@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Dejiny",
@@ -319,7 +323,9 @@
     "deleteBody": "A ich úlohy / dokončenie budú odstránené. Toto sa nedá zrušiť.",
     "deletedTitle": "Zmazané dieťa",
     "deletedBody": "Z rodiny bol odstránený.",
-    "deleteFailed": "Nepodarilo sa odstrániť dieťa."
+    "deleteFailed": "Nepodarilo sa odstrániť dieťa.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Každý deň",

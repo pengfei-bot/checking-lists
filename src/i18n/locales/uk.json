@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Історія",
@@ -319,7 +323,9 @@
     "deleteBody": "⟦ ⟦ ⟦ ⟦ Це не може бути неоновим.",
     "deletedTitle": "Дитина видалена",
     "deletedBody": "浜у 涓 蹇",
-    "deleteFailed": "Не можна видалити дитину."
+    "deleteFailed": "Не можна видалити дитину.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Щодня",

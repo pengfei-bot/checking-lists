@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "История",
@@ -319,7 +323,9 @@
     "deleteBody": "И техните задачи ще бъдат премахнати. Това не може да бъде отменено.",
     "deletedTitle": "Изтрито дете",
     "deletedBody": "Отстранен е от семейството.",
-    "deleteFailed": "Детето не може да бъде изтрито."
+    "deleteFailed": "Детето не може да бъде изтрито.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Всеки ден",

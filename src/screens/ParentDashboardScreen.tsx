@@ -14,7 +14,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
-import { colors } from "../theme/colors";
+import { colors, softTint } from "../theme/colors";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
@@ -196,25 +196,32 @@ export function ParentDashboardScreen({ navigation }: Props) {
               {t("common.all")}
             </Text>
           </Pressable>
-          {childrenProfiles.map((c) => (
-            <Pressable
-              key={c.id}
-              onPress={() => setFilterChildId(c.id)}
-              style={[
-                rewardsStyles.filterChip,
-                filterChildId === c.id && rewardsStyles.filterChipActiveOrange,
-              ]}
-            >
-              <Text
+          {childrenProfiles.map((c) => {
+            const active = filterChildId === c.id;
+            const chipColor = c.color || colors.primary;
+            return (
+              <Pressable
+                key={c.id}
+                onPress={() => setFilterChildId(c.id)}
                 style={[
-                  rewardsStyles.filterChipText,
-                  filterChildId === c.id && rewardsStyles.filterChipTextActive,
+                  rewardsStyles.filterChip,
+                  {
+                    borderColor: chipColor,
+                    backgroundColor: active ? chipColor : softTint(chipColor, 0.14),
+                  },
                 ]}
               >
-                {c.emoji} {c.name}
-              </Text>
-            </Pressable>
-          ))}
+                <Text
+                  style={[
+                    rewardsStyles.filterChipText,
+                    active && { color: "#fff" },
+                  ]}
+                >
+                  {c.emoji} {c.name}
+                </Text>
+              </Pressable>
+            );
+          })}
         </ScrollView>
 
         {/* M2: tasks-first — only show cream selected-child card when filtered */}
@@ -227,11 +234,26 @@ export function ParentDashboardScreen({ navigation }: Props) {
                 style={({ pressed }) => [
                   styles.statCard,
                   styles.statCardSelected,
+                  {
+                    backgroundColor: softTint(child.color || colors.primary, 0.18),
+                    borderWidth: 2,
+                    borderColor: child.color || colors.primary,
+                  },
                   pressed ? { opacity: 0.92 } : null,
                   { outlineWidth: 0, outlineStyle: "solid", outlineColor: "transparent" } as object,
                 ]}
               >
-                <Text style={styles.statEmoji}>{child.emoji}</Text>
+                <View
+                  style={[
+                    styles.childAvatar,
+                    {
+                      backgroundColor: softTint(child.color || colors.primary, 0.35),
+                      borderColor: child.color || colors.primary,
+                    },
+                  ]}
+                >
+                  <Text style={styles.statEmoji}>{child.emoji}</Text>
+                </View>
                 <Text style={styles.statName} numberOfLines={1}>
                   {child.name}
                 </Text>
@@ -566,6 +588,15 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 3 },
     elevation: 3,
+  },
+  childAvatar: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    marginBottom: 2,
   },
   statEmoji: { fontSize: 28 },
   statName: { fontWeight: "700", marginTop: 4 },

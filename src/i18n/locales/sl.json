@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Zgodovina",
@@ -319,7 +323,9 @@
     "deleteBody": "‚ & quot; in njihove naloge/dokončanja bodo odstranjena. Tega ni mogoče popraviti.",
     "deletedTitle": "Otrok izbrisan",
     "deletedBody": "",
-    "deleteFailed": "Ni moč zbrisati otroka."
+    "deleteFailed": "Ni moč zbrisati otroka.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Vsak dan",

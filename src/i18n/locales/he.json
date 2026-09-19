@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "היסטוריה",
@@ -319,7 +323,9 @@
     "deleteBody": "\"⟦0\" ומשימותיהם / השלמתם יוסרו. זה לא יכול להיות בלתי חוקי.",
     "deletedTitle": "הילד נמחק",
     "deletedBody": "⟦0 הוסר מהמשפחה.",
-    "deleteFailed": "לא יכול למחוק את הילד."
+    "deleteFailed": "לא יכול למחוק את הילד.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "כל יום",

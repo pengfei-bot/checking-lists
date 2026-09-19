@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Historia",
@@ -319,7 +323,9 @@
     "deleteBody": "Tätä ei voi perua.",
     "deletedTitle": "Lapsi poistettu",
     "deletedBody": "Hänet poistettiin perheestä.",
-    "deleteFailed": "Lapsia ei voitu poistaa."
+    "deleteFailed": "Lapsia ei voitu poistaa.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Joka päivä",

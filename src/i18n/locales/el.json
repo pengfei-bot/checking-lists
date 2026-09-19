@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Ιστορία",
@@ -319,7 +323,9 @@
     "deleteBody": "“{{name}}” και οι εργασίες / ολοκλήρωσή τους θα αφαιρεθούν. Αυτό δεν μπορεί να αναιρεθεί.",
     "deletedTitle": "Διαγραφή παιδιού",
     "deletedBody": "{{name}} απομακρύνθηκε από την οικογένεια.",
-    "deleteFailed": "Αδυναμία διαγραφής του παιδιού."
+    "deleteFailed": "Αδυναμία διαγραφής του παιδιού.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Κάθε μέρα",

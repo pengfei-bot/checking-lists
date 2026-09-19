@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Historia",
@@ -319,7 +323,9 @@
     "deleteBody": "“{{name}}” y sus tareas / terminaciones serán eliminadas. Esto no puede ser deshecho.",
     "deletedTitle": "Niños eliminados",
     "deletedBody": "{{name}} fue eliminado de la familia.",
-    "deleteFailed": "No pude eliminar al niño."
+    "deleteFailed": "No pude eliminar al niño.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Cada día",

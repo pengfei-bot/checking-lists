@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "历史",
@@ -319,7 +323,9 @@
     "deleteBody": "“+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 这一点是无法消除的。",
     "deletedTitle": "已删除",
     "deletedBody": "{{name}}被家庭除名.",
-    "deleteFailed": "无法删除孩子 。"
+    "deleteFailed": "无法删除孩子 。",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "每天都这样",

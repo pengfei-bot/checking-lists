@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Történelem",
@@ -319,7 +323,9 @@
     "deleteBody": "A \"0\" és a feladatok / kiegészítések törlésre kerülnek. Ezt nem lehet visszacsinálni.",
     "deletedTitle": "Törölt gyermek",
     "deletedBody": "Eltávolították a családból.",
-    "deleteFailed": "Nem sikerült törölni a gyermeket."
+    "deleteFailed": "Nem sikerült törölni a gyermeket.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Minden nap",

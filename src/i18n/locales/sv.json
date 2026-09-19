@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Historia historia",
@@ -319,7 +323,9 @@
     "deleteBody": "”0 ́” och deras uppgifter/slutföranden kommer att tas bort. Detta kan inte vara ogjort.",
     "deletedTitle": "Barn raderade",
     "deletedBody": "0, togs bort från familjen.",
-    "deleteFailed": "Kunde inte ta bort barnet."
+    "deleteFailed": "Kunde inte ta bort barnet.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Varje dag",

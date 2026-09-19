@@ -3,7 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
-import { colors } from "../theme/colors";
+import { colors, softTint } from "../theme/colors";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
@@ -121,10 +121,12 @@ export function RewardsChildScreen({ navigation, route }: Props) {
     return t("rewards.validatedByParent");
   };
 
+  const tint = softTint(child.color || colors.primary, 0.22);
+
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { backgroundColor: softTint(child.color || colors.primary, 0.08) }]}>
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-        <View style={styles.headerBlock}>
+        <View style={[styles.headerBlock, styles.headerTint, { backgroundColor: tint }]}>
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>
               {isOwnChild ? t("rewards.myHistory") : `${child.emoji} ${child.name}`}
@@ -301,6 +303,15 @@ const styles = StyleSheet.create({
     maxWidth: 480,
     width: "100%",
     alignSelf: "center",
+  },
+  headerTint: {
+    marginHorizontal: -16,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 14,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    marginBottom: 8,
   },
   headerBlock: {
     flexDirection: "row",

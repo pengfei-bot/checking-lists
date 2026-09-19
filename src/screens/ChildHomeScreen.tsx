@@ -10,8 +10,10 @@ import {
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
-import { colors } from "../theme/colors";
+import { ColorChips } from "../components/ColorChips";
+import { colors, softTint } from "../theme/colors";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
+import { frenchCloudError } from "../utils/cloudTimeout";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { todayISO } from "../utils/dates";
@@ -40,8 +42,10 @@ export function ChildHomeScreen({ navigation }: Props) {
     unitKindFor,
     balanceFor,
     pointsFor,
+    updateChild,
   } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [colorBusy, setColorBusy] = useState(false);
 
   if (!currentProfile || currentProfile.role !== "child") {
     return (
@@ -119,11 +123,33 @@ export function ChildHomeScreen({ navigation }: Props) {
     fn();
   };
 
+  const onChangeColor = (next: string) => {
+    if (!currentProfile || currentProfile.role !== "child") return;
+    if (next === currentProfile.color) return;
+    void (async () => {
+      setColorBusy(true);
+      try {
+        await updateChild(currentProfile.id, {
+          name: currentProfile.name,
+          emoji: currentProfile.emoji,
+          color: next,
+        });
+        notifyUser(t("childHome.colorUpdated"), t("childHome.colorUpdatedBody"));
+      } catch (e) {
+        notifyUser(t("common.error"), frenchCloudError(e, t("childForm.saveFailed")));
+      } finally {
+        setColorBusy(false);
+      }
+    })();
+  };
+
+  const headerTint = softTint(currentProfile.color || rewardsUi.peach, 0.28);
+
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { backgroundColor: softTint(currentProfile.color || rewardsUi.peach, 0.08) }]}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        {/* Peach header band — M3 */}
-        <View style={styles.peachHeader}>
+        {/* Soft tint header band from child color — M5 */}
+        <View style={[styles.peachHeader, { backgroundColor: headerTint }]}>
           <View style={styles.headerRow}>
             <View style={{ flex: 1, paddingRight: 8 }}>
               <Text style={styles.hello}>
@@ -276,6 +302,10 @@ export function ChildHomeScreen({ navigation }: Props) {
                 style={{ marginTop: 8 }}
               />
             ) : null}
+            <Text style={styles.colorSectionLabel}>{t("childHome.colorSection")}</Text>
+            <View style={styles.colorRow} pointerEvents={colorBusy ? "none" : "auto"}>
+              <ColorChips value={currentProfile.color} onChange={onChangeColor} />
+            </View>
             <PrimaryButton
               label={t("common.changeProfile")}
               variant="ghost"
@@ -435,4 +465,14 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 4,
   },
+  colorSectionLabel: {
+    marginTop: 14,
+    marginBottom: 10,
+    fontSize: 13,
+    fontWeight: "800",
+    color: rewardsUi.navyMuted,
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
+  },
+  colorRow: { marginBottom: 4 },
 });

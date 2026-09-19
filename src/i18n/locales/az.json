@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Tarix",
@@ -319,7 +323,9 @@
     "deleteBody": "\"{{name}}\" və onların məsləhətləri / tamamlandıqları silinir. Bu qazanmaq mümkün deyil.",
     "deletedTitle": "Uşaq",
     "deletedBody": "{{name}} ailə çıxdı.",
-    "deleteFailed": "uşağı silmək deyil."
+    "deleteFailed": "uşağı silmək deyil.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Hər gün",

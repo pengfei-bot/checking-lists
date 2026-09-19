@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "ব্রাউজ-ইতিহাস",
@@ -319,7 +323,9 @@
     "deleteBody": "তারা তাদের কাজ এবং তাদের কাজ মুছে ফেলা হবে। এই কাজ নাকচ করা যাবে না।",
     "deletedTitle": "চাইল্ড মুছে ফেলুন",
     "deletedBody": "পরিবার থেকে মুছে ফেলা হয়েছে।",
-    "deleteFailed": "চাইল্ড মুছে ফেলতে ব্যর্থ।"
+    "deleteFailed": "চাইল্ড মুছে ফেলতে ব্যর্থ।",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "প্রতিদিন",

@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Historia",
@@ -319,7 +323,9 @@
     "deleteBody": "\"Adresaci 0\" i ich zadania / uzupełnienia zostaną usunięte. Tego nie da się cofnąć.",
     "deletedTitle": "Dziecko usunięte",
     "deletedBody": "Z rodziny został usunięty.",
-    "deleteFailed": "Nie można usunąć dziecka."
+    "deleteFailed": "Nie można usunąć dziecka.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Każdego dnia",

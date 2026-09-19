@@ -11,15 +11,17 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { PrimaryButton } from "../components/PrimaryButton";
+import { ColorChips } from "../components/ColorChips";
 import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { childColors, colors } from "../theme/colors";
+import { rewardsUi } from "../theme/rewardsUi";
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { frenchCloudError } from "../utils/cloudTimeout";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChildForm">;
 
-const EMOJI_CHOICES = ["🦁", "🦄", "🦊", "🐻", "🐼", "🐸", "🐰", "🐯", "🐨", "🐶", "🐱", "🌟"];
+const EMOJI_CHOICES = ["🦁", "🐯", "🐼", "🐶", "🐰", "🦕", "🦄", "🦊", "🐻", "🐸", "🐨", "🌟"];
 
 export function ChildFormScreen({ navigation, route }: Props) {
   const { t } = useTranslation();
@@ -32,7 +34,7 @@ export function ChildFormScreen({ navigation, route }: Props) {
     childColors[childrenProfiles.length % childColors.length] ?? childColors[0];
 
   const [name, setName] = useState(isEdit ? existing.name : "");
-  const [emoji, setEmoji] = useState(isEdit ? existing.emoji : "🌟");
+  const [emoji, setEmoji] = useState(isEdit ? existing.emoji : "🦁");
   const [color, setColor] = useState(isEdit ? existing.color : defaultColor);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -113,57 +115,56 @@ export function ChildFormScreen({ navigation, route }: Props) {
   return (
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
       <Text style={styles.title}>{isEdit ? t("childForm.editTitle") : t("childForm.newTitle")}</Text>
-      <Text style={styles.hint}>
-        Le profil apparaît dans le sélecteur, le tableau de bord, le calendrier et le formulaire de tâche.
-      </Text>
 
-      <Text style={styles.label}>{t("childForm.name")}</Text>
-      <TextInput
-        style={styles.input}
-        value={name}
-        onChangeText={setName}
-        placeholder="Ex. Léo"
-        placeholderTextColor={colors.textMuted}
-        autoFocus={!isEdit}
-      />
-
-      <Text style={styles.label}>{t("childForm.emoji")}</Text>
-      <View style={styles.rowWrap}>
-        {EMOJI_CHOICES.map((e) => (
-          <Pressable
-            key={e}
-            onPress={() => setEmoji(e)}
-            style={[styles.emojiChip, emoji === e && styles.emojiChipActive]}
-          >
-            <Text style={styles.emojiText}>{e}</Text>
-          </Pressable>
-        ))}
+      {/* Prénom */}
+      <View style={styles.card}>
+        <Text style={styles.cardLabel}>{t("childForm.name")}</Text>
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+          placeholder={t("childForm.namePlaceholder")}
+          placeholderTextColor={colors.textMuted}
+          autoFocus={!isEdit}
+        />
       </View>
 
-      <Text style={styles.label}>{t("childForm.color")}</Text>
-      <View style={styles.rowWrap}>
-        {childColors.map((c) => (
-          <Pressable
-            key={c}
-            onPress={() => setColor(c)}
-            style={[
-              styles.colorChip,
-              { backgroundColor: c },
-              color === c && styles.colorChipActive,
-            ]}
-          />
-        ))}
+      {/* Couleur */}
+      <View style={styles.card}>
+        <Text style={styles.cardLabel}>{t("childForm.color")}</Text>
+        <ColorChips value={color} onChange={setColor} />
+      </View>
+
+      {/* Emoji */}
+      <View style={styles.card}>
+        <Text style={styles.cardLabel}>{t("childForm.emoji")}</Text>
+        <View style={styles.rowWrap}>
+          {EMOJI_CHOICES.map((e) => (
+            <Pressable
+              key={e}
+              onPress={() => setEmoji(e)}
+              style={[styles.emojiChip, emoji === e && styles.emojiChipActive]}
+            >
+              <Text style={styles.emojiText}>{e}</Text>
+            </Pressable>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.infoNote}>
+        <Text style={styles.infoIcon}>ⓘ</Text>
+        <Text style={styles.infoText}>{t("childForm.colorLaterNote")}</Text>
       </View>
 
       <View style={[styles.preview, { borderColor: color }]}>
         <Text style={styles.previewEmoji}>{emoji}</Text>
-        <Text style={styles.previewName}>{name.trim() || "Prénom"}</Text>
+        <Text style={styles.previewName}>{name.trim() || t("childForm.namePlaceholder")}</Text>
       </View>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <PrimaryButton
-        label={isEdit ? t("childForm.save") : t("childForm.add")}
+        label={isEdit ? t("childForm.save") : t("childForm.create")}
         onPress={() => void onSave()}
         loading={saving}
         disabled={!canSave || saving}
@@ -192,51 +193,72 @@ export function ChildFormScreen({ navigation, route }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, paddingBottom: 48, backgroundColor: colors.bg, flexGrow: 1 },
-  title: { fontSize: 24, fontWeight: "800", color: colors.text },
-  hint: { marginTop: 8, marginBottom: 16, color: colors.textMuted, lineHeight: 20 },
-  label: {
-    marginTop: 14,
-    marginBottom: 8,
-    fontSize: 13,
-    fontWeight: "700",
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
+  container: {
+    padding: 20,
+    paddingBottom: 48,
+    backgroundColor: rewardsUi.cream,
+    flexGrow: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: rewardsUi.navy,
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  card: {
+    backgroundColor: colors.card,
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 12,
+    ...rewardsUi.shadow,
+  },
+  cardLabel: {
+    marginBottom: 12,
+    fontSize: 15,
+    fontWeight: "800",
+    color: rewardsUi.navy,
   },
   input: {
-    backgroundColor: colors.card,
+    backgroundColor: "#F7F8FC",
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: colors.text,
+    color: rewardsUi.navy,
+    fontWeight: "600",
   },
   rowWrap: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   emojiChip: {
     width: 48,
     height: 48,
-    borderRadius: 12,
-    backgroundColor: colors.card,
-    borderWidth: 2,
-    borderColor: colors.border,
+    borderRadius: 24,
+    backgroundColor: "transparent",
     alignItems: "center",
     justifyContent: "center",
   },
-  emojiChipActive: { borderColor: colors.primary, backgroundColor: colors.primarySoft },
-  emojiText: { fontSize: 24 },
-  colorChip: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "transparent",
+  emojiChipActive: { backgroundColor: rewardsUi.peachSoft },
+  emojiText: { fontSize: 26 },
+  infoNote: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 8,
+    marginTop: 4,
+    marginBottom: 12,
+    paddingHorizontal: 4,
   },
-  colorChipActive: { borderColor: colors.text, transform: [{ scale: 1.08 }] },
+  infoIcon: { fontSize: 14, color: colors.textMuted, marginTop: 1 },
+  infoText: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.textMuted,
+    fontWeight: "600",
+  },
   preview: {
-    marginTop: 20,
+    marginTop: 8,
     marginBottom: 8,
     backgroundColor: colors.card,
     borderRadius: 16,
@@ -247,7 +269,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   previewEmoji: { fontSize: 32 },
-  previewName: { fontSize: 17, fontWeight: "800", color: colors.text },
+  previewName: { fontSize: 17, fontWeight: "800", color: rewardsUi.navy },
   error: {
     marginTop: 12,
     color: colors.danger,

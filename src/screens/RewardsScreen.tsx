@@ -12,7 +12,7 @@ import {
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
-import { colors } from "../theme/colors";
+import { colors, softTint } from "../theme/colors";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
@@ -250,7 +250,7 @@ export function RewardsScreen({ navigation }: Props) {
                     <View
                       style={[
                         rewardsStyles.avatarCircle,
-                        { backgroundColor: (child.color || colors.primary) + "33" },
+                        { backgroundColor: softTint(child.color || colors.primary, 0.2), borderColor: child.color || colors.primary, borderWidth: 2 },
                       ]}
                     >
                       <Text style={rewardsStyles.avatarEmoji}>{child.emoji}</Text>

@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Voorgeschiedenis",
@@ -319,7 +323,9 @@
     "deleteBody": "De taken / voltooiingen worden verwijderd. Dit kan niet ongedaan worden gemaakt.",
     "deletedTitle": "Kind verwijderd",
     "deletedBody": "De groep werd uit de familie verwijderd.",
-    "deleteFailed": "Kon het kind niet verwijderen."
+    "deleteFailed": "Kon het kind niet verwijderen.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Elke dag",

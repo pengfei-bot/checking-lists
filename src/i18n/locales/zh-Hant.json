@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "歷史",
@@ -319,7 +323,9 @@
     "deleteBody": "他們的任務/完成將被移除。 這無法解除 。",
     "deletedTitle": "已刪除",
     "deletedBody": "{{name}}被逐出家庭.",
-    "deleteFailed": "無法刪除孩子 。"
+    "deleteFailed": "無法刪除孩子 。",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "每天",

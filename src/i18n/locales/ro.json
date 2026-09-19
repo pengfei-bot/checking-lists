@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Istoric",
@@ -319,7 +323,9 @@
     "deleteBody": "Asta nu poate fi anulată.",
     "deletedTitle": "Copii şterşi",
     "deletedBody": "A fost scos din familie.",
-    "deleteFailed": "Nu am putut şterge copilul."
+    "deleteFailed": "Nu am putut şterge copilul.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "În fiecare zi",

@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Sejarah",
@@ -319,7 +323,9 @@
     "deleteBody": "Dan segala urusan mereka akan dihapus. Ini tidak boleh dibatalkan.",
     "deletedTitle": "Anak terhapus",
     "deletedBody": "⟦0 disingkirkan dari keluarga.",
-    "deleteFailed": "Tak bisa menghapus anak itu."
+    "deleteFailed": "Tak bisa menghapus anak itu.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Setiap hari",

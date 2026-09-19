@@ -169,7 +169,11 @@
     "navHome": "Accueil",
     "navTasks": "Tâches",
     "navRewards": "Récompenses",
-    "navHistory": "Historique"
+    "navHistory": "Historique",
+    "changeColor": "Changer ma couleur",
+    "colorUpdated": "Couleur mise à jour",
+    "colorUpdatedBody": "Ta couleur a été enregistrée.",
+    "colorSection": "Couleur du profil"
   },
   "childHistory": {
     "title": "Calendrier des tâches",
@@ -301,10 +305,10 @@
   "childForm": {
     "newTitle": "Nouvel enfant",
     "editTitle": "Modifier l'enfant",
-    "name": "Prénom *",
+    "name": "Prénom",
     "namePlaceholder": "Prénom",
-    "emoji": "Emoji (optionnel)",
-    "color": "Couleur (optionnel)",
+    "emoji": "Emoji",
+    "color": "Couleur",
     "save": "Enregistrer",
     "add": "Ajouter l'enfant",
     "delete": "Supprimer l'enfant",
@@ -319,7 +323,9 @@
     "deleteBody": "« {{name}} » et ses tâches / complétions seront retirés. Cette action est irréversible.",
     "deletedTitle": "Enfant supprimé",
     "deletedBody": "{{name}} a été retiré de la famille.",
-    "deleteFailed": "Impossible de supprimer l'enfant."
+    "deleteFailed": "Impossible de supprimer l'enfant.",
+    "create": "Créer",
+    "colorLaterNote": "Parent et enfant pourront changer la couleur plus tard"
   },
   "recurrence": {
     "daily": "Tous les jours",

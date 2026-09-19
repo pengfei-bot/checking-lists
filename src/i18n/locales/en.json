@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "Change my color",
+    "colorUpdated": "Color updated",
+    "colorUpdatedBody": "Your color was saved.",
+    "colorSection": "Profile color"
   },
   "childHistory": {
     "title": "Task calendar",
@@ -301,10 +305,10 @@
   "childForm": {
     "newTitle": "New child",
     "editTitle": "Edit child",
-    "name": "First name *",
+    "name": "First name",
     "namePlaceholder": "First name",
-    "emoji": "Emoji (optional)",
-    "color": "Color (optional)",
+    "emoji": "Emoji",
+    "color": "Color",
     "save": "Save",
     "add": "Add child",
     "delete": "Delete child",
@@ -319,7 +323,9 @@
     "deleteBody": "“{{name}}” and their tasks / completions will be removed. This cannot be undone.",
     "deletedTitle": "Child deleted",
     "deletedBody": "{{name}} was removed from the family.",
-    "deleteFailed": "Could not delete the child."
+    "deleteFailed": "Could not delete the child.",
+    "create": "Create",
+    "colorLaterNote": "Parent and child can change the color later"
   },
   "recurrence": {
     "daily": "Every day",

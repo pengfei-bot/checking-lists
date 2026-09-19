@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "ປະຫວັດ",
@@ -319,7 +323,9 @@
     "deleteBody": "และงาน / เสร็จสิ้น นี่ไม่สามารถยกเลิกได้",
     "deletedTitle": "ลบเด็กออก",
     "deletedBody": "α ถูก ย้าย ออก จาก ครอบครัว.",
-    "deleteFailed": "ไม่สามารถลบเด็กได้"
+    "deleteFailed": "ไม่สามารถลบเด็กได้",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "ทุกๆวัน",

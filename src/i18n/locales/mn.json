@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Түүх",
@@ -319,7 +323,9 @@
     "deleteBody": "«.0.» и их задачи/завершения будут удалены. Это нельзя отменить.",
     "deletedTitle": "Ребенок удален",
     "deletedBody": ".0. был удален из семьи.",
-    "deleteFailed": "Не удалось удалить ребенка."
+    "deleteFailed": "Не удалось удалить ребенка.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Каждый день",

@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "- 연혁",
@@ -319,7 +323,9 @@
     "deleteBody": "“ their0 their” 과 그들의 작업 / 완료가 제거됩니다. 이것은 undone일 수 없습니다.",
     "deletedTitle": "삭제 된",
     "deletedBody": "0 was은 가족에서 제거되었습니다.",
-    "deleteFailed": "아이를 삭제할 수 없습니다."
+    "deleteFailed": "아이를 삭제할 수 없습니다.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "매일",

@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "ඉතිහාසය",
@@ -319,7 +323,9 @@
     "deleteBody": "The act of the body of the body. यह नहीं हो सकता है।",
     "deletedTitle": "बच्चे को हटा दिया",
     "deletedBody": "To remove the family.",
-    "deleteFailed": "बच्चे को नष्ट नहीं कर सकता।"
+    "deleteFailed": "बच्चे को नष्ट नहीं कर सकता।",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "हर दिन",

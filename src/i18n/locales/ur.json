@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "تاریخ",
@@ -319,7 +323,9 @@
     "deleteBody": "\"⟦0\" اور ان کے کام / تکمیل کو ہٹا دیا جائے گا۔ یہ غلط نہیں ہو سکتا ۔",
     "deletedTitle": "بچے حذف ہو گئے",
     "deletedBody": "{{name}} کو خاندان سے ہٹا دیا گیا۔",
-    "deleteFailed": "بچے کو ختم نہ کر سکا۔"
+    "deleteFailed": "بچے کو ختم نہ کر سکا۔",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "روزانہ",

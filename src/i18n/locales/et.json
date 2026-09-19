@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Ajalugu",
@@ -319,7 +323,9 @@
     "deleteBody": "„0 ⟧ ja nende ülesanded/lõpud eemaldatakse. Seda ei saa tagasi võtta.",
     "deletedTitle": "Laps kustutati",
     "deletedBody": "{{name}} eemaldati perekonnast.",
-    "deleteFailed": "Lapse kustutamine nurjus."
+    "deleteFailed": "Lapse kustutamine nurjus.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Iga päev",

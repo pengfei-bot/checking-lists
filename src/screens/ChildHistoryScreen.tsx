@@ -10,7 +10,7 @@ import {
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
-import { colors } from "../theme/colors";
+import { colors, softTint } from "../theme/colors";
 import { rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { PrimaryButton } from "../components/PrimaryButton";
@@ -135,10 +135,10 @@ export function ChildHistoryScreen({ navigation }: Props) {
   const statusLabel = (status: DayAggregateStatus) => t(`calendar.status.${status}`);
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { backgroundColor: softTint(currentProfile.color || colors.primary, 0.08) }]}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View
-          style={[styles.hero, { backgroundColor: currentProfile.color + "22" }]}
+          style={[styles.hero, { backgroundColor: softTint(currentProfile.color || colors.primary, 0.28) }]}
         >
           <Text style={styles.heroEmoji}>{currentProfile.emoji}</Text>
           <Text style={styles.heroTitle}>{t("childHistory.title")}</Text>

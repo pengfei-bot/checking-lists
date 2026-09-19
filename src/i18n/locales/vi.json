@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Lịch sử",
@@ -319,7 +323,9 @@
     "deleteBody": "“ Họ sẽ bị loại trừ khi hoàn tất công việc của mình. Chuyện này không thể thay đổi được.",
     "deletedTitle": "Trẻ em đã bị xoá",
     "deletedBody": "Không, không.",
-    "deleteFailed": "Không thể xoá con."
+    "deleteFailed": "Không thể xoá con.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Mỗi ngày",

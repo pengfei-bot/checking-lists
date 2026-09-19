@@ -169,7 +169,11 @@
     "navHome": "Home",
     "navTasks": "Tasks",
     "navRewards": "Rewards",
-    "navHistory": "History"
+    "navHistory": "History",
+    "changeColor": "",
+    "colorUpdated": "",
+    "colorUpdatedBody": "",
+    "colorSection": ""
   },
   "childHistory": {
     "title": "Geschichte",
@@ -319,7 +323,9 @@
     "deleteBody": "\"{{name}}\" und ihre Aufgaben / Fertigstellungen werden entfernt. Das kann nicht rückgängig gemacht werden.",
     "deletedTitle": "Kind gelöscht",
     "deletedBody": "{{name}} wurde aus der Familie entfernt.",
-    "deleteFailed": "Das Kind konnte nicht gelöscht werden."
+    "deleteFailed": "Das Kind konnte nicht gelöscht werden.",
+    "create": "",
+    "colorLaterNote": ""
   },
   "recurrence": {
     "daily": "Jeden Tag",
