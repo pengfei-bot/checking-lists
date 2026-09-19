@@ -215,8 +215,8 @@ export function ChildHomeScreen({ navigation }: Props) {
                   {balance} <Text style={styles.soldeStarInline}>⭐</Text>
                 </Text>
               </View>
-              <Text style={styles.piggy} accessibilityLabel="piggy">
-                🐷
+              <Text style={styles.soldeChevron} accessibilityElementsHidden>
+                ›
               </Text>
             </Pressable>
           ) : null}
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   soldeStarInline: { fontSize: 18 },
-  piggy: { fontSize: 40, marginRight: 2 },
+  soldeChevron: { fontSize: 28, fontWeight: "300", color: rewardsUi.navyMuted, marginRight: 4 },
   bodySheet: {
     backgroundColor: "#fff",
     marginTop: -8,
