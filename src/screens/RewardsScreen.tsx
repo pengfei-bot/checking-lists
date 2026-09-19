@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Platform,
   Pressable,
@@ -17,6 +17,7 @@ import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { PrimaryButton } from "../components/PrimaryButton";
+import { BuildStamp } from "../components/BuildStamp";
 import { frenchCloudError } from "../utils/cloudTimeout";
 import { notifyUser } from "../utils/feedback";
 import { RewardUnitKind } from "../types";
@@ -51,6 +52,10 @@ export function RewardsScreen({ navigation }: Props) {
   const [pointsDraft, setPointsDraft] = useState<Record<string, string>>({});
   const [filterChildId, setFilterChildId] = useState<ChildFilter>("all");
   const [pendingOpen, setPendingOpen] = useState(false);
+  /** Per-child accordion — collapsed by default so the header affordance is obvious. */
+  const [expandedByChild, setExpandedByChild] = useState<Record<string, boolean>>({});
+  const scrollRef = useRef<ScrollView>(null);
+  const pointsYRef = useRef(0);
 
   // Heal missing per-child rows when opening Rewards (new kids / pre-backfill families).
   useEffect(() => {
@@ -71,6 +76,14 @@ export function RewardsScreen({ navigation }: Props) {
       ),
     [pendingEarns, filterChildId]
   );
+
+  const pendingCountByChild = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const item of pendingEarns) {
+      map[item.childId] = (map[item.childId] ?? 0) + 1;
+    }
+    return map;
+  }, [pendingEarns]);
 
   // Auto-expand hub only when there is something to validate (still below fold).
   useEffect(() => {
@@ -94,6 +107,26 @@ export function RewardsScreen({ navigation }: Props) {
   }
 
   const unitLabelFor = (childId: string) => t(unitShortKey(unitKindFor(childId)));
+
+  const setChildExpanded = (childId: string, open: boolean) => {
+    setExpandedByChild((prev) => ({ ...prev, [childId]: open }));
+  };
+
+  const toggleChildExpanded = (childId: string) => {
+    setExpandedByChild((prev) => ({ ...prev, [childId]: !prev[childId] }));
+  };
+
+  /** Expand card + filter task points to this child + scroll to config list. */
+  const onConfigureChild = (childId: string) => {
+    setChildExpanded(childId, true);
+    setFilterChildId(childId);
+    requestAnimationFrame(() => {
+      scrollRef.current?.scrollTo({
+        y: Math.max(0, pointsYRef.current - 12),
+        animated: true,
+      });
+    });
+  };
 
   const onToggleChild = async (childId: string, enabled: boolean) => {
     setSaving(true);
@@ -227,10 +260,10 @@ export function RewardsScreen({ navigation }: Props) {
   return (
     <View style={styles.root}>
       <ScrollView
+        ref={scrollRef}
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Activation first — no intro title/subtitle noise */}
         <Text style={styles.section}>{t("rewards.perChild")}</Text>
         {childrenProfiles.length === 0 ? (
           <Text style={styles.help}>{t("rewards.noChildrenHelp")}</Text>
@@ -240,17 +273,37 @@ export function RewardsScreen({ navigation }: Props) {
             const kind = unitKindFor(child.id);
             const bal = balanceFor(child.id);
             const unit = t(unitShortKey(kind));
+            const expanded = !!expandedByChild[child.id];
+            const pendingCount = pendingCountByChild[child.id] ?? 0;
             return (
-              <View key={child.id} style={styles.childCard}>
+              <View
+                key={child.id}
+                style={[
+                  styles.childCard,
+                  expanded && styles.childCardExpanded,
+                ]}
+              >
                 <View style={styles.childHeader}>
                   <Pressable
-                    onPress={() => navigation.navigate("RewardsChild", { childId: child.id })}
+                    onPress={() => toggleChildExpanded(child.id)}
                     style={styles.childIdentity}
+                    accessibilityRole="button"
+                    accessibilityState={{ expanded }}
+                    accessibilityLabel={`${child.name}. ${
+                      expanded ? t("rewards.tapToCollapse") : t("rewards.tapToExpand")
+                    }`}
                   >
+                    <Text style={styles.childChevron} accessibilityElementsHidden>
+                      {expanded ? "▼" : "▶"}
+                    </Text>
                     <View
                       style={[
                         rewardsStyles.avatarCircle,
-                        { backgroundColor: softTint(child.color || colors.primary, 0.2), borderColor: child.color || colors.primary, borderWidth: 2 },
+                        {
+                          backgroundColor: softTint(child.color || colors.primary, 0.2),
+                          borderColor: child.color || colors.primary,
+                          borderWidth: 2,
+                        },
                       ]}
                     >
                       <Text style={rewardsStyles.avatarEmoji}>{child.emoji}</Text>
@@ -259,16 +312,23 @@ export function RewardsScreen({ navigation }: Props) {
                       <Text style={styles.childName}>
                         {child.name} {child.emoji}
                       </Text>
+                      <Text style={styles.sectionLabel}>{t("rewards.childSectionLabel")}</Text>
                       <Text
                         style={[styles.statusLabel, active ? styles.statusOn : styles.statusOff]}
                       >
                         {active ? t("rewards.activated") : t("rewards.deactivated")}
+                        {active
+                          ? ` · ${t("rewards.soldeChip", { amount: bal, unit })}`
+                          : ""}
                       </Text>
-                      {active ? (
-                        <Text style={styles.childMeta}>
-                          {t("rewards.balanceLabel", { amount: bal, unit })}
+                      {pendingCount > 0 ? (
+                        <Text style={styles.pendingBadgeText}>
+                          {t("rewards.pendingForChild", { count: pendingCount })}
                         </Text>
                       ) : null}
+                      <Text style={styles.expandHint}>
+                        {expanded ? t("rewards.tapToCollapse") : t("rewards.tapToExpand")}
+                      </Text>
                     </View>
                   </Pressable>
                   <Switch
@@ -283,44 +343,71 @@ export function RewardsScreen({ navigation }: Props) {
                     }
                   />
                 </View>
-                <View style={[styles.unitRow, !active && styles.unitRowDisabled]}>
-                  <View style={rewardsStyles.unitSeg}>
+
+                <Pressable
+                  onPress={() => onConfigureChild(child.id)}
+                  style={styles.configureCta}
+                  accessibilityRole="button"
+                  accessibilityLabel={t("rewards.configureCta")}
+                >
+                  <Text style={styles.configureCtaIcon}>⚙️</Text>
+                  <Text style={styles.configureCtaText}>{t("rewards.configureCta")}</Text>
+                </Pressable>
+
+                {expanded ? (
+                  <View style={styles.childBody}>
+                    <Text style={styles.unitRowLabel}>{t("rewards.unitRowLabel")}</Text>
+                    <View style={[styles.unitRow, !active && styles.unitRowDisabled]}>
+                      <View style={rewardsStyles.unitSeg}>
+                        <Pressable
+                          onPress={() => void onUnitKind(child.id, "points")}
+                          disabled={saving || !active}
+                          style={[
+                            rewardsStyles.unitSegItem,
+                            kind === "points" && active && rewardsStyles.unitSegItemActive,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              rewardsStyles.unitSegText,
+                              kind === "points" && active && rewardsStyles.unitSegTextActive,
+                            ]}
+                          >
+                            {t("rewards.unitPoints")} ⭐
+                          </Text>
+                        </Pressable>
+                        <Pressable
+                          onPress={() => void onUnitKind(child.id, "money")}
+                          disabled={saving || !active}
+                          style={[
+                            rewardsStyles.unitSegItem,
+                            kind === "money" && active && rewardsStyles.unitSegItemActive,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              rewardsStyles.unitSegText,
+                              kind === "money" && active && rewardsStyles.unitSegTextActive,
+                            ]}
+                          >
+                            {t("rewards.unitMoneyChip")}
+                          </Text>
+                        </Pressable>
+                      </View>
+                    </View>
                     <Pressable
-                      onPress={() => void onUnitKind(child.id, "points")}
-                      disabled={saving || !active}
-                      style={[
-                        rewardsStyles.unitSegItem,
-                        kind === "points" && active && rewardsStyles.unitSegItemActive,
-                      ]}
+                      onPress={() =>
+                        navigation.navigate("RewardsChild", { childId: child.id })
+                      }
+                      style={styles.historyLink}
+                      accessibilityRole="link"
                     >
-                      <Text
-                        style={[
-                          rewardsStyles.unitSegText,
-                          kind === "points" && active && rewardsStyles.unitSegTextActive,
-                        ]}
-                      >
-                        {t("rewards.unitPoints")}
-                      </Text>
-                    </Pressable>
-                    <Pressable
-                      onPress={() => void onUnitKind(child.id, "money")}
-                      disabled={saving || !active}
-                      style={[
-                        rewardsStyles.unitSegItem,
-                        kind === "money" && active && rewardsStyles.unitSegItemActive,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          rewardsStyles.unitSegText,
-                          kind === "money" && active && rewardsStyles.unitSegTextActive,
-                        ]}
-                      >
-                        {t("rewards.unitMoneyChip")}
+                      <Text style={styles.historyLinkText}>
+                        {t("rewards.openChildHistory")} →
                       </Text>
                     </Pressable>
                   </View>
-                </View>
+                ) : null}
               </View>
             );
           })
@@ -335,54 +422,61 @@ export function RewardsScreen({ navigation }: Props) {
 
         {filterChips}
 
-        <Text style={styles.section}>{t("rewards.configurePoints")}</Text>
-        {tasksSorted.length === 0 ? (
-          <Text style={styles.help}>{t("rewards.noTasks")}</Text>
-        ) : (
-          tasksSorted.map((task) => {
-            const child = childrenProfiles.find((c) => c.id === task.childId);
-            const current = pointsFor(task.id);
-            const draft =
-              pointsDraft[task.id] !== undefined
-                ? pointsDraft[task.id]
-                : current != null
-                  ? String(current)
-                  : "";
-            const childActive = child ? isRewardsActiveForChild(child.id) : false;
-            return (
-              <View key={task.id} style={[styles.taskRow, !childActive && styles.taskRowMuted]}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.taskTitle}>{task.title}</Text>
-                  <Text style={styles.childMeta}>
-                    {child ? `${child.emoji} ${child.name}` : "—"} · {task.time}
-                    {!childActive ? ` · ${t("rewards.deactivated")}` : ""}
-                  </Text>
-                </View>
-                {current != null && childActive ? (
-                  <View style={[rewardsStyles.pointsPill, { marginRight: 4 }]}>
-                    <Text style={rewardsStyles.pointsPillText}>+{current} ⭐</Text>
+        <View
+          onLayout={(e) => {
+            pointsYRef.current = e.nativeEvent.layout.y;
+          }}
+        >
+          <Text style={styles.section}>{t("rewards.configurePoints")}</Text>
+          <Text style={styles.help}>{t("rewards.configurePointsHelp")}</Text>
+          {tasksSorted.length === 0 ? (
+            <Text style={styles.help}>{t("rewards.noTasks")}</Text>
+          ) : (
+            tasksSorted.map((task) => {
+              const child = childrenProfiles.find((c) => c.id === task.childId);
+              const current = pointsFor(task.id);
+              const draft =
+                pointsDraft[task.id] !== undefined
+                  ? pointsDraft[task.id]
+                  : current != null
+                    ? String(current)
+                    : "";
+              const childActive = child ? isRewardsActiveForChild(child.id) : false;
+              return (
+                <View key={task.id} style={[styles.taskRow, !childActive && styles.taskRowMuted]}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.taskTitle}>{task.title}</Text>
+                    <Text style={styles.childMeta}>
+                      {child ? `${child.emoji} ${child.name}` : "—"} · {task.time}
+                      {!childActive ? ` · ${t("rewards.deactivated")}` : ""}
+                    </Text>
                   </View>
-                ) : null}
-                <TextInput
-                  value={draft}
-                  onChangeText={(v) => setPointsDraft((p) => ({ ...p, [task.id]: v }))}
-                  keyboardType="number-pad"
-                  style={styles.pointsInput}
-                  placeholder="0"
-                  placeholderTextColor={colors.textMuted}
-                  editable={childActive}
-                />
-                <Pressable
-                  onPress={() => void onSavePoints(task.id)}
-                  style={styles.savePts}
-                  disabled={saving || !childActive}
-                >
-                  <Text style={styles.savePtsText}>{t("common.save")}</Text>
-                </Pressable>
-              </View>
-            );
-          })
-        )}
+                  {current != null && childActive ? (
+                    <View style={[rewardsStyles.pointsPill, { marginRight: 4 }]}>
+                      <Text style={rewardsStyles.pointsPillText}>+{current} ⭐</Text>
+                    </View>
+                  ) : null}
+                  <TextInput
+                    value={draft}
+                    onChangeText={(v) => setPointsDraft((p) => ({ ...p, [task.id]: v }))}
+                    keyboardType="number-pad"
+                    style={styles.pointsInput}
+                    placeholder="0"
+                    placeholderTextColor={colors.textMuted}
+                    editable={childActive}
+                  />
+                  <Pressable
+                    onPress={() => void onSavePoints(task.id)}
+                    style={styles.savePts}
+                    disabled={saving || !childActive}
+                  >
+                    <Text style={styles.savePtsText}>{t("common.save")}</Text>
+                  </Pressable>
+                </View>
+              );
+            })
+          )}
+        </View>
 
         {/* « À valider » hub below the fold — collapsed when empty */}
         <Pressable
@@ -394,7 +488,7 @@ export function RewardsScreen({ navigation }: Props) {
             {t("rewards.toValidate")}
             {filteredPending.length > 0 ? ` (${filteredPending.length})` : ""}
           </Text>
-          <Text style={styles.pendingChevron}>{pendingOpen ? "▾" : "▸"}</Text>
+          <Text style={styles.pendingChevron}>{pendingOpen ? "▼" : "▶"}</Text>
         </Pressable>
         {pendingOpen ? (
           <View style={styles.pendingCard}>
@@ -425,6 +519,7 @@ export function RewardsScreen({ navigation }: Props) {
           </View>
         ) : null}
 
+        <BuildStamp />
         <View style={{ height: 72 }} />
       </ScrollView>
 
@@ -442,11 +537,15 @@ export function RewardsScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
+  root: { flex: 1, backgroundColor: rewardsUi.cream },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
-  container: { ...rewardsStyles.screenParent },
+  container: {
+    ...rewardsStyles.screenParent,
+    backgroundColor: rewardsUi.cream,
+  },
   stickyBar: {
     ...rewardsStyles.stickyBar,
+    backgroundColor: rewardsUi.cream,
     paddingBottom: Platform.OS === "ios" ? 20 : 12,
   },
   section: {
@@ -454,7 +553,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 4,
     marginBottom: 8,
-    color: colors.text,
+    color: rewardsUi.navy,
   },
   help: { color: colors.textMuted, fontSize: 13, marginTop: 2, marginBottom: 6 },
   pendingHeader: {
@@ -464,8 +563,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  pendingTitle: { fontWeight: "800", fontSize: 16, color: colors.text },
-  pendingChevron: { fontSize: 16, color: colors.textMuted, fontWeight: "700" },
+  pendingTitle: { fontWeight: "800", fontSize: 16, color: rewardsUi.navy },
+  pendingChevron: { fontSize: 14, color: colors.textMuted, fontWeight: "700" },
   pendingCard: {
     backgroundColor: colors.card,
     borderRadius: rewardsUi.cardRadius,
@@ -486,20 +585,93 @@ const styles = StyleSheet.create({
   childCard: {
     backgroundColor: colors.card,
     borderRadius: rewardsUi.cardRadius,
-    borderWidth: 0,
+    borderWidth: 1.5,
+    borderColor: "#F0E0D0",
     padding: 14,
     marginBottom: 12,
     ...rewardsUi.shadow,
   },
-  childHeader: { flexDirection: "row", alignItems: "center", gap: 10 },
-  childIdentity: { flexDirection: "row", alignItems: "center", gap: 10, flex: 1 },
-  childName: { fontWeight: "800", color: colors.text, fontSize: 16 },
-  statusLabel: { fontWeight: "700", fontSize: 13, marginTop: 1 },
+  childCardExpanded: {
+    borderColor: rewardsUi.peach,
+    backgroundColor: rewardsUi.peachSoft,
+  },
+  childHeader: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
+  childIdentity: { flexDirection: "row", alignItems: "flex-start", gap: 10, flex: 1 },
+  childChevron: {
+    fontSize: 12,
+    color: rewardsUi.navyMuted,
+    fontWeight: "800",
+    marginTop: 16,
+    width: 14,
+  },
+  childName: { fontWeight: "800", color: rewardsUi.navy, fontSize: 16 },
+  sectionLabel: {
+    fontWeight: "700",
+    fontSize: 12,
+    color: rewardsUi.navyMuted,
+    marginTop: 1,
+    letterSpacing: 0.2,
+  },
+  statusLabel: { fontWeight: "700", fontSize: 13, marginTop: 2 },
   statusOn: { color: colors.success },
   statusOff: { color: colors.textMuted },
-  childMeta: { color: colors.textMuted, fontSize: 12, marginTop: 1 },
-  unitRow: { marginTop: 10 },
+  pendingBadgeText: {
+    marginTop: 3,
+    fontSize: 12,
+    fontWeight: "800",
+    color: rewardsUi.filterOrange,
+  },
+  expandHint: {
+    marginTop: 3,
+    fontSize: 11,
+    fontWeight: "600",
+    color: rewardsUi.navyMuted,
+  },
+  configureCta: {
+    marginTop: 10,
+    alignSelf: "stretch",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: rewardsUi.pillRadius,
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+    backgroundColor: "#fff",
+  },
+  configureCtaIcon: { fontSize: 14 },
+  configureCtaText: {
+    fontWeight: "800",
+    color: colors.primary,
+    fontSize: 14,
+  },
+  childBody: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: "#F0E0D0",
+  },
+  unitRowLabel: {
+    fontWeight: "700",
+    fontSize: 12,
+    color: rewardsUi.navyMuted,
+    marginBottom: 6,
+  },
+  unitRow: { marginTop: 0 },
   unitRowDisabled: { opacity: 0.4 },
+  historyLink: {
+    marginTop: 12,
+    alignSelf: "flex-start",
+    paddingVertical: 6,
+  },
+  historyLinkText: {
+    fontWeight: "800",
+    color: colors.primary,
+    fontSize: 13,
+  },
+  childMeta: { color: colors.textMuted, fontSize: 12, marginTop: 1 },
   chipsScroll: { marginBottom: 10, flexGrow: 0 },
   taskRow: {
     flexDirection: "row",

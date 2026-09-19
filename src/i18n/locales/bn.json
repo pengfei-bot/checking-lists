@@ -518,7 +518,15 @@
     "currentBalanceLabel": "Current balance",
     "validatedBy": "Validated by {{name}}",
     "validatedByParent": "Validated by a parent",
-    "soldeHistoryLabel": ""
+    "soldeHistoryLabel": "",
+    "childSectionLabel": "Rewards",
+    "tapToExpand": "Tap to expand",
+    "tapToCollapse": "Tap to collapse",
+    "configureCta": "Configure points",
+    "configureCtaShort": "Configure",
+    "pendingForChild": "{{count}} to validate",
+    "unitRowLabel": "Unit (€ / ⭐)",
+    "openChildHistory": "View balance and history"
   },
   "parentSettings": {
     "title": "",
