@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Modal,
   Pressable,
@@ -24,6 +24,8 @@ import { ensureNotificationPermissions, notificationsSupported } from "../servic
 import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
 import { ChildRewardsBottomNav } from "../components/RewardsBottomNav";
 import { BuildStamp } from "../components/BuildStamp";
+import { RewardCelebration } from "../components/RewardCelebration";
+import type { RewardUnitKind } from "../types";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChildHome">;
 
@@ -46,6 +48,31 @@ export function ChildHomeScreen({ navigation }: Props) {
   } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
   const [colorBusy, setColorBusy] = useState(false);
+  /** Per-task reward burst after a successful complete (rewards + points). */
+  const [burst, setBurst] = useState<{
+    taskId: string;
+    amount: number;
+    unitKind: RewardUnitKind;
+    key: number;
+  } | null>(null);
+
+  const clearBurst = useCallback(() => setBurst(null), []);
+
+  const maybeCelebrate = useCallback(
+    (taskId: string) => {
+      if (!currentProfile || currentProfile.role !== "child") return;
+      if (!isRewardsActiveForChild(currentProfile.id)) return;
+      const pts = pointsFor(taskId);
+      if (pts == null || pts <= 0) return;
+      setBurst({
+        taskId,
+        amount: pts,
+        unitKind: unitKindFor(currentProfile.id),
+        key: Date.now(),
+      });
+    },
+    [currentProfile, isRewardsActiveForChild, pointsFor, unitKindFor]
+  );
 
   if (!currentProfile || currentProfile.role !== "child") {
     return (
@@ -80,6 +107,7 @@ export function ChildHomeScreen({ navigation }: Props) {
       return;
     }
     await markTaskDone(taskId, currentProfile.id);
+    maybeCelebrate(taskId);
   };
 
   const doneWithPhoto = async (taskId: string) => {
@@ -91,10 +119,12 @@ export function ChildHomeScreen({ navigation }: Props) {
     if (result.status === "error") {
       await markTaskDone(taskId, currentProfile.id, MOCK_PHOTO_URI);
       notifyUser(t("photo.title"), t("photo.demoUsed", { message: result.message }));
+      maybeCelebrate(taskId);
       return;
     }
     await markTaskDone(taskId, currentProfile.id, result.uri);
     notifyUser(t("photo.title"), t("photo.saved"));
+    maybeCelebrate(taskId);
   };
 
   const onReminders = async () => {
@@ -221,15 +251,25 @@ export function ChildHomeScreen({ navigation }: Props) {
               const pts = rewardsActive ? pointsFor(task.id) : null;
               return (
                 <View key={task.id} style={[styles.taskRow, done && styles.taskRowDone]}>
-                  <Pressable
-                    style={[styles.checkbox, done && styles.checkboxDone]}
-                    onPress={() => void quickDone(task.id)}
-                    accessibilityLabel={done ? t("childHome.unmarkA11y") : t("childHome.markDoneA11y")}
-                  >
-                    <Text style={[styles.checkboxText, done && styles.checkboxTextDone]}>
-                      {done ? "✓" : ""}
-                    </Text>
-                  </Pressable>
+                  <View style={styles.checkboxWrap}>
+                    <Pressable
+                      style={[styles.checkbox, done && styles.checkboxDone]}
+                      onPress={() => void quickDone(task.id)}
+                      accessibilityLabel={done ? t("childHome.unmarkA11y") : t("childHome.markDoneA11y")}
+                    >
+                      <Text style={[styles.checkboxText, done && styles.checkboxTextDone]}>
+                        {done ? "✓" : ""}
+                      </Text>
+                    </Pressable>
+                    {burst?.taskId === task.id ? (
+                      <RewardCelebration
+                        key={burst.key}
+                        amount={burst.amount}
+                        unitKind={burst.unitKind}
+                        onFinished={clearBurst}
+                      />
+                    ) : null}
+                  </View>
 
                   <Pressable
                     style={styles.taskMain}
@@ -410,9 +450,17 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 12,
     marginBottom: 10,
+    overflow: "visible",
     ...rewardsUi.shadow,
   },
   taskRowDone: { backgroundColor: colors.successSoft, borderColor: "#C8E6D4" },
+  checkboxWrap: {
+    width: 28,
+    height: 28,
+    position: "relative",
+    overflow: "visible",
+    zIndex: 2,
+  },
   checkbox: {
     width: 28,
     height: 28,

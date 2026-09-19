@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Image,
   Platform,
@@ -27,6 +27,8 @@ import { unitShortKey } from "../utils/rewards";
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { openPhotoReportMail } from "../utils/reportPhoto";
 import { MOCK_PHOTO_URI, pickProofImage } from "../utils/pickImage";
+import { RewardCelebration } from "../components/RewardCelebration";
+import type { RewardUnitKind } from "../types";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskDetail">;
 
@@ -58,6 +60,13 @@ export function TaskDetailScreen({ navigation, route }: Props) {
   const isToday = viewDate === todayISO();
   const [busy, setBusy] = useState(false);
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
+  const [burst, setBurst] = useState<{
+    amount: number;
+    unitKind: RewardUnitKind;
+    key: number;
+  } | null>(null);
+
+  const clearBurst = useCallback(() => setBurst(null), []);
 
   const dayLabel = useMemo(
     () => formatLocalizedDate(viewDate, i18n.language),
@@ -106,6 +115,19 @@ export function TaskDetailScreen({ navigation, route }: Props) {
         }
       }
       await markTaskDone(task.id, task.childId, photoUri);
+      // Child celebrate: rewards active + task has points (non-blocking)
+      if (
+        currentProfile?.role === "child" &&
+        isRewardsActiveForChild(task.childId) &&
+        rewardPoints != null &&
+        rewardPoints > 0
+      ) {
+        setBurst({
+          amount: rewardPoints,
+          unitKind: unitKindFor(task.childId),
+          key: Date.now(),
+        });
+      }
     } finally {
       setBusy(false);
     }
@@ -177,6 +199,16 @@ export function TaskDetailScreen({ navigation, route }: Props) {
       <>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.statusEmoji}>{done ? "⭐" : "○"}</Text>
+        <View style={styles.celebrateHost} pointerEvents="none">
+          {burst ? (
+            <RewardCelebration
+              key={burst.key}
+              amount={burst.amount}
+              unitKind={burst.unitKind}
+              onFinished={clearBurst}
+            />
+          ) : null}
+        </View>
         <Text style={styles.childEmoji}>{child?.emoji ?? "✅"}</Text>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
         <Text style={styles.childTitle}>{task.title}</Text>
@@ -378,6 +410,16 @@ export function TaskDetailScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 20 },
   container: { padding: 16, paddingBottom: 40, backgroundColor: colors.bg, flexGrow: 1 },
+  celebrateHost: {
+    position: "relative",
+    overflow: "visible",
+    alignSelf: "center",
+    width: 120,
+    height: 48,
+    marginTop: -8,
+    marginBottom: -8,
+    zIndex: 5,
+  },
   statusEmoji: { fontSize: 72, textAlign: "center", marginTop: 8 },
   emoji: { fontSize: 40 },
   childEmoji: { fontSize: 40, textAlign: "center" },
