@@ -65,7 +65,11 @@ export function ChildRewardsBottomNav({
           navigation.navigate("RewardsChild", { childId });
         }
       })}
-      {item("history", "📅", t("childHome.navHistory"), () => navigation.navigate("ChildHistory"))}
+      {item("history", "📜", t("childHome.navHistory"), () => {
+        if (childId) {
+          navigation.navigate("RewardsChild", { childId });
+        }
+      })}
     </View>
   );
 }

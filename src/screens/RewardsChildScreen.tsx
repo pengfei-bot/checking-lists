@@ -284,7 +284,7 @@ export function RewardsChildScreen({ navigation, route }: Props) {
       {isOwnChild ? (
         <ChildRewardsBottomNav
           navigation={navigation}
-          active="rewards"
+          active="history"
           childId={childId}
           rewardsActive={childActive}
         />
