@@ -238,12 +238,15 @@ export function ParentDashboardScreen({ navigation }: Props) {
           </Pressable>
           <Pressable
             onPress={() => navigation.navigate("Rewards")}
-            style={({ pressed }) => [styles.compactBtn, { opacity: pressed ? 0.85 : 1 }]}
+            accessibilityRole="button"
+            accessibilityLabel={t("parentDash.rewards")}
+            style={({ pressed }) => [
+              styles.compactBtn,
+              styles.compactBtnIconOnly,
+              { opacity: pressed ? 0.85 : 1 },
+            ]}
           >
             <Text style={styles.compactEmoji}>⭐</Text>
-            <Text style={styles.compactLabel} numberOfLines={1}>
-              {t("parentDash.rewards")}
-            </Text>
             {pendingEarnCount > 0 ? (
               <View style={styles.badge}>
                 <Text style={styles.badgeText}>
@@ -506,6 +509,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 12,
   },
+  compactBtnIconOnly: { flex: 0.55, justifyContent: "center", gap: 6, paddingHorizontal: 10 },
   compactEmoji: { fontSize: 18 },
   compactLabel: { flex: 1, fontWeight: "700", color: colors.primary, fontSize: 13 },
   badge: {

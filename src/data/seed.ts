@@ -293,22 +293,26 @@ export function createSeedState(now = new Date()): AppState {
       createdAt,
     },
   ];
-  const rewardLedger: RewardLedgerEntry[] = [
-    {
-      id: "reward_ledger_demo_1",
+  const completions = buildDemoCompletions(tasks, now);
+  const pointsByTask = new Map(rewardTasks.map((r) => [r.taskId, r.points]));
+  // Credit past demo completions so « À valider » is not flooded; leave none pending in seed.
+  const rewardLedger: RewardLedgerEntry[] = completions
+    .filter((c) => pointsByTask.has(c.taskId))
+    .map((c, i) => ({
+      id: `reward_ledger_demo_${i + 1}`,
       familyId: "local",
-      childProfileId: CHILD_LEO_ID,
-      amount: 2,
-      kind: "earn",
-      taskId: DEMO_TASK_IDS.leoBrush,
+      childProfileId: c.childId,
+      amount: pointsByTask.get(c.taskId)!,
+      kind: "earn" as const,
+      taskId: c.taskId,
+      completionId: c.id,
       note: "Demo",
-      createdAt,
-    },
-  ];
+      createdAt: c.completedAt,
+    }));
   return {
     profiles: buildDemoProfiles(),
     tasks,
-    completions: buildDemoCompletions(tasks, now),
+    completions,
     rewardSettings: {
       familyId: "local",
       enabled: true,
