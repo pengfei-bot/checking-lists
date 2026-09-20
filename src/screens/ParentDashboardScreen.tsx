@@ -22,7 +22,6 @@ import { formatCompletionTime, formatLocalizedDate, todayISO } from "../utils/da
 import { isTaskForDate } from "../utils/recurrence";
 import { unitShortKey } from "../utils/rewards";
 import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
-import { BuildStamp } from "../components/BuildStamp";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParentDashboard">;
 
@@ -339,7 +338,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
         <Text style={styles.fabPlus}>+</Text>
       </Pressable>
 
-      <BuildStamp />
       <ParentRewardsBottomNav navigation={navigation} active="dashboard" />
 
       <PhotoLightbox

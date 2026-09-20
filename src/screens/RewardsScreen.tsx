@@ -16,7 +16,6 @@ import { RootStackParamList } from "../navigation/types";
 import { openProfileSwitcher } from "../navigation/openProfileSwitcher";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { PrimaryButton } from "../components/PrimaryButton";
-import { BuildStamp } from "../components/BuildStamp";
 import { frenchCloudError } from "../utils/cloudTimeout";
 import { confirmUser, notifyUser } from "../utils/feedback";
 import { RewardUnitKind } from "../types";
@@ -255,8 +254,7 @@ export function RewardsScreen({ navigation }: Props) {
           })
         )}
 
-        <BuildStamp />
-        <View style={{ height: 72 }} />
+          <View style={{ height: 72 }} />
       </ScrollView>
 
       <ParentRewardsBottomNav navigation={navigation} active="rewards" />

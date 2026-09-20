@@ -15,7 +15,6 @@ import { RootStackParamList } from "../navigation/types";
 import { openProfileSwitcher } from "../navigation/openProfileSwitcher";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
-import { BuildStamp } from "../components/BuildStamp";
 import { rewardsUi } from "../theme/rewardsUi";
 import {
   daysInMonth,
@@ -175,7 +174,6 @@ export function ParentCalendarScreen({ navigation }: Props) {
 
         <Text style={styles.hint}>{t("calendar.hint")}</Text>
       </ScrollView>
-      <BuildStamp />
       <ParentRewardsBottomNav navigation={navigation} active="tasks" />
     </View>
   );

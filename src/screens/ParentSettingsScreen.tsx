@@ -11,7 +11,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth";
 import { useApp } from "../context/AppContext";
-import { BuildStamp } from "../components/BuildStamp";
 import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { RootStackParamList } from "../navigation/types";
@@ -182,7 +181,6 @@ export function ParentSettingsScreen({ navigation }: Props) {
           </View>
         ) : null}
       </ScrollView>
-      <BuildStamp />
       <ParentRewardsBottomNav navigation={navigation} active="profile" />
     </View>
   );
