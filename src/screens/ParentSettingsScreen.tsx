@@ -15,6 +15,7 @@ import { BuildStamp } from "../components/BuildStamp";
 import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { RootStackParamList } from "../navigation/types";
+import { openProfileSwitcher } from "../navigation/openProfileSwitcher";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { addTodayTasksToCalendar, calendarSupported } from "../services/calendar";
 import {
@@ -52,7 +53,7 @@ function SettingsRow({
 export function ParentSettingsScreen({ navigation }: Props) {
   const { t } = useTranslation();
   const blocked = useParentOnlyGuard(navigation);
-  const { currentProfile, state, setCurrentProfileId, refreshReminders } = useApp();
+  const { currentProfile, state, refreshReminders } = useApp();
   const { isAuthenticated, deleteAccount } = useAuth();
   const [deletingAccount, setDeletingAccount] = useState(false);
 
@@ -62,10 +63,7 @@ export function ParentSettingsScreen({ navigation }: Props) {
         <Text>{blocked ? t("roles.parentOnly") : t("roles.parentRequired")}</Text>
         <PrimaryButton
           label={t("common.changeProfile")}
-          onPress={() => {
-            setCurrentProfileId(null);
-            navigation.replace("ProfilePicker", { mode: "switch" });
-          }}
+          onPress={() => openProfileSwitcher(navigation)}
           style={{ marginTop: 12 }}
         />
       </View>
@@ -137,10 +135,7 @@ export function ParentSettingsScreen({ navigation }: Props) {
           <View style={styles.sep} />
           <SettingsRow
             label={t("common.changeProfile")}
-            onPress={() => {
-              setCurrentProfileId(null);
-              navigation.replace("ProfilePicker", { mode: "switch" });
-            }}
+            onPress={() => openProfileSwitcher(navigation)}
           />
         </View>
 

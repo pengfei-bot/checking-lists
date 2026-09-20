@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors, softTint } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
+import { openProfileSwitcher } from "../navigation/openProfileSwitcher";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { unitShortKey } from "../utils/rewards";
 import { formatCompletionTime, formatLocalizedDate } from "../utils/dates";
@@ -18,7 +19,6 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
     childrenProfiles,
     state,
     currentProfile,
-    setCurrentProfileId,
     isRewardsActiveForChild,
     pointsFor,
     unitKindFor,
@@ -35,10 +35,7 @@ export function ParentDayDetailScreen({ navigation, route }: Props) {
         <Text>{t("roles.parentRequired")}</Text>
         <PrimaryButton
           label={t("common.changeProfile")}
-          onPress={() => {
-            setCurrentProfileId(null);
-            navigation.replace("ProfilePicker", { mode: "switch" });
-          }}
+          onPress={() => openProfileSwitcher(navigation)}
           style={{ marginTop: 12 }}
         />
       </View>

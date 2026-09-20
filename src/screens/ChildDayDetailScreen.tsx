@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
+import { openProfileSwitcher } from "../navigation/openProfileSwitcher";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { PhotoLightbox } from "../components/PhotoLightbox";
 import { confirmUser, notifyUser } from "../utils/feedback";
@@ -23,7 +24,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "ChildDayDetail">;
 export function ChildDayDetailScreen({ navigation, route }: Props) {
   const { date } = route.params;
   const { t, i18n } = useTranslation();
-  const { currentProfile, state, getTask, setCurrentProfileId, clearCompletionPhoto } = useApp();
+  const { currentProfile, state, getTask, clearCompletionPhoto } = useApp();
   const { family } = useAuth();
   const [reportingId, setReportingId] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<{
@@ -65,10 +66,7 @@ export function ChildDayDetailScreen({ navigation, route }: Props) {
         <Text>{t("roles.childRequired")}</Text>
         <PrimaryButton
           label={t("common.changeProfile")}
-          onPress={() => {
-            setCurrentProfileId(null);
-            navigation.replace("ProfilePicker", { mode: "switch" });
-          }}
+          onPress={() => openProfileSwitcher(navigation)}
           style={{ marginTop: 12 }}
         />
       </View>

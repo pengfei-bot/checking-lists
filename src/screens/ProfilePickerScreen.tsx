@@ -40,6 +40,7 @@ export function ProfilePickerScreen({ navigation, route }: Props) {
 
   // Resume last profile once on cold entry. Never when switching profiles from the tab bar.
   const didAutoEnter = useRef(false);
+  const enteringRef = useRef(false);
   useEffect(() => {
     if (!ready) return;
     if (route.params?.mode === "switch") {
@@ -94,8 +95,10 @@ export function ProfilePickerScreen({ navigation, route }: Props) {
 
   const enter = (id: string, role: "parent" | "child") => {
     if (isChildDevice && role === "parent") return;
+    if (enteringRef.current) return;
+    enteringRef.current = true;
     setCurrentProfileId(id);
-    // replace (not reset) keeps switch snappy — no full nav-tree remount.
+    // replace (not reset) keeps switch snappy — no full nav-tree remount / double reset.
     navigation.replace(role === "parent" ? "ParentDashboard" : "ChildHome");
   };
 

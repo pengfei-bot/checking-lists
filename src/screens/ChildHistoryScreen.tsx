@@ -13,6 +13,7 @@ import { useApp } from "../context/AppContext";
 import { colors, softTint } from "../theme/colors";
 import { rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
+import { openProfileSwitcher } from "../navigation/openProfileSwitcher";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { dateLocaleTag } from "../i18n";
 import {
@@ -33,7 +34,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "ChildHistory">;
 
 export function ChildHistoryScreen({ navigation }: Props) {
   const { t, i18n } = useTranslation();
-  const { currentProfile, state, setCurrentProfileId, isRewardsActiveForChild } = useApp();
+  const { currentProfile, state, isRewardsActiveForChild } = useApp();
   const { width } = useWindowDimensions();
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
@@ -66,40 +67,7 @@ export function ChildHistoryScreen({ navigation }: Props) {
     });
   }, [year, monthIndex, i18n.language]);
 
-  if (!currentProfile || currentProfile.role !== "child" || !childId) {
-    return (
-      <View style={styles.center}>
-        <Text>{t("roles.childRequired")}</Text>
-        <PrimaryButton
-          label={t("common.changeProfile")}
-          onPress={() => {
-            setCurrentProfileId(null);
-            navigation.replace("ProfilePicker", { mode: "switch" });
-          }}
-          style={{ marginTop: 12 }}
-        />
-      </View>
-    );
-  }
-
-  const goPrev = () => {
-    if (monthIndex === 0) {
-      setYear((y) => y - 1);
-      setMonthIndex(11);
-    } else {
-      setMonthIndex((m) => m - 1);
-    }
-  };
-
-  const goNext = () => {
-    if (monthIndex === 11) {
-      setYear((y) => y + 1);
-      setMonthIndex(0);
-    } else {
-      setMonthIndex((m) => m + 1);
-    }
-  };
-
+  // cells useMemo must run before the null-profile early return (Rules of Hooks).
   const cells = useMemo(() => {
     const totalDays = daysInMonth(year, monthIndex);
     const offset = mondayFirstOffset(year, monthIndex);
@@ -124,6 +92,37 @@ export function ChildHistoryScreen({ navigation }: Props) {
     }
     return out;
   }, [year, monthIndex, state.tasks, state.completions, children, today]);
+
+  if (!currentProfile || currentProfile.role !== "child" || !childId) {
+    return (
+      <View style={styles.center}>
+        <Text>{t("roles.childRequired")}</Text>
+        <PrimaryButton
+          label={t("common.changeProfile")}
+          onPress={() => openProfileSwitcher(navigation)}
+          style={{ marginTop: 12 }}
+        />
+      </View>
+    );
+  }
+
+  const goPrev = () => {
+    if (monthIndex === 0) {
+      setYear((y) => y - 1);
+      setMonthIndex(11);
+    } else {
+      setMonthIndex((m) => m - 1);
+    }
+  };
+
+  const goNext = () => {
+    if (monthIndex === 11) {
+      setYear((y) => y + 1);
+      setMonthIndex(0);
+    } else {
+      setMonthIndex((m) => m + 1);
+    }
+  };
 
   const gap = 6;
   const gridPad = 16;

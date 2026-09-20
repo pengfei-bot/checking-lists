@@ -13,6 +13,7 @@ import { useApp } from "../context/AppContext";
 import { colors, softTint } from "../theme/colors";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { RootStackParamList } from "../navigation/types";
+import { openProfileSwitcher } from "../navigation/openProfileSwitcher";
 import { useParentOnlyGuard } from "../navigation/useParentOnlyGuard";
 import { TaskCard } from "../components/TaskCard";
 import { PrimaryButton } from "../components/PrimaryButton";
@@ -33,7 +34,6 @@ export function ParentDashboardScreen({ navigation }: Props) {
     childrenProfiles,
     state,
     completionFor,
-    setCurrentProfileId,
     isRewardsActiveForChild,
     pointsFor,
     unitKindFor,
@@ -59,10 +59,7 @@ export function ParentDashboardScreen({ navigation }: Props) {
         <Text>{blocked ? t("roles.parentOnly") : t("roles.parentRequired")}</Text>
         <PrimaryButton
           label={t("common.changeProfile")}
-          onPress={() => {
-            setCurrentProfileId(null);
-            navigation.replace("ProfilePicker", { mode: "switch" });
-          }}
+          onPress={() => openProfileSwitcher(navigation)}
           style={{ marginTop: 12 }}
         />
       </View>

@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useApp } from "../context/AppContext";
 import { colors } from "../theme/colors";
 import { RootStackParamList } from "../navigation/types";
+import { openProfileSwitcher } from "../navigation/openProfileSwitcher";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { ParentRewardsBottomNav } from "../components/RewardsBottomNav";
 import { BuildStamp } from "../components/BuildStamp";
@@ -34,12 +35,27 @@ type Props = NativeStackScreenProps<RootStackParamList, "ParentCalendar">;
 
 export function ParentCalendarScreen({ navigation }: Props) {
   const { t, i18n } = useTranslation();
-  const { currentProfile, childrenProfiles, state, setCurrentProfileId } = useApp();
+  const { currentProfile, childrenProfiles, state } = useApp();
   const { width } = useWindowDimensions();
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [monthIndex, setMonthIndex] = useState(now.getMonth());
   const today = todayISO();
+
+  // cells useMemo must run before the null-profile early return (Rules of Hooks).
+  const cells = useMemo(() => {
+    const totalDays = daysInMonth(year, monthIndex);
+    const offset = mondayFirstOffset(year, monthIndex);
+    const out: Array<{ day: number | null; iso: string | null; status: DayAggregateStatus }> = [];
+    for (let i = 0; i < offset; i++) out.push({ day: null, iso: null, status: "empty" });
+    for (let day = 1; day <= totalDays; day++) {
+      const iso = isoFromParts(year, monthIndex, day);
+      const overview = buildDayOverview(iso, state.tasks, state.completions, childrenProfiles, today);
+      out.push({ day, iso, status: overview.status });
+    }
+    while (out.length % 7 !== 0) out.push({ day: null, iso: null, status: "empty" });
+    return out;
+  }, [year, monthIndex, state.tasks, state.completions, childrenProfiles, today]);
 
   if (!currentProfile || currentProfile.role !== "parent") {
     return (
@@ -47,10 +63,7 @@ export function ParentCalendarScreen({ navigation }: Props) {
         <Text>{t("roles.parentRequired")}</Text>
         <PrimaryButton
           label={t("common.changeProfile")}
-          onPress={() => {
-            setCurrentProfileId(null);
-            navigation.replace("ProfilePicker", { mode: "switch" });
-          }}
+          onPress={() => openProfileSwitcher(navigation)}
           style={{ marginTop: 12 }}
         />
       </View>
@@ -74,20 +87,6 @@ export function ParentCalendarScreen({ navigation }: Props) {
       setMonthIndex((m) => m + 1);
     }
   };
-
-  const cells = useMemo(() => {
-    const totalDays = daysInMonth(year, monthIndex);
-    const offset = mondayFirstOffset(year, monthIndex);
-    const out: Array<{ day: number | null; iso: string | null; status: DayAggregateStatus }> = [];
-    for (let i = 0; i < offset; i++) out.push({ day: null, iso: null, status: "empty" });
-    for (let day = 1; day <= totalDays; day++) {
-      const iso = isoFromParts(year, monthIndex, day);
-      const overview = buildDayOverview(iso, state.tasks, state.completions, childrenProfiles, today);
-      out.push({ day, iso, status: overview.status });
-    }
-    while (out.length % 7 !== 0) out.push({ day: null, iso: null, status: "empty" });
-    return out;
-  }, [year, monthIndex, state.tasks, state.completions, childrenProfiles, today]);
 
   const gridPad = 16;
   const gap = 6;

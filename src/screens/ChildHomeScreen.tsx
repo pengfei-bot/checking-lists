@@ -15,6 +15,7 @@ import { colors, softTint } from "../theme/colors";
 import { rewardsStyles, rewardsUi } from "../theme/rewardsUi";
 import { frenchCloudError } from "../utils/cloudTimeout";
 import { RootStackParamList } from "../navigation/types";
+import { openProfileSwitcher } from "../navigation/openProfileSwitcher";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { todayISO } from "../utils/dates";
 import { unitShortKey } from "../utils/rewards";
@@ -37,7 +38,6 @@ export function ChildHomeScreen({ navigation }: Props) {
     completionFor,
     markTaskDone,
     unmarkTaskDone,
-    setCurrentProfileId,
     state,
     refreshReminders,
     isRewardsActiveForChild,
@@ -74,31 +74,30 @@ export function ChildHomeScreen({ navigation }: Props) {
     [currentProfile, isRewardsActiveForChild, pointsFor, unitKindFor]
   );
 
-  if (!currentProfile || currentProfile.role !== "child") {
+  // Hooks must run even when currentProfile is null mid-switch (Rules of Hooks).
+  const childId = currentProfile?.role === "child" ? currentProfile.id : null;
+  const tasks = childId ? tasksForChildToday(childId) : [];
+  const doneCount = tasks.filter((task) => completionFor(task.id)).length;
+  const balance = childId ? balanceFor(childId) : 0;
+  const unitLabel = t(unitShortKey(unitKindFor(childId ?? "")));
+  const rewardsActive = childId ? isRewardsActiveForChild(childId) : false;
+  const possibleStars = useMemo(() => {
+    if (!rewardsActive) return 0;
+    return tasks.reduce((sum, task) => sum + (pointsFor(task.id) ?? 0), 0);
+  }, [tasks, rewardsActive, pointsFor]);
+
+  if (!currentProfile || currentProfile.role !== "child" || !childId) {
     return (
       <View style={styles.center}>
         <Text>{t("roles.childRequired")}</Text>
         <PrimaryButton
           label={t("common.changeProfile")}
-          onPress={() => {
-            setCurrentProfileId(null);
-            navigation.replace("ProfilePicker", { mode: "switch" });
-          }}
+          onPress={() => openProfileSwitcher(navigation)}
           style={{ marginTop: 12 }}
         />
       </View>
     );
   }
-
-  const tasks = tasksForChildToday(currentProfile.id);
-  const doneCount = tasks.filter((task) => completionFor(task.id)).length;
-  const balance = balanceFor(currentProfile.id);
-  const unitLabel = t(unitShortKey(unitKindFor(currentProfile.id)));
-  const rewardsActive = isRewardsActiveForChild(currentProfile.id);
-  const possibleStars = useMemo(() => {
-    if (!rewardsActive) return 0;
-    return tasks.reduce((sum, task) => sum + (pointsFor(task.id) ?? 0), 0);
-  }, [tasks, rewardsActive, pointsFor]);
 
   const quickDone = async (taskId: string) => {
     const existing = completionFor(taskId);
@@ -362,8 +361,7 @@ export function ChildHomeScreen({ navigation }: Props) {
               variant="ghost"
               onPress={() =>
                 closeAnd(() => {
-                  setCurrentProfileId(null);
-                  navigation.replace("ProfilePicker", { mode: "switch" });
+                  openProfileSwitcher(navigation);
                 })
               }
               style={{ marginTop: 8 }}
