@@ -70,11 +70,16 @@ export async function cancelAllReminders(): Promise<void> {
 
 export async function rescheduleTodayReminders(
   tasks: Task[],
-  profiles: Profile[]
+  profiles: Profile[],
+  /** When a child profile is active, only schedule that child's tasks. Parents (or null) keep all kids. */
+  activeProfile?: Profile | null
 ): Promise<number> {
   if (Platform.OS === "web") return 0;
   await cancelAllReminders();
-  const todayTasks = tasks.filter((t) => t.reminderEnabled && isTaskForDate(t));
+  let todayTasks = tasks.filter((t) => t.reminderEnabled && isTaskForDate(t));
+  if (activeProfile?.role === "child") {
+    todayTasks = todayTasks.filter((t) => t.childId === activeProfile.id);
+  }
   let count = 0;
   for (const task of todayTasks) {
     const child = profiles.find((p) => p.id === task.childId);

@@ -143,8 +143,20 @@ const emptyState: AppState = {
   currentProfileId: null,
 };
 
-async function safeReminders(tasks: Task[], profiles: Profile[]) {
-  try { await rescheduleTodayReminders(tasks, profiles); } catch { /* ignore */ }
+async function safeReminders(
+  tasks: Task[],
+  profiles: Profile[],
+  currentProfileId?: string | null
+) {
+  const active =
+    currentProfileId != null
+      ? profiles.find((p) => p.id === currentProfileId) ?? null
+      : null;
+  try {
+    await rescheduleTodayReminders(tasks, profiles, active);
+  } catch {
+    /* ignore */
+  }
 }
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
@@ -224,7 +236,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setCacheSavedAt(new Date().toISOString());
       setUsingCache(false);
       setSyncError(null);
-      await safeReminders(next.tasks, next.profiles);
+      await safeReminders(next.tasks, next.profiles, next.currentProfileId);
     } catch (e) {
       const msg = frenchCloudError(e, "Chargement cloud impossible.");
       setSyncError(msg);
@@ -283,7 +295,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           setCacheSavedAt(cached.savedAt);
           setUsingCache(true);
           setReady(true);
-          await safeReminders(next.tasks, next.profiles);
+          await safeReminders(next.tasks, next.profiles, next.currentProfileId);
         }
 
         const online = await probeOnline(2_500);
@@ -321,10 +333,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           const next = { ...loaded, currentProfileId };
           setState(next);
           await saveAppState(next);
-          await safeReminders(next.tasks, next.profiles);
+          await safeReminders(next.tasks, next.profiles, next.currentProfileId);
         } else {
           setState(loaded);
-          await safeReminders(loaded.tasks, loaded.profiles);
+          await safeReminders(loaded.tasks, loaded.profiles, loaded.currentProfileId);
         }
       }
     } catch {
@@ -386,6 +398,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       stateRef.current = next;
       // Local/demo only: persist roster. Cloud keeps currentProfileId in lastProfile + memory.
       if (!familyId) void saveAppState(next);
+      // Clear other kids' alerts and reschedule for the newly active profile.
+      void safeReminders(next.tasks, next.profiles, id);
       return next;
     });
   }, [familyId]);
@@ -600,7 +614,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           stateRef.current = next;
           setState(next);
           void cacheCloudSnapshot(next);
-          await safeReminders(next.tasks, next.profiles);
+          await safeReminders(next.tasks, next.profiles, next.currentProfileId);
           void flushPending(familyId);
           return saved;
         } catch (e) {
@@ -656,7 +670,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       stateRef.current = next;
       setState(next);
       void cacheCloudSnapshot(next);
-      await safeReminders(next.tasks, next.profiles);
+      await safeReminders(next.tasks, next.profiles, next.currentProfileId);
       const q = await enqueueMutation(familyId, {
         type: "upsertTask",
         input: taskInputForQueue({ ...input, id }),
@@ -698,7 +712,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const next = { ...prev, tasks };
     stateRef.current = next;
     await persistLocal(next);
-    await safeReminders(next.tasks, next.profiles);
+    await safeReminders(next.tasks, next.profiles, next.currentProfileId);
     return saved;
   }, [familyId, persistLocal, cacheCloudSnapshot, flushPending]);
 
@@ -718,7 +732,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           stateRef.current = next;
           setState(next);
           void cacheCloudSnapshot(next);
-          await safeReminders(next.tasks, next.profiles);
+          await safeReminders(next.tasks, next.profiles, next.currentProfileId);
           void flushPending(familyId);
           return;
         } catch (e) {
@@ -739,7 +753,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       stateRef.current = next;
       setState(next);
       void cacheCloudSnapshot(next);
-      await safeReminders(next.tasks, next.profiles);
+      await safeReminders(next.tasks, next.profiles, next.currentProfileId);
       const q = await enqueueMutation(familyId, { type: "deleteTask", taskId });
       setPendingMutations(q.length);
       setUsingCache(true);
@@ -755,7 +769,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     };
     stateRef.current = next;
     await persistLocal(next);
-    await safeReminders(next.tasks, next.profiles);
+    await safeReminders(next.tasks, next.profiles, next.currentProfileId);
   }, [familyId, persistLocal, cacheCloudSnapshot, flushPending]);
 
   const addChild = useCallback(async (input: { name: string; emoji?: string; color?: string }): Promise<Profile> => {
@@ -882,7 +896,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     } else {
       await persistLocal(next);
     }
-    await safeReminders(next.tasks, next.profiles);
+    await safeReminders(next.tasks, next.profiles, next.currentProfileId);
   }, [familyId, persistLocal, state, cacheCloudSnapshot]);
 
   const getTask = useCallback((taskId: string) => state.tasks.find((t) => t.id === taskId), [state.tasks]);
@@ -1174,10 +1188,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (!isDemo && familyId) { await load(); return; }
     const seeded = await resetDemoData();
     setState(seeded);
-    await safeReminders(seeded.tasks, seeded.profiles);
+    await safeReminders(seeded.tasks, seeded.profiles, seeded.currentProfileId);
   }, [familyId, isDemo, load]);
 
-  const refreshReminders = useCallback(async () => rescheduleTodayReminders(state.tasks, state.profiles), [state.tasks, state.profiles]);
+  const refreshReminders = useCallback(async () => {
+    const active =
+      state.profiles.find((p) => p.id === state.currentProfileId) ?? null;
+    return rescheduleTodayReminders(state.tasks, state.profiles, active);
+  }, [state.tasks, state.profiles, state.currentProfileId]);
   const reloadFromCloud = useCallback(async () => {
     if (!familyId) {
       await load();
