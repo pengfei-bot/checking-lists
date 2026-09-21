@@ -71,15 +71,23 @@ export async function cancelAllReminders(): Promise<void> {
 export async function rescheduleTodayReminders(
   tasks: Task[],
   profiles: Profile[],
-  /** When a child profile is active, only schedule that child's tasks. Parents (or null) keep all kids. */
+  /**
+   * Reminders are child-device only: schedule solely when a child profile is active,
+   * and only that child's tasks. Parent / null cancels pending alerts and schedules none.
+   */
   activeProfile?: Profile | null
 ): Promise<number> {
   if (Platform.OS === "web") return 0;
   await cancelAllReminders();
-  let todayTasks = tasks.filter((t) => t.reminderEnabled && isTaskForDate(t));
-  if (activeProfile?.role === "child") {
-    todayTasks = todayTasks.filter((t) => t.childId === activeProfile.id);
+  if (activeProfile?.role !== "child") {
+    return 0;
   }
+  const todayTasks = tasks.filter(
+    (t) =>
+      t.reminderEnabled &&
+      t.childId === activeProfile.id &&
+      isTaskForDate(t)
+  );
   let count = 0;
   for (const task of todayTasks) {
     const child = profiles.find((p) => p.id === task.childId);
