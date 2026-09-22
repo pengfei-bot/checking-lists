@@ -1,0 +1,23 @@
+export type RootStackParamList = {
+  Welcome: undefined;
+  SignUp: undefined;
+  SignIn: undefined;
+  ForgotPassword: undefined;
+  RedeemInvite: undefined;
+  JoinPending: undefined;
+  FamilyShare: undefined;
+  ProfilePicker: { mode?: "switch" } | undefined;
+  ChildHome: undefined;
+  ChildHistory: undefined;
+  ChildDayDetail: { date: string };
+  ParentDashboard: undefined;
+  ParentCalendar: undefined;
+  ParentDayDetail: { date: string };
+  TaskForm: { taskId?: string; childId?: string };
+  TaskDetail: { taskId: string; date?: string };
+  ChildForm: { childId?: string };
+  LanguageSettings: undefined;
+  ParentSettings: undefined;
+  Rewards: undefined;
+  RewardsChild: { childId: string };
+};
